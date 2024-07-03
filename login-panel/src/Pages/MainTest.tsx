@@ -10,17 +10,17 @@ export function Main() {
                 <h1>HTTP Post Requests</h1>
             </header>
             <main>
-                <button onClick={() => history.push("/doctor-login")}>
-                    Doctor Login
+                <button onClick={() => history.push("/chef-login")}>
+                    Chef Login
                 </button>
-                <button onClick={() => history.push("/doctor-register")}>
-                    Doctor Register
+                <button onClick={() => history.push("/chef-register")}>
+                    Chef Register
                 </button>
-                <button onClick={() => history.push("/patient-login")}>
-                    Patient Login
+                <button onClick={() => history.push("/customer-login")}>
+                    Customer Login
                 </button>
-                <button onClick={() => history.push("/patient-register")}>
-                    Patient Register
+                <button onClick={() => history.push("/customer-register")}>
+                    Customer Register
                 </button>
             </main>
         </div>

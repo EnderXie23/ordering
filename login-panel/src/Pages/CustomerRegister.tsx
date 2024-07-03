@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import axios, { isAxiosError } from 'axios';
-import { RegisterMessage } from 'Plugins/DoctorAPI/RegisterMessage';
+import { CustomerRegisterMessage } from 'Plugins/CustomerAPI/CustomerRegisterMessage';
 import { useHistory } from 'react-router'
 
-export function DoctorRegister() {
+export function CustomerRegister() {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
 
     const history=useHistory()
-    const sendPostRequest = async (message: RegisterMessage) => {
+    const sendPostRequest = async (message: CustomerRegisterMessage) => {
         try {
             const response = await axios.post(message.getURL(), JSON.stringify(message), {
                 headers: { 'Content-Type': 'application/json' },
@@ -29,14 +29,14 @@ export function DoctorRegister() {
     };
 
     const handleLogin = () => {
-        const registerMessage = new RegisterMessage(userName, password);
-        sendPostRequest(registerMessage);
+        const customerRegisterMessage = new CustomerRegisterMessage(userName, password);
+        sendPostRequest(customerRegisterMessage);
     };
 
     return (
         <div className="App">
             <header className="App-header">
-                <h1>Doctor Register</h1>
+                <h1>Customer Register</h1>
             </header>
             <main>
                 <form onSubmit={(e) => e.preventDefault()}>

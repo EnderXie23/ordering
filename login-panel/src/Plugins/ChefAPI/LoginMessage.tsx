@@ -1,6 +1,6 @@
-import { DoctorMessage } from 'Plugins/DoctorAPI/DoctorMessage'
+import { ChefMessage } from 'Plugins/ChefAPI/ChefMessage'
 
-export class LoginMessage extends DoctorMessage {
+export class LoginMessage extends ChefMessage {
     userName: string;
     password: string;
 

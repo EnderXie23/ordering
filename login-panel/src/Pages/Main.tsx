@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import axios, { isAxiosError } from 'axios'
 import { API } from 'Plugins/CommonUtils/API'
-import { LoginMessage } from 'Plugins/DoctorAPI/LoginMessage'
-import { RegisterMessage } from 'Plugins/DoctorAPI/RegisterMessage'
-import { PatientLoginMessage } from 'Plugins/PatientAPI/PatientLoginMessage'
-import { PatientRegisterMessage } from 'Plugins/PatientAPI/PatientRegisterMessage'
-import { AddPatientMessage } from 'Plugins/DoctorAPI/AddPatientMessage'
+import { LoginMessage } from 'Plugins/ChefAPI/LoginMessage'
+import { RegisterMessage } from 'Plugins/ChefAPI/RegisterMessage'
+import { CustomerLoginMessage } from 'Plugins/CustomerAPI/CustomerLoginMessage'
+import { CustomerRegisterMessage } from 'Plugins/CustomerAPI/CustomerRegisterMessage'
+import { AddCustomerMessage } from 'Plugins/ChefAPI/AddCustomerMessage'
 import { useHistory } from 'react-router';
 
 export function Main(){
@@ -38,22 +38,22 @@ export function Main(){
             </header>
             <main>
                 <button onClick={() => sendPostRequest(new LoginMessage('aaaa', 'bbbb'))}>
-                    Doctor Login aaaa
+                    Chef Login aaaa
                 </button>
                 <button onClick={() => sendPostRequest(new RegisterMessage('aaaa', 'bbbb'))}>
-                    Doctor Register aaaa
+                    Chef Register aaaa
                 </button>
                 <button onClick={() => sendPostRequest(new LoginMessage('aaaab', 'bbbb'))}>
-                    Doctor Login aaaab
+                    Chef Login aaaab
                 </button>
-                <button onClick={() => sendPostRequest(new PatientLoginMessage('cccc', 'bbbb'))}>
-                    Patient Login cccc
+                <button onClick={() => sendPostRequest(new CustomerLoginMessage('cccc', 'bbbb'))}>
+                    Customer Login cccc
                 </button>
-                <button onClick={() => sendPostRequest(new PatientRegisterMessage('cccc', 'bbbb'))}>
-                    Patient Register cccc
+                <button onClick={() => sendPostRequest(new CustomerRegisterMessage('cccc', 'bbbb'))}>
+                    Customer Register cccc
                 </button>
-                <button onClick={() => sendPostRequest(new AddPatientMessage('aaaa', 'cccc'))}>
-                    Add Patient
+                <button onClick={() => sendPostRequest(new AddCustomerMessage('aaaa', 'cccc'))}>
+                    Add Customer
                 </button>
                 <button onClick={() => history.push("/another")}>
                     jump to another page

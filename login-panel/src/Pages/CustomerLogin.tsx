@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import axios, { isAxiosError } from 'axios';
-import { LoginMessage } from 'Plugins/DoctorAPI/LoginMessage';
+import { CustomerLoginMessage } from 'Plugins/CustomerAPI/CustomerLoginMessage';
 import { useHistory } from 'react-router'
 
-export function DoctorLogin() {
+export function CustomerLogin() {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
 
     const history=useHistory()
-    const sendPostRequest = async (message: LoginMessage) => {
+    const sendPostRequest = async (message: CustomerLoginMessage) => {
         try {
             const response = await axios.post(message.getURL(), JSON.stringify(message), {
                 headers: { 'Content-Type': 'application/json' },
@@ -29,14 +29,14 @@ export function DoctorLogin() {
     };
 
     const handleLogin = () => {
-        const loginMessage = new LoginMessage(userName, password);
-        sendPostRequest(loginMessage);
+        const customerLoginMessage = new CustomerLoginMessage(userName, password);
+        sendPostRequest(customerLoginMessage);
     };
 
     return (
         <div className="App">
             <header className="App-header">
-                <h1>Doctor Login</h1>
+                <h1>Customer Login</h1>
             </header>
             <main>
                 <form onSubmit={(e) => e.preventDefault()}>

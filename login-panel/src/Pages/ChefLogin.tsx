@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import axios, { isAxiosError } from 'axios';
-import { PatientRegisterMessage } from 'Plugins/PatientAPI/PatientRegisterMessage';
+import { LoginMessage } from 'Plugins/ChefAPI/LoginMessage';
 import { useHistory } from 'react-router'
 
-export function PatientRegister() {
+export function ChefLogin() {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
 
     const history=useHistory()
-    const sendPostRequest = async (message: PatientRegisterMessage) => {
+    const sendPostRequest = async (message: LoginMessage) => {
         try {
             const response = await axios.post(message.getURL(), JSON.stringify(message), {
                 headers: { 'Content-Type': 'application/json' },
@@ -29,14 +29,14 @@ export function PatientRegister() {
     };
 
     const handleLogin = () => {
-        const patientRegisterMessage = new PatientRegisterMessage(userName, password);
-        sendPostRequest(patientRegisterMessage);
+        const loginMessage = new LoginMessage(userName, password);
+        sendPostRequest(loginMessage);
     };
 
     return (
         <div className="App">
             <header className="App-header">
-                <h1>Patient Register</h1>
+                <h1>Chef Login</h1>
             </header>
             <main>
                 <form onSubmit={(e) => e.preventDefault()}>
@@ -61,7 +61,7 @@ export function PatientRegister() {
                         </label>
                     </div>
                     <button type="button" onClick={handleLogin}>
-                        Register
+                        Login
                     </button>
                     <button onClick={() => history.push("/")}>
                         Return

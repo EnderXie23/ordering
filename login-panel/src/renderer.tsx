@@ -3,20 +3,20 @@ import { render } from 'react-dom'
 import { HashRouter, Route, Switch } from 'react-router-dom'
 import { Main } from 'Pages/MainTest'
 import { AnotherPage } from 'Pages/AnotherPage'
-import { DoctorLogin } from 'Pages/DoctorLogin'
-import { DoctorRegister } from 'Pages/DoctorRegister'
-import { PatientLogin } from 'Pages/PatientLogin'
-import { PatientRegister } from 'Pages/PatientRegister'
+import { ChefLogin } from 'Pages/ChefLogin'
+import { ChefRegister } from 'Pages/ChefRegister'
+import { CustomerLogin } from 'Pages/CustomerLogin'
+import { CustomerRegister } from 'Pages/CustomerRegister'
 
 const Layout = () => {
     return (
         <HashRouter>
             <Switch>
                 <Route path="/" exact component={Main} />
-                <Route path="/doctor-login" exact component={DoctorLogin} />
-                <Route path="/doctor-register" exact component={DoctorRegister} />
-                <Route path="/patient-login" exact component={PatientLogin} />
-                <Route path="/patient-register" exact component={PatientRegister} />
+                <Route path="/chef-login" exact component={ChefLogin} />
+                <Route path="/chef-register" exact component={ChefRegister} />
+                <Route path="/customer-login" exact component={CustomerLogin} />
+                <Route path="/customer-register" exact component={CustomerRegister} />
                 <Route path="/another" exact component={AnotherPage} />
             </Switch>
         </HashRouter>
