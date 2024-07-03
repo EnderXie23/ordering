@@ -14,18 +14,18 @@ import org.http4s.dsl.io.*
 object Routes:
   private def executePlan(messageType:String, str: String): IO[String]=
     messageType match {
-      case "PatientLoginMessage" =>
-        IO(decode[CustomerLoginMessagePlanner](str).getOrElse(throw new Exception("Invalid JSON for PatientLoginMessage")))
+      case "CustomerLoginMessage" =>
+        IO(decode[CustomerLoginMessagePlanner](str).getOrElse(throw new Exception("Invalid JSON for CustomerLoginMessage")))
           .flatMap{m=>
             m.fullPlan.map(_.asJson.toString)
           }
-      case "PatientQueryMessage" =>
-        IO(decode[CustomerQueryMessagePlanner](str).getOrElse(throw new Exception("Invalid JSON for PatientQueryMessage")))
+      case "CustomerQueryMessage" =>
+        IO(decode[CustomerQueryMessagePlanner](str).getOrElse(throw new Exception("Invalid JSON for CustomerQueryMessage")))
           .flatMap{m=>
             m.fullPlan.map(_.asJson.toString)
           }
-      case "PatientRegisterMessage" =>
-        IO(decode[CustomerRegisterMessagePlanner](str).getOrElse(throw new Exception("Invalid JSON for PatientRegisterMessage")))
+      case "CustomerRegisterMessage" =>
+        IO(decode[CustomerRegisterMessagePlanner](str).getOrElse(throw new Exception("Invalid JSON for CustomerRegisterMessage")))
           .flatMap{m=>
             m.fullPlan.map(_.asJson.toString)
           }

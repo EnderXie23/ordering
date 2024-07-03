@@ -15,15 +15,15 @@ object ServiceCenter {
 
   val fullNameMap: Map[String, String] = Map(
     dbManagerServiceCode ->  "数据库管理（DB_Manager）",
-    chefServiceCode    ->  "医生（Doctor）",
-    customerServiceCode   ->  "病人（Patient）",
+    chefServiceCode    ->  "厨师（Chef）",
+    customerServiceCode   ->  "顾客（Customer）",
     portalServiceCode    ->  "门户（Portal）"
   )
 
   val address: Map[String, String] = Map(
     "DB-Manager" ->     "127.0.0.1:10001",
-    "Doctor" ->         "127.0.0.1:10002",
-    "Patient" ->        "127.0.0.1:10003",
+    "Chef" ->         "127.0.0.1:10002",
+    "Customer" ->        "127.0.0.1:10003",
     "Portal" ->         "127.0.0.1:10004"
   )
 }
