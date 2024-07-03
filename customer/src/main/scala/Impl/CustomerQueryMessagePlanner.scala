@@ -8,15 +8,20 @@ import Common.Object.SqlParameter
 import Common.ServiceUtils.schemaName
 
 
-case class CustomerQueryMessagePlanner(chefName:String, customerName:String, override val planContext: PlanContext) extends Planner[String]:
+case class CustomerQueryMessagePlanner(customerName:String, orders: List[(String, String)], override val planContext: PlanContext) extends Planner[String]:
   override def plan(using PlanContext): IO[String] = {
-    /** 故意写入数据库一个消息，注意到，如果中间出现rollback，这个消息是写不进去的。 */
-    startTransaction{
-      writeDB(s"INSERT INTO ${schemaName}.chef_rec (chef_name, customer_name) VALUES (?, ?)",
-        List(SqlParameter("String", chefName),
-          SqlParameter("String", customerName)
+    // Insert into database the customer order
+    val insertStatements = orders.map{ case (dishName, orderCount)=>
+      writeDB(s"INSERT INTO ${schemaName}.order_rec (customer_name, dish_name, order_count) VALUES (?, ?, ?)",
+        List(
+          SqlParameter("String", customerName),
+          SqlParameter("String", dishName),
+          SqlParameter("String", orderCount)
+          // The encoder asks for String type
         ))
-//        rollback()  //这句可以注释了看看效果
-    }>>
+    }
+
+    // Combine all the insert statements into one transaction
+    startTransaction(insertStatements.reduce(_ >> _)) >>
     IO.pure(customerName)
   }
