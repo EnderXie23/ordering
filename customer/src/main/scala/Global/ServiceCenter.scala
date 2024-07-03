@@ -9,14 +9,14 @@ object ServiceCenter {
   val projectName: String = "APP"
 
   val dbManagerServiceCode = "A000001"
-  val doctorServiceCode    = "A000002"
-  val patientServiceCode   = "A000003"
+  val chefServiceCode    = "A000002"
+  val customerServiceCode   = "A000003"
   val portalServiceCode    = "A000004"
 
   val fullNameMap: Map[String, String] = Map(
     dbManagerServiceCode ->  "数据库管理（DB_Manager）",
-    doctorServiceCode    ->  "医生（Doctor）",
-    patientServiceCode   ->  "病人（Patient）",
+    chefServiceCode    ->  "医生（Doctor）",
+    customerServiceCode   ->  "病人（Patient）",
     portalServiceCode    ->  "门户（Portal）"
   )
 

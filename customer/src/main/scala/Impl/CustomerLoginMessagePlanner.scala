@@ -7,7 +7,7 @@ import Common.DBAPI.{readDBRows, readDBString}
 import Common.Object.SqlParameter
 import Common.ServiceUtils.schemaName
 
-case class PatientLoginMessagePlanner(userName:String, password:String, override val planContext: PlanContext) extends Planner[String]:
+case class CustomerLoginMessagePlanner(userName:String, password:String, override val planContext: PlanContext) extends Planner[String]:
   override def plan(using PlanContext): IO[String] = {
     // Attempt to validate the user by reading the rows from the database
     readDBRows(
