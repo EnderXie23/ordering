@@ -2,7 +2,6 @@ import React from 'react'
 import { render } from 'react-dom'
 import { HashRouter, Route, Switch } from 'react-router-dom'
 import { Main } from 'Pages/Main'
-import { AnotherPage } from 'Pages/AnotherPage'
 import { ChefLogin } from 'Pages/ChefLogin'
 import { ChefRegister } from 'Pages/ChefRegister'
 import { CustomerLogin } from 'Pages/CustomerLogin'
@@ -32,7 +31,6 @@ const Layout = () => {
                         console.log('Orders:', orders);
                     }} />
                 </Route>
-                <Route path="/another" exact component={AnotherPage} />
             </Switch>
         </HashRouter>
     )

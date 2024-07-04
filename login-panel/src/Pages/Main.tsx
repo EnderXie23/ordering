@@ -1,40 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios, { isAxiosError } from 'axios'
+import { API } from 'Plugins/CommonUtils/API'
+import { LoginMessage } from 'Plugins/ChefAPI/LoginMessage'
+import { RegisterMessage } from 'Plugins/ChefAPI/RegisterMessage'
+import { CustomerLoginMessage } from 'Plugins/CustomerAPI/CustomerLoginMessage'
+import { CustomerRegisterMessage } from 'Plugins/CustomerAPI/CustomerRegisterMessage'
+import { AddCustomerMessage } from 'Plugins/ChefAPI/AddCustomerMessage'
 import { useHistory } from 'react-router';
+import './index.css'; // Importing the CSS file
 import { render } from 'react-dom'
 
 export function Main() {
     const history = useHistory();
 
-    // Place Order handler
-    const handlePlaceOrder = () => {
-        history.push({
-            pathname: '/place-order',
-            state:{ customerName: 'Guest'}
-        });
-    };
-
     return (
         <div className="App">
             <header className="App-header">
-                <h1>HTTP Post Requests</h1>
+                <h1>丑团外卖</h1>
             </header>
             <main>
-                <button onClick={() => history.push("/chef-login")}>
-                    Chef Login
-                </button>
-                <button onClick={() => history.push("/chef-register")}>
-                    Chef Register
-                </button>
                 <button onClick={() => history.push("/customer-login")}>
-                    Customer Login
+                    我是顾客
                 </button>
-                <button onClick={() => history.push("/customer-register")}>
-                    Customer Register
-                </button>
-                <button onClick={handlePlaceOrder}>
-                    Place Order
+
+                <button onClick={() => history.push("/chef-login")}>
+                    我是厨师
                 </button>
             </main>
         </div>
     );
 }
+
+
