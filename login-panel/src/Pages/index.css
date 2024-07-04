@@ -5,13 +5,13 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #ffffff;
+    background-color: #e0f7fa;
     font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
 }
 
 
 .container {
-    background-color: #ffffff;
+    background-color: #e0f7fa;
     padding: 20px;
     border-radius: 8px;
 }

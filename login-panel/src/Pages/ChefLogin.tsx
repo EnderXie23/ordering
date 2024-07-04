@@ -7,6 +7,8 @@ import { useHistory } from 'react-router'
 export function ChefLogin() {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState(''); // State for error message
+    const [successMessage, setSuccessMessage] = useState('');
 
     const history=useHistory()
     const sendPostRequest = async (message: LoginMessage) => {
@@ -16,20 +18,36 @@ export function ChefLogin() {
             });
             console.log('Response status:', response.status);
             console.log('Response body:', response.data);
+            setSuccessMessage('注册成功，跳转至登录页…');
+            setErrorMessage('');
         } catch (error) {
             if (isAxiosError(error)) {
                 if (error.response && error.response.data) {
                     console.error('Error sending request:', error.response.data);
+                    setErrorMessage(extractErrorBody(error.response.data.error) || '登录失败');
+                    setSuccessMessage('');
                 } else {
                     console.error('Error sending request:', error.message);
+                    setErrorMessage(error.message || '登录失败');
+                    setSuccessMessage('');
                 }
             } else {
                 console.error('Unexpected error:', error);
+                setErrorMessage('Unexpected error occurred');
+                setSuccessMessage('');
             }
         }
     };
 
-    const handleLogin = () => {
+    const extractErrorBody = (errorData: any) => {
+        if (typeof errorData === 'string') {
+            const bodyMatch = errorData.match(/Body: (.*)$/);
+            return bodyMatch ? bodyMatch[1] : errorData;
+        }
+        return JSON.stringify(errorData);
+    };
+
+    const ChefLogin = () => {
         const loginMessage = new LoginMessage(userName, password);
         sendPostRequest(loginMessage);
     };
@@ -61,7 +79,7 @@ export function ChefLogin() {
                             />
                         </label>
                     </div>
-                    <button type="button" onClick={handleLogin}>
+                    <button type="button" onClick={ChefLogin}>
                         登录
                     </button>
                     <button onClick={() => history.push("/chef-register")}>

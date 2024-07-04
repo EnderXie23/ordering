@@ -21,8 +21,11 @@ export function ChefRegister() {
             });
             console.log('Response status:', response.status);
             console.log('Response body:', response.data);
-            setSuccessMessage('注册成功');
+            setSuccessMessage('注册成功，跳转至登录页…');
             setErrorMessage('');
+            setTimeout(() => {
+                history.push('/chef-login');
+            }, 2000);
         } catch (error) {
             if (isAxiosError(error)) {
                 if (error.response && error.response.data) {
@@ -50,7 +53,7 @@ export function ChefRegister() {
         return JSON.stringify(errorData);
     };
 
-    const handleRegister = () => {
+    const ChefRegister = () => {
         if (password !== confirmPassword) {
             setErrorMessage('密码和确认密码不匹配');
             setSuccessMessage('');
@@ -61,60 +64,49 @@ export function ChefRegister() {
         sendPostRequest(registerMessage);
     };
 
-    const theme = createTheme({
-        palette: {
-            background: {
-                default: '#e0f7fa', // Choose your desired color
-            },
-        },
-    });
-
     return (
-        <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <Container maxWidth="sm" className="container">
-                <Typography variant="h4" component="h1" align="center" gutterBottom>
-                    新厨师注册
-                </Typography>
-                <form onSubmit={(e) => e.preventDefault()}>
-                    <TextField
-                        label="用户名"
-                        value={userName}
-                        onChange={(e) => setUserName(e.target.value)}
-                        fullWidth
-                        margin="normal"
-                    />
-                    <TextField
-                        label="密码"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        fullWidth
-                        margin="normal"
-                    />
-                    <TextField
-                        label="确认密码"
-                        type="password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        fullWidth
-                        margin="normal"
-                    />
-                    {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
-                    {successMessage && <Alert severity="success">{successMessage}</Alert>}
-                    <Button variant="contained" color="primary" onClick={handleRegister} fullWidth>
-                        注册
+        <Container maxWidth="sm" className="container">
+            <Typography variant="h4" component="h1" align="center" gutterBottom>
+                新厨师注册
+            </Typography>
+            <form onSubmit={(e) => e.preventDefault()}>
+                <TextField
+                    label="用户名"
+                    value={userName}
+                    onChange={(e) => setUserName(e.target.value)}
+                    fullWidth
+                    margin="normal"
+                />
+                <TextField
+                    label="密码"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    fullWidth
+                    margin="normal"
+                />
+                <TextField
+                    label="确认密码"
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    fullWidth
+                    margin="normal"
+                />
+                {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+                {successMessage && <Alert severity="success">{successMessage}</Alert>}
+                <Button variant="contained" color="primary" onClick={ChefRegister} fullWidth>
+                    注册
+                </Button>
+                <Box display="flex" mt={2} className="button-container">
+                    <Button variant="outlined" color="secondary" onClick={() => history.push("/chef-login")}>
+                        返回登录页
                     </Button>
-                    <Box display="flex" mt={2} className="button-container">
-                        <Button variant="outlined" color="secondary" onClick={() => history.push("/chef-login")}>
-                            返回登录页
-                        </Button>
-                        <Button variant="outlined" color="secondary" onClick={() => history.push("/")}>
-                            主页
-                        </Button>
-                    </Box>
-                </form>
-            </Container>
-        </ThemeProvider>
+                    <Button variant="outlined" color="secondary" onClick={() => history.push("/")}>
+                        主页
+                    </Button>
+                </Box>
+            </form>
+        </Container>
     );
 }
