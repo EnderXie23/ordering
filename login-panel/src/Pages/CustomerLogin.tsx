@@ -36,13 +36,13 @@ export function CustomerLogin() {
     return (
         <div className="App">
             <header className="App-header">
-                <h1>Customer Login</h1>
+                <h1>顾客登录</h1>
             </header>
             <main>
                 <form onSubmit={(e) => e.preventDefault()}>
                     <div>
                         <label>
-                            Username:
+                            用户名：
                             <input
                                 type="text"
                                 value={userName}
@@ -52,7 +52,7 @@ export function CustomerLogin() {
                     </div>
                     <div>
                         <label>
-                            Password:
+                            密码：
                             <input
                                 type="password"
                                 value={password}
@@ -61,10 +61,13 @@ export function CustomerLogin() {
                         </label>
                     </div>
                     <button type="button" onClick={handleLogin}>
-                        Login
+                        登录
+                    </button>
+                    <button onClick={() => history.push("/customer-register")}>
+                        新用户注册
                     </button>
                     <button onClick={() => history.push("/")}>
-                        Return
+                        主页
                     </button>
                 </form>
             </main>

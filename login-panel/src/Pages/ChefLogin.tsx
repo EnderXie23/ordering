@@ -3,6 +3,7 @@ import axios, { isAxiosError } from 'axios';
 import { LoginMessage } from 'Plugins/ChefAPI/LoginMessage';
 import { useHistory } from 'react-router'
 
+
 export function ChefLogin() {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
@@ -36,13 +37,13 @@ export function ChefLogin() {
     return (
         <div className="App">
             <header className="App-header">
-                <h1>Chef Login</h1>
+                <h1>厨师登录</h1>
             </header>
             <main>
                 <form onSubmit={(e) => e.preventDefault()}>
                     <div>
                         <label>
-                            Username:
+                            用户名：
                             <input
                                 type="text"
                                 value={userName}
@@ -52,7 +53,7 @@ export function ChefLogin() {
                     </div>
                     <div>
                         <label>
-                            Password:
+                            密码：
                             <input
                                 type="password"
                                 value={password}
@@ -61,10 +62,13 @@ export function ChefLogin() {
                         </label>
                     </div>
                     <button type="button" onClick={handleLogin}>
-                        Login
+                        登录
+                    </button>
+                    <button onClick={() => history.push("/chef-register")}>
+                        新用户注册
                     </button>
                     <button onClick={() => history.push("/")}>
-                        Return
+                        主页
                     </button>
                 </form>
             </main>

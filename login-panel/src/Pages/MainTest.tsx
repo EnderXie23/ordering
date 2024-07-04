@@ -7,20 +7,15 @@ export function Main() {
     return (
         <div className="App">
             <header className="App-header">
-                <h1>HTTP Post Requests</h1>
+                <h1>丑团外卖</h1>
             </header>
             <main>
-                <button onClick={() => history.push("/chef-login")}>
-                    Chef Login
-                </button>
-                <button onClick={() => history.push("/chef-register")}>
-                    Chef Register
-                </button>
                 <button onClick={() => history.push("/customer-login")}>
-                    Customer Login
+                    我是顾客
                 </button>
-                <button onClick={() => history.push("/customer-register")}>
-                    Customer Register
+
+                <button onClick={() => history.push("/chef-login")}>
+                    我是厨师
                 </button>
             </main>
         </div>
