@@ -18,8 +18,14 @@ export function ChefLogin() {
             });
             console.log('Response status:', response.status);
             console.log('Response body:', response.data);
-            setSuccessMessage('注册成功，跳转至登录页…');
-            setErrorMessage('');
+            if (response.data == 'Valid user') {
+                setSuccessMessage('注册成功，跳转中…');
+                setErrorMessage('');
+                setTimeout(() => {
+                    history.push('/');
+                }, 2000);
+            }
+
         } catch (error) {
             if (isAxiosError(error)) {
                 if (error.response && error.response.data) {

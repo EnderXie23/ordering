@@ -2,19 +2,27 @@ import React, { useState } from 'react';
 import axios, { isAxiosError } from 'axios';
 import { CustomerLoginMessage } from 'Plugins/CustomerAPI/CustomerLoginMessage';
 import { useHistory } from 'react-router'
+import { useUser } from 'Pages/UserContext'
 
 export function CustomerLogin() {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
+    const { setUsername } = useUser()
 
     const history=useHistory()
     const sendPostRequest = async (message: CustomerLoginMessage) => {
         try {
             const response = await axios.post(message.getURL(), JSON.stringify(message), {
                 headers: { 'Content-Type': 'application/json' },
-            });
-            console.log('Response status:', response.status);
-            console.log('Response body:', response.data);
+            })
+            console.log('Response status:', response.status)
+            console.log('Response body:', response.data)
+
+            // Add the following code to jump to ordering page
+            if (response.data == 'Valid user') {
+                setUsername(userName)
+                history.push('/place-order')
+            }
         } catch (error) {
             if (isAxiosError(error)) {
                 if (error.response && error.response.data) {
