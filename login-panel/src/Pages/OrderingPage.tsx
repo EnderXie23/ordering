@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useLocation, useHistory } from 'react-router'
 import { useUser } from 'Pages/UserContext'
+import { CustomerOrderMessage } from 'Plugins/CustomerAPI/CustomerOrderMessage'
+import axios from 'axios'
 
 type Dish = {
     name: string;
@@ -28,10 +30,24 @@ const OrderingPage: React.FC = () => {
         })
     }
 
+    const sendOrderRequest = async (message: CustomerOrderMessage) => {
+        try {
+            const response = await axios.post(message.getURL(), JSON.stringify(message), {
+                headers: { 'Content-Type': 'application/json' },
+            });
+            console.log(response.status);
+            console.log(response.data);
+        } catch (error) {
+            console.error('Error submitting order:', error);
+        }
+    }
+
     const handleSubmit = () => {
         const orders = Object.entries(orderCounts).map(([dishName, count]) => [dishName, count.toString()])
         console.log('Customer:', customerName);
         console.log('Orders:', orders);
+        const orderMessage = new CustomerOrderMessage(customerName, orders.map(order => order.join(",")).join(";"));
+        sendOrderRequest(orderMessage);
     }
 
     return (
