@@ -17,7 +17,8 @@ object Init {
       _ <- API.init(config.maximumClientConnection)
       _ <- initSchema(schemaName)
       _ <- writeDB(s"CREATE TABLE IF NOT EXISTS ${schemaName}.user_name (user_name TEXT, password TEXT)", List())
-      _ <- writeDB(s"CREATE TABLE IF NOT EXISTS ${schemaName}.chef_rec (chef_name TEXT, customer_name TEXT)", List())
+      _ <- writeDB(s"CREATE TABLE IF NOT EXISTS ${schemaName}.order_rec (customer_name TEXT, dish_name TEXT, order_count TEXT)", List())
+      _ <- writeDB(s"DELETE FROM ${schemaName}.order_rec", List.empty)
     } yield ()
 
 }
