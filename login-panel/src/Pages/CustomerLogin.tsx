@@ -3,12 +3,8 @@ import axios, { isAxiosError } from 'axios';
 import { LoginMessage } from 'Plugins/ChefAPI/LoginMessage';
 import { useHistory } from 'react-router'
 import { Alert, Box, Button, Container, TextField, Typography } from '@mui/material'
-<<<<<<< Updated upstream
 import { useUser } from 'Pages/UserContext'
-=======
 import { CustomerLoginMessage } from 'Plugins/CustomerAPI/CustomerLoginMessage'
->>>>>>> Stashed changes
-
 
 export function CustomerLogin() {
     const [userName, setUserName] = useState('');

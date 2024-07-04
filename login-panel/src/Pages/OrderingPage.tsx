@@ -5,6 +5,7 @@ import { CustomerOrderMessage } from 'Plugins/CustomerAPI/CustomerOrderMessage'
 import axios from 'axios'
 import { Container, Typography, Box, Button, IconButton, Grid, Card, CardContent, CardMedia } from '@mui/material';
 import { Add, Remove } from '@mui/icons-material';
+// eslint-disable-next-line import/no-unresolved
 import fuxuanImage from '../images/fuxuan.jpg'
 
 type Dish = {
