@@ -3,6 +3,7 @@ import axios, { isAxiosError } from 'axios';
 import { LoginMessage } from 'Plugins/ChefAPI/LoginMessage';
 import { useHistory } from 'react-router'
 import { Alert, Box, Button, Container, TextField, Typography } from '@mui/material'
+import { useUser } from 'Pages/UserContext'
 
 
 export function CustomerLogin() {
@@ -10,6 +11,7 @@ export function CustomerLogin() {
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState(''); // State for error message
     const [successMessage, setSuccessMessage] = useState('');
+    const { setUsername } = useUser()
 
     const history=useHistory()
     const sendPostRequest = async (message: LoginMessage) => {
@@ -22,6 +24,7 @@ export function CustomerLogin() {
             if (response.data == 'Valid user') {
                 setSuccessMessage('登录成功，跳转中…');
                 setErrorMessage('');
+                setUsername(userName)
                 setTimeout(() => {
                     history.push('/place-order');
                 }, 1000);
@@ -92,10 +95,10 @@ export function CustomerLogin() {
                     登录
                 </Button>
                 <Box display="flex" mt={2} className="button-container">
-                    <Button variant="outlined" color="secondary" onClick={() => history.push("/customer-register")}>
+                    <Button color="secondary" onClick={() => history.push("/customer-register")}>
                         新用户注册
                     </Button>
-                    <Button variant="outlined" color="secondary" onClick={() => history.push("/")}>
+                    <Button color="secondary" onClick={() => history.push("/")}>
                         主页
                     </Button>
                 </Box>

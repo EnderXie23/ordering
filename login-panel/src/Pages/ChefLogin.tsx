@@ -92,10 +92,10 @@ export function ChefLogin() {
                     登录
                 </Button>
                 <Box display="flex" mt={2} className="button-container">
-                    <Button variant="outlined" color="secondary" onClick={() => history.push("/chef-register")}>
+                    <Button color="secondary" onClick={() => history.push("/chef-register")}>
                         新用户注册
                     </Button>
-                    <Button variant="outlined" color="secondary" onClick={() => history.push("/")}>
+                    <Button color="secondary" onClick={() => history.push("/")}>
                         主页
                     </Button>
                 </Box>

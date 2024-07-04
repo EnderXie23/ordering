@@ -1,7 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router';
-import { Alert, Box, Button, Container, TextField, Typography } from '@mui/material'
-import { spacing } from '@material-ui/system';
+import { Box, Button, Container, Typography } from '@mui/material'
 import './index.css'; // Importing the CSS file
 
 export function Main() {
