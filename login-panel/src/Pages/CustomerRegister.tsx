@@ -36,13 +36,13 @@ export function CustomerRegister() {
     return (
         <div className="App">
             <header className="App-header">
-                <h1>Customer Register</h1>
+                <h1>新顾客注册</h1>
             </header>
             <main>
                 <form onSubmit={(e) => e.preventDefault()}>
                     <div>
                         <label>
-                            Username:
+                            用户名：
                             <input
                                 type="text"
                                 value={userName}
@@ -52,7 +52,7 @@ export function CustomerRegister() {
                     </div>
                     <div>
                         <label>
-                            Password:
+                            密码：
                             <input
                                 type="password"
                                 value={password}
@@ -61,10 +61,13 @@ export function CustomerRegister() {
                         </label>
                     </div>
                     <button type="button" onClick={handleLogin}>
-                        Register
+                        注册
+                    </button>
+                    <button onClick={() => history.push("/customer-login")}>
+                        回到登录页面
                     </button>
                     <button onClick={() => history.push("/")}>
-                        Return
+                        主页
                     </button>
                 </form>
             </main>
