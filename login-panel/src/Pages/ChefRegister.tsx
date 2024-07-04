@@ -52,13 +52,18 @@ export function ChefRegister() {
     };
 
     const ChefRegister = () => {
-        if (password !== confirmPassword) {
-            setErrorMessage('密码和确认密码不匹配');
+        if (userName == '') {
+            setErrorMessage('用户名不能为空');
             setSuccessMessage('');
             return;
         }
-        if (password == '') {
+        if (password == '' || confirmPassword == '') {
             setErrorMessage('密码不能为空');
+            setSuccessMessage('');
+            return;
+        }
+        if (password !== confirmPassword) {
+            setErrorMessage('密码和确认密码不匹配');
             setSuccessMessage('');
             return;
         }
