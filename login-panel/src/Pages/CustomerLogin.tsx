@@ -3,7 +3,11 @@ import axios, { isAxiosError } from 'axios';
 import { LoginMessage } from 'Plugins/ChefAPI/LoginMessage';
 import { useHistory } from 'react-router'
 import { Alert, Box, Button, Container, TextField, Typography } from '@mui/material'
+<<<<<<< Updated upstream
 import { useUser } from 'Pages/UserContext'
+=======
+import { CustomerLoginMessage } from 'Plugins/CustomerAPI/CustomerLoginMessage'
+>>>>>>> Stashed changes
 
 
 export function CustomerLogin() {
@@ -14,7 +18,7 @@ export function CustomerLogin() {
     const { setUsername } = useUser()
 
     const history=useHistory()
-    const sendPostRequest = async (message: LoginMessage) => {
+    const sendPostRequest = async (message: CustomerLoginMessage) => {
         try {
             const response = await axios.post(message.getURL(), JSON.stringify(message), {
                 headers: { 'Content-Type': 'application/json' },
@@ -35,7 +39,6 @@ export function CustomerLogin() {
                 setSuccessMessage('');
                 setErrorMessage(response.data);
             }
-
         } catch (error) {
             if (isAxiosError(error)) {
                 if (error.response && error.response.data) {
@@ -64,7 +67,7 @@ export function CustomerLogin() {
     };
 
     const CustomerLogin = () => {
-        const loginMessage = new LoginMessage(userName, password);
+        const loginMessage = new CustomerLoginMessage(userName, password);
         sendPostRequest(loginMessage);
     };
 
@@ -89,11 +92,13 @@ export function CustomerLogin() {
                     fullWidth
                     margin="normal"
                 />
-                {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
-                {successMessage && <Alert severity="success">{successMessage}</Alert>}
-                <Button variant="contained" color="primary" onClick={CustomerLogin} fullWidth>
-                    登录
-                </Button>
+                <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column'}}>
+                    {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+                    {successMessage && <Alert severity="success">{successMessage}</Alert>}
+                    <Button variant="contained" color="primary" onClick={CustomerLogin} fullWidth>
+                        登录
+                    </Button>
+                </Box>
                 <Box display="flex" mt={2} className="button-container">
                     <Button color="secondary" onClick={() => history.push("/customer-register")}>
                         新用户注册

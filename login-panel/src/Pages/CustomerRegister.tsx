@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import axios, { isAxiosError } from 'axios';
-import { RegisterMessage } from 'Plugins/ChefAPI/RegisterMessage';
 import { useHistory } from 'react-router'
 import { Container, TextField, Button, Typography, Alert, Box } from '@mui/material';
+import { CustomerRegisterMessage } from 'Plugins/CustomerAPI/CustomerRegisterMessage'
 
 export function CustomerRegister() {
     const [userName, setUserName] = useState('');
@@ -12,7 +12,7 @@ export function CustomerRegister() {
     const [successMessage, setSuccessMessage] = useState('');
 
     const history=useHistory()
-    const sendPostRequest = async (message: RegisterMessage) => {
+    const sendPostRequest = async (message: CustomerRegisterMessage) => {
         try {
             const response = await axios.post(message.getURL(), JSON.stringify(message), {
                 headers: { 'Content-Type': 'application/json' },
@@ -68,7 +68,7 @@ export function CustomerRegister() {
             return;
         }
 
-        const registerMessage = new RegisterMessage(userName, password);
+        const registerMessage = new CustomerRegisterMessage(userName, password);
         sendPostRequest(registerMessage);
     };
 

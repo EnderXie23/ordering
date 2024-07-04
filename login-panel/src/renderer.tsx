@@ -7,6 +7,7 @@ import { ChefRegister } from 'Pages/ChefRegister'
 import { CustomerLogin } from 'Pages/CustomerLogin'
 import { CustomerRegister } from 'Pages/CustomerRegister'
 import OrderingPage from 'Pages/OrderingPage'
+import ChefPage from 'Pages/ChefPage'
 import { UserProvider } from 'Pages/UserContext'
 
 const Layout = () => {
@@ -20,6 +21,9 @@ const Layout = () => {
                 <Route path="/customer-register" exact component={CustomerRegister} />
                 <Route path="/place-order" exact>
                     <OrderingPage/>
+                </Route>
+                <Route path="/chef" exact>
+                    <ChefPage/>
                 </Route>
             </Switch>
         </HashRouter>

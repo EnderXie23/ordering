@@ -23,7 +23,7 @@ export function ChefLogin() {
                 setSuccessMessage('登录成功，跳转中…');
                 setErrorMessage('');
                 setTimeout(() => {
-                    history.push('/');
+                    history.push('/chef');
                 }, 1000);
             } else if (response.data == 'Invalid user') {
                 setSuccessMessage('');
@@ -86,11 +86,13 @@ export function ChefLogin() {
                     fullWidth
                     margin="normal"
                 />
-                {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
-                {successMessage && <Alert severity="success">{successMessage}</Alert>}
-                <Button variant="contained" color="primary" onClick={ChefLogin} fullWidth>
-                    登录
-                </Button>
+                <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column'}}>
+                    {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+                    {successMessage && <Alert severity="success">{successMessage}</Alert>}
+                    <Button variant="contained" color="primary" onClick={ChefLogin} fullWidth>
+                        登录
+                    </Button>
+                </Box>
                 <Box display="flex" mt={2} className="button-container">
                     <Button color="secondary" onClick={() => history.push("/chef-register")}>
                         新用户注册
