@@ -7,13 +7,14 @@ type Dish = {
     photoUrl: string;
 };
 
-type Props = {
-    customerName: string;
-    dishes: Dish[];
-    onSubmit: (customerName: string, orders: [string, string][]) => void;
-};
+const dishes = [
+    { name: 'Spaghetti Carbonara', photoUrl: '/images/spaghetti_carbonara.jpg' },
+    { name: 'Margherita Pizza', photoUrl: '/images/margherita_pizza.jpg' },
+    { name: 'Caesar Salad', photoUrl: '/images/caesar_salad.jpg' },
+    { name: 'Tiramisu', photoUrl: '/images/tiramisu.jpg' },
+];
 
-const OrderingPage: React.FC<Props> = ({ dishes, onSubmit }) => {
+const OrderingPage: React.FC = () => {
     const {username} = useUser();
     const customerName = username
     const history = useHistory();
@@ -29,7 +30,8 @@ const OrderingPage: React.FC<Props> = ({ dishes, onSubmit }) => {
 
     const handleSubmit = () => {
         const orders = Object.entries(orderCounts).map(([dishName, count]) => [dishName, count.toString()])
-        onSubmit(customerName, orders as [string, string][])
+        console.log('Customer:', customerName);
+        console.log('Orders:', orders);
     }
 
     return (
