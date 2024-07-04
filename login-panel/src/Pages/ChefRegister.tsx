@@ -59,6 +59,11 @@ export function ChefRegister() {
             setSuccessMessage('');
             return;
         }
+        if (password == '') {
+            setErrorMessage('密码不能为空');
+            setSuccessMessage('');
+            return;
+        }
 
         const registerMessage = new RegisterMessage(userName, password);
         sendPostRequest(registerMessage);
