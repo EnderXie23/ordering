@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import axios, { isAxiosError } from 'axios';
 import { RegisterMessage } from 'Plugins/ChefAPI/RegisterMessage';
 import { useHistory } from 'react-router'
-import { CssBaseline, Container, TextField, Button, Typography, Alert, Box } from '@mui/material';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import './index.css'; // Importing the CSS file
+import { Container, TextField, Button, Typography, Alert, Box } from '@mui/material';
 
 export function ChefRegister() {
     const [userName, setUserName] = useState('');
@@ -25,12 +23,12 @@ export function ChefRegister() {
             setErrorMessage('');
             setTimeout(() => {
                 history.push('/chef-login');
-            }, 2000);
+            }, 1000);
         } catch (error) {
             if (isAxiosError(error)) {
                 if (error.response && error.response.data) {
                     console.error('Error sending request:', error.response.data);
-                    setErrorMessage(extractErrorBody(error.response.data.error) || '注册失败');
+                    setErrorMessage('注册失败：' + extractErrorBody(error.response.data.error) || '注册失败');
                     setSuccessMessage('');
                 } else {
                     console.error('Error sending request:', error.message);
@@ -39,7 +37,7 @@ export function ChefRegister() {
                 }
             } else {
                 console.error('Unexpected error:', error);
-                setErrorMessage('Unexpected error occurred');
+                setErrorMessage('注册失败：未知错误');
                 setSuccessMessage('');
             }
         }
@@ -68,14 +66,6 @@ export function ChefRegister() {
         const registerMessage = new RegisterMessage(userName, password);
         sendPostRequest(registerMessage);
     };
-
-    const theme = createTheme({
-        palette: {
-            background: {
-                default: '#e0f7fa', // Choose your desired color
-            },
-        },
-    });
 
     return (
         <Container maxWidth="sm" className="container">

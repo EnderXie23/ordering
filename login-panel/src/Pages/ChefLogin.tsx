@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios, { isAxiosError } from 'axios';
 import { LoginMessage } from 'Plugins/ChefAPI/LoginMessage';
 import { useHistory } from 'react-router'
+import { Alert, Box, Button, Container, TextField, Typography } from '@mui/material'
 
 
 export function ChefLogin() {
@@ -19,11 +20,17 @@ export function ChefLogin() {
             console.log('Response status:', response.status);
             console.log('Response body:', response.data);
             if (response.data == 'Valid user') {
-                setSuccessMessage('注册成功，跳转中…');
+                setSuccessMessage('登录成功，跳转中…');
                 setErrorMessage('');
                 setTimeout(() => {
                     history.push('/');
-                }, 2000);
+                }, 1000);
+            } else if (response.data == 'Invalid user') {
+                setSuccessMessage('');
+                setErrorMessage('登录失败：用户名或密码错误');
+            } else {
+                setSuccessMessage('');
+                setErrorMessage(response.data);
             }
 
         } catch (error) {
@@ -59,43 +66,40 @@ export function ChefLogin() {
     };
 
     return (
-        <div className="App">
-            <header className="App-header">
-                <h1>厨师登录</h1>
-            </header>
-            <main>
-                <form onSubmit={(e) => e.preventDefault()}>
-                    <div>
-                        <label>
-                            用户名：
-                            <input
-                                type="text"
-                                value={userName}
-                                onChange={(e) => setUserName(e.target.value)}
-                            />
-                        </label>
-                    </div>
-                    <div>
-                        <label>
-                            密码：
-                            <input
-                                type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                        </label>
-                    </div>
-                    <button type="button" onClick={ChefLogin}>
-                        登录
-                    </button>
-                    <button onClick={() => history.push("/chef-register")}>
+        <Container maxWidth="sm" className="container">
+            <Typography variant="h4" component="h1" align="center" gutterBottom>
+                厨师登录
+            </Typography>
+            <form onSubmit={(e) => e.preventDefault()}>
+                <TextField
+                    label="用户名"
+                    value={userName}
+                    onChange={(e) => setUserName(e.target.value)}
+                    fullWidth
+                    margin="normal"
+                />
+                <TextField
+                    label="密码"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    fullWidth
+                    margin="normal"
+                />
+                {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+                {successMessage && <Alert severity="success">{successMessage}</Alert>}
+                <Button variant="contained" color="primary" onClick={ChefLogin} fullWidth>
+                    登录
+                </Button>
+                <Box display="flex" mt={2} className="button-container">
+                    <Button variant="outlined" color="secondary" onClick={() => history.push("/chef-register")}>
                         新用户注册
-                    </button>
-                    <button onClick={() => history.push("/")}>
+                    </Button>
+                    <Button variant="outlined" color="secondary" onClick={() => history.push("/")}>
                         主页
-                    </button>
-                </form>
-            </main>
-        </div>
+                    </Button>
+                </Box>
+            </form>
+        </Container>
     );
 }

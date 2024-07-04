@@ -41,4 +41,5 @@ body, html {
     display: flex;
     justify-content: space-between;
     margin-top: 16px; /* 2 * theme.spacing(2) */
+    margin-bottom: 20px;
 }
