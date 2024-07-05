@@ -20,7 +20,6 @@ const dishes: Dish[] = [
 ];
 
 
-
 const OrderingPage: React.FC = () => {
     const { username } = useUser();
     const customerName = username;
@@ -29,6 +28,8 @@ const OrderingPage: React.FC = () => {
     const [orderCounts, setOrderCounts] = useState<{ [key: string]: number }>({});
 
     const handleCountChange = (dishName: string, count: number) => {
+        if (count < 0)
+            return;
         setOrderCounts({
             ...orderCounts,
             [dishName]: count,
@@ -65,7 +66,7 @@ const OrderingPage: React.FC = () => {
             <Grid container spacing={4}>
                 {dishes.map((dish) => (
                     <Grid item xs={12} sm={6} md={4} key={dish.name}>
-                        <Card>
+                        <Card style={{maxWidth: '250px', height: '300px'}}>
                             <CardMedia component="img" height="140" src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.jocooks.com%2Frecipes%2Fmargherita-pizza%2F&psig=AOvVaw205TXyqzfrJYsSs92Jahk7&ust=1720232586106000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCPiL9fbrjocDFQAAAAAdAAAAABAE" alt={dish.name} />
                             <CardContent>
                                 <Typography variant="h5">{dish.name}</Typography>
@@ -83,13 +84,19 @@ const OrderingPage: React.FC = () => {
                     </Grid>
                 ))}
             </Grid>
-            <Box mt={4}>
-                <Button variant="contained" color="primary" onClick={handleSubmit}>
-                    提交订单
-                </Button>
-                <Button color="secondary" onClick={() => {setTimeout(() => {history.push('/')}, 500)}}>
-                    返回主页
-                </Button>
+            <Box
+                display = "flex"
+                justifyContent="center"
+                alignItems="center"
+            >
+                <Box mt={4}>
+                    <Button variant="contained" color="primary" onClick={handleSubmit}>
+                        提交订单
+                    </Button>
+                    <Button color="secondary" onClick={() => {setTimeout(() => {history.push('/')}, 500)}}>
+                        返回主页
+                    </Button>
+                </Box>
             </Box>
         </Container>
     );

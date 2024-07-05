@@ -9,18 +9,18 @@ export function Main() {
     return (
         <Container maxWidth="sm" className="container">
             <Typography variant="h2" component="h1" align="center" gutterBottom>
-                丑团外卖
+                米麒麟厨房
             </Typography>
             <form onSubmit={(e) => e.preventDefault()}>
                 <Box className="button-container">
                     <Button variant="contained" color="primary" className="button-spacing"
-                            onClick={() => history.push("/customer-login")} fullWidth >
+                            onClick={() => {setTimeout(() => {history.push('/customer-login')}, 500)}} fullWidth >
                         我是顾客
                     </Button>
                 </Box>
                 <Box className="button-container">
                     <Button variant="contained" color="primary" className="custom-button button-spacing"
-                            onClick={() => history.push("/chef-login")} fullWidth>
+                            onClick={() => {setTimeout(() => {history.push('/chef-login')}, 500)}} fullWidth>
                         我是厨师
                     </Button>
                 </Box>
