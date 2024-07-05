@@ -1,49 +1,64 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router'
-import { Button, Card, CardContent, Typography, List, ListItem, ListItemText, Container } from '@mui/material';
+import { Grid, Button, Card, CardContent, Typography, ListItemText, Container, Box } from '@mui/material'
 import axios from 'axios'
 import { QueryMessage } from 'Plugins/ChefAPI/QueryMessage'
+import { CompleteMessage } from 'Plugins/ChefAPI/CompleteMessage'
 
 interface Order {
     id: string;
     customerName: string;
-    items: { dishName: string, quantity: number }[];
+    item: { dishName: string, quantity: number };
 }
 
 function parseOrders(input: string): Order[] {
     const strings = input.split('\n');
-    const ordersMap: { [customerName: string]: { dishName: string, quantity: number }[] } = {};
-
+    const orders: Order[] = [];
     let currentCustomer: string = '';
 
-    strings.forEach(str => {
+    strings.forEach((str, index) => {
         if (str.startsWith('Customer: ')) {
             currentCustomer = str.replace('Customer: ', '').trim();
-            if (currentCustomer == '')
-                currentCustomer = 'Anonymous'
-            if (!ordersMap[currentCustomer]) {
-                ordersMap[currentCustomer] = [];
-            }
+            if (currentCustomer === '') currentCustomer = 'Anonymous';
         } else if (str.startsWith('Dish: ') && currentCustomer) {
             const dish = str.replace('Dish: ', '').trim();
-            const quantityStr = strings[strings.indexOf(str) + 1];
+            const quantityStr = strings[index + 1];
             if (quantityStr.startsWith('Order Count: ')) {
                 const quantity = parseInt(quantityStr.replace('Order Count: ', '').trim());
-                ordersMap[currentCustomer].push({ dishName: dish, quantity: quantity });
+                orders.push({
+                    id: (orders.length + 1).toString(),
+                    customerName: currentCustomer,
+                    item: { dishName: dish, quantity: quantity }
+                });
             }
         }
     });
 
-    return Object.entries(ordersMap).map(([customerName, items], index) => ({
-        id: (index + 1).toString(),
-        customerName: customerName,
-        items: items
-    }));
+    return orders;
 }
 
 const ChefPage: React.FC = () => {
     const history = useHistory()
     const [orders, setOrders] = useState<Order[]>([])
+
+    const sendCompleteRequest = async (message: CompleteMessage) => {
+        try {
+            const response = await axios.post(message.getURL(), JSON.stringify(message), {
+                headers: { 'Content-Type': 'application/json' },
+            })
+            console.log(response.status)
+            console.log(response.data)
+            handleQuery()
+        } catch (error) {
+            console.error('Error completing order:', error)
+        }
+    }
+
+    const handleComplete = (order: Order, state: string) => {
+        const completeMessage = new CompleteMessage(`${order.customerName}\n${order.item.dishName}\n${order.item.quantity}\n`+state)
+        console.log('Complete order:', order)
+        sendCompleteRequest(completeMessage)
+    }
 
     const sendQueryRequest = async (message: QueryMessage) => {
         try {
@@ -72,28 +87,44 @@ const ChefPage: React.FC = () => {
             <Typography variant="h4" gutterBottom>
                 Chef Page
             </Typography>
-            {orders.map(order => (
-                <Card key={order.id} style={{ marginBottom: '20px' }}>
-                    <CardContent>
-                        <Typography variant="h5">
-                            Order for {order.customerName}
-                        </Typography>
-                        <List>
-                            {order.items.map((item, index) => (
-                                <ListItem key={index}>
-                                    <ListItemText primary={`${item.dishName} x ${item.quantity}`} />
-                                </ListItem>
-                            ))}
-                        </List>
-                    </CardContent>
-                </Card>
-            ))}
-            <Button variant="contained" color="primary" onClick={handleQuery} style={{ marginBottom: '20px' }}>
-                刷新
-            </Button>
-            <Button variant="contained" color="primary" onClick={() => {setTimeout(() => {history.push('/')}, 500)}} style={{ marginBottom: '20px' }}>
-                返回主页
-            </Button>
+            <Grid container spacing={2}>
+                {orders.map(order => (
+                    <Grid item xs={12} sm={6} md={3} key={order.id} style={{minWidth: '250px', display: 'flex' }}>
+                        <Card>
+                            <CardContent>
+                                <Typography variant="h5">
+                                    {order.customerName}的点餐：
+                                </Typography>
+                                <ListItemText primary={`${order.item.dishName} x ${order.item.quantity}`} />
+                            </CardContent>
+                            <Grid container spacing={1} justifyContent="center" alignItems="center">
+                                <Grid item>
+                                    <Button variant="contained" color="primary" onClick={() => handleComplete(order, "1")} style={{ marginBottom: '20px' }}>
+                                        完成
+                                    </Button>
+                                </Grid>
+                                <Grid item>
+                                    <Button variant="contained"     onClick={() => handleComplete(order, "0")} style={{ backgroundColor: '#ff0000', marginBottom: '20px'}}>
+                                        拒绝
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </Card>
+                    </Grid>
+                ))}
+            </Grid>
+            <Box
+                display = "flex"
+                justifyContent="center"
+                alignItems="center"
+            >
+                <Button variant="contained" color="primary" onClick={handleQuery} style={{ marginBottom: '20px' }}>
+                    刷新
+                </Button>
+                <Button variant="contained" color="primary" onClick={() => {setTimeout(() => {history.push('/')}, 500)}} style={{ marginBottom: '20px' }}>
+                    返回主页
+                </Button>
+            </Box>
         </Container>
     )
 }

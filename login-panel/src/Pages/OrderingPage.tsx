@@ -89,14 +89,12 @@ const OrderingPage: React.FC = () => {
                 justifyContent="center"
                 alignItems="center"
             >
-                <Box mt={4}>
-                    <Button variant="contained" color="primary" onClick={handleSubmit}>
-                        提交订单
-                    </Button>
-                    <Button color="secondary" onClick={() => {setTimeout(() => {history.push('/')}, 500)}}>
-                        返回主页
-                    </Button>
-                </Box>
+                <Button variant="contained" color="primary" onClick={handleSubmit}>
+                    提交订单
+                </Button>
+                <Button color="secondary" onClick={() => {setTimeout(() => {history.push('/')}, 500)}}>
+                    返回主页
+                </Button>
             </Box>
         </Container>
     );
