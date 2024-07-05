@@ -89,10 +89,10 @@ const ChefPage: React.FC = () => {
                 </Card>
             ))}
             <Button variant="contained" color="primary" onClick={handleQuery} style={{ marginBottom: '20px' }}>
-                Query
+                刷新
             </Button>
-            <Button variant="contained" color="primary" onClick={() => history.push('/')} style={{ marginBottom: '20px' }}>
-                Return
+            <Button variant="contained" color="primary" onClick={() => {setTimeout(() => {history.push('/')}, 500)}} style={{ marginBottom: '20px' }}>
+                返回主页
             </Button>
         </Container>
     )

@@ -94,10 +94,10 @@ export function ChefLogin() {
                     </Button>
                 </Box>
                 <Box display="flex" mt={2} className="button-container">
-                    <Button color="secondary" onClick={() => history.push("/chef-register")}>
+                    <Button color="secondary" onClick={() => {setTimeout(() => {history.push('/chef-register')}, 500)}}>
                         新用户注册
                     </Button>
-                    <Button color="secondary" onClick={() => history.push("/")}>
+                    <Button color="secondary" onClick={() => {setTimeout(() => {history.push('/')}, 500)}}>
                         主页
                     </Button>
                 </Box>

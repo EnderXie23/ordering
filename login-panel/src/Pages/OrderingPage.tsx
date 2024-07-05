@@ -6,7 +6,7 @@ import axios from 'axios'
 import { Container, Typography, Box, Button, IconButton, Grid, Card, CardContent, CardMedia } from '@mui/material';
 import { Add, Remove } from '@mui/icons-material';
 // eslint-disable-next-line import/no-unresolved
-import fuxuanImage from '../images/fuxuan.jpg'
+import fuxuanImage from 'Images/fuxuan.jpg';
 
 type Dish = {
     name: string;
@@ -18,6 +18,8 @@ const dishes: Dish[] = [
     { name: 'Caesar Salad'},
     { name: 'Tiramisu'},
 ];
+
+
 
 const OrderingPage: React.FC = () => {
     const { username } = useUser();
@@ -64,7 +66,7 @@ const OrderingPage: React.FC = () => {
                 {dishes.map((dish) => (
                     <Grid item xs={12} sm={6} md={4} key={dish.name}>
                         <Card>
-                            <CardMedia component="img" height="140" image={fuxuanImage} alt={dish.name} />
+                            <CardMedia component="img" height="140" src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.jocooks.com%2Frecipes%2Fmargherita-pizza%2F&psig=AOvVaw205TXyqzfrJYsSs92Jahk7&ust=1720232586106000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCPiL9fbrjocDFQAAAAAdAAAAABAE" alt={dish.name} />
                             <CardContent>
                                 <Typography variant="h5">{dish.name}</Typography>
                                 <Box display="flex" alignItems="center">
@@ -85,7 +87,7 @@ const OrderingPage: React.FC = () => {
                 <Button variant="contained" color="primary" onClick={handleSubmit}>
                     提交订单
                 </Button>
-                <Button color="secondary" onClick={() => history.push('/')}>
+                <Button color="secondary" onClick={() => {setTimeout(() => {history.push('/')}, 500)}}>
                     返回主页
                 </Button>
             </Box>
