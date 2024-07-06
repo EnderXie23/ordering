@@ -1,15 +1,20 @@
 import React, { useState } from 'react';
 import axios, { isAxiosError } from 'axios';
 import { useHistory } from 'react-router'
-import { Container, TextField, Button, Typography, Alert, Box } from '@mui/material';
+import { Container, TextField, Button, Typography, Alert, Box, IconButton, InputAdornment } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { CustomerRegisterMessage } from 'Plugins/CustomerAPI/CustomerRegisterMessage'
 
 export function CustomerRegister() {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState(''); // New state for confirm password
-    const [errorMessage, setErrorMessage] = useState(''); // State for error message
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [nickname, setNickname] = useState('');
+    const [phone, setPhone] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+    const [showPassword, setShowPassword] = useState(false); // State for password visibility
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false); // State for confirm password visibility
 
     const history=useHistory()
     const sendPostRequest = async (message: CustomerRegisterMessage) => {
@@ -22,7 +27,7 @@ export function CustomerRegister() {
             setSuccessMessage('注册成功，跳转至登录页…');
             setErrorMessage('');
             setTimeout(() => {
-                history.push('/chef-login');
+                history.push('/customer-login');
             }, 1000);
         } catch (error) {
             if (isAxiosError(error)) {
@@ -41,6 +46,11 @@ export function CustomerRegister() {
                 setSuccessMessage('');
             }
         }
+    };
+
+    const validatePhoneNumber = (phone: string) => {
+        const phoneRegex = /^[1-9]\d{9,14}$/; // Simple regex for phone number validation
+        return phoneRegex.test(phone);
     };
 
     const extractErrorBody = (errorData: any) => {
@@ -62,13 +72,18 @@ export function CustomerRegister() {
             setSuccessMessage('');
             return;
         }
+        if (!validatePhoneNumber(phone)) {
+            setErrorMessage('电话号码格式不正确');
+            setSuccessMessage('');
+            return;
+        }
         if (password !== confirmPassword) {
             setErrorMessage('密码和确认密码不匹配');
             setSuccessMessage('');
             return;
         }
 
-        const registerMessage = new CustomerRegisterMessage(userName, password);
+        const registerMessage = new CustomerRegisterMessage(userName, password, nickname, phone);
         sendPostRequest(registerMessage);
     };
 
@@ -86,20 +101,60 @@ export function CustomerRegister() {
                     margin="normal"
                 />
                 <TextField
-                    label="密码"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    label="昵称"
+                    value={nickname}
+                    onChange={(e) => setNickname(e.target.value)}
                     fullWidth
                     margin="normal"
                 />
                 <TextField
+                    label="电话"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    fullWidth
+                    margin="normal"
+                />
+                <TextField
+                    label="密码"
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    fullWidth
+                    margin="normal"
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    edge="end"
+                                >
+                                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
+                />
+                <TextField
                     label="确认密码"
-                    type="password"
+                    type={showConfirmPassword ? 'text' : 'password'}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     fullWidth
                     margin="normal"
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle confirm password visibility"
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    edge="end"
+                                >
+                                    {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
                 />
                 {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
                 {successMessage && <Alert severity="success">{successMessage}</Alert>}
@@ -107,10 +162,10 @@ export function CustomerRegister() {
                     注册
                 </Button>
                 <Box display="flex" mt={2} className="button-container">
-                    <Button color="secondary" onClick={() => {setTimeout(() => {history.push('/customer-login')}, 500)}}>
+                    <Button color="secondary" onClick={() => {history.push('/customer-login')}}>
                         返回登录页
                     </Button>
-                    <Button color="secondary" onClick={() => {setTimeout(() => {history.push('/')}, 500)}}>
+                    <Button color="secondary" onClick={() => {history.push('/')}}>
                         主页
                     </Button>
                 </Box>

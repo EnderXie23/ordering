@@ -14,13 +14,15 @@ export function Main() {
             <form onSubmit={(e) => e.preventDefault()}>
                 <Box className="button-container">
                     <Button variant="contained" color="primary" className="button-spacing"
-                            onClick={() => {setTimeout(() => {history.push('/customer-login')}, 500)}} fullWidth >
+                            //onClick={() => {setTimeout(() => {history.push('/customer-login')}, 500)}} fullWidth >
+                            onClick={() => {history.push('/customer-login')}} fullWidth >
                         我是顾客
                     </Button>
                 </Box>
                 <Box className="button-container">
                     <Button variant="contained" color="primary" className="custom-button button-spacing"
-                            onClick={() => {setTimeout(() => {history.push('/chef-login')}, 500)}} fullWidth>
+                            //onClick={() => {setTimeout(() => {history.push('/chef-login')}, 500)}} fullWidth>
+                            onClick={() => {history.push('/chef-login')}} fullWidth >
                         我是厨师
                     </Button>
                 </Box>
