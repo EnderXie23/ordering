@@ -11,6 +11,7 @@ interface Order {
     item: { dishName: string, quantity: number };
 }
 
+//parse the order to Order type list
 function parseOrders(input: string): Order[] {
     const strings = input.split('\n');
     const orders: Order[] = [];
@@ -48,16 +49,27 @@ const ChefPage: React.FC = () => {
             })
             console.log(response.status)
             console.log(response.data)
-            handleQuery()
+            await handleQuery()
         } catch (error) {
             console.error('Error completing order:', error)
         }
     }
 
-    const handleComplete = (order: Order, state: string) => {
-        const completeMessage = new CompleteMessage(`${order.customerName}\n${order.item.dishName}\n${order.item.quantity}\n`+state)
-        console.log('Complete order:', order)
-        sendCompleteRequest(completeMessage)
+    const handleComplete = async (order: Order, state: string) => {
+        const completeMessage = new CompleteMessage(`${order.customerName}\n${order.item.dishName}\n${order.item.quantity}\n` + state)
+        if (state === "0") {
+            console.log('Reject order:', order)
+        } else if (state === "1") {
+            console.log('Complete order:', order)
+        } else {
+            console.error('Invalid State')
+            return
+        }
+        try {
+            await sendCompleteRequest(completeMessage);
+        } catch (error) {
+            console.error('Error in handleComplete:', error);
+        }
     }
 
     const sendQueryRequest = async (message: QueryMessage) => {
@@ -73,13 +85,23 @@ const ChefPage: React.FC = () => {
         }
     }
 
-    const handleQuery = () =>{
+    const handleQuery = async () => {
         const queryMessage = new QueryMessage('chef')
-        sendQueryRequest(queryMessage)
+        try {
+            await sendQueryRequest(queryMessage); // Added await
+        } catch (error) {
+            console.error('Error in handleQuery:', error); // Added error handling
+        }
     }
 
     useEffect(() => {
         handleQuery()
+            .then(() => {
+            // Handle any post-request actions here
+        })
+            .catch(error => {
+                console.error('Error in handleComplete:', error); // Added error handling
+            });
     }, []);
 
     return (
