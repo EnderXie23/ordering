@@ -9,7 +9,6 @@ import { CustomerLoginMessage } from 'Plugins/CustomerAPI/CustomerLoginMessage'
 export function CustomerLogin() {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
-    const [nickname, setNickname] = useState('');
     const [errorMessage, setErrorMessage] = useState(''); // State for error message
     const [successMessage, setSuccessMessage] = useState('');
     const [showPassword, setShowPassword] = useState(false); // State for password
@@ -26,7 +25,6 @@ export function CustomerLogin() {
             if (response.data[0] == 'Valid user') {
                 setSuccessMessage('登录成功，跳转中…');
                 setErrorMessage('');
-                setNickname(response.data[1])
                 setNickName(response.data[1])
                 setTimeout(() => {
                     history.push('/place-order');
