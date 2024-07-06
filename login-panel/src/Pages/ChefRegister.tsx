@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import axios, { isAxiosError } from 'axios';
 import { RegisterMessage } from 'Plugins/ChefAPI/RegisterMessage';
 import { useHistory } from 'react-router'
-import { Container, TextField, Button, Typography, Alert, Box } from '@mui/material';
+import { Container, TextField, Button, Typography, Alert, Box, IconButton, InputAdornment } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 export function ChefRegister() {
     const [userName, setUserName] = useState('');
@@ -10,6 +11,8 @@ export function ChefRegister() {
     const [confirmPassword, setConfirmPassword] = useState(''); // New state for confirm password
     const [errorMessage, setErrorMessage] = useState(''); // State for error message
     const [successMessage, setSuccessMessage] = useState('');
+    const [showPassword, setShowPassword] = useState(false); // State for password visibility
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false); // State for confirm password visibility
 
     const history=useHistory()
     const sendPostRequest = async (message: RegisterMessage) => {
@@ -87,19 +90,45 @@ export function ChefRegister() {
                 />
                 <TextField
                     label="密码"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     fullWidth
                     margin="normal"
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    edge="end"
+                                >
+                                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
                 />
                 <TextField
                     label="确认密码"
-                    type="password"
+                    type={showConfirmPassword ? 'text' : 'password'}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     fullWidth
                     margin="normal"
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle confirm password visibility"
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    edge="end"
+                                >
+                                    {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
                 />
                 {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
                 {successMessage && <Alert severity="success">{successMessage}</Alert>}

@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import axios, { isAxiosError } from 'axios';
 import { LoginMessage } from 'Plugins/ChefAPI/LoginMessage';
 import { useHistory } from 'react-router'
-import { Alert, Box, Button, Container, TextField, Typography } from '@mui/material'
+import { Container, TextField, Button, Typography, Alert, Box, IconButton, InputAdornment } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 
 export function ChefLogin() {
@@ -10,6 +11,7 @@ export function ChefLogin() {
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState(''); // State for error message
     const [successMessage, setSuccessMessage] = useState('');
+    const [showPassword, setShowPassword] = useState(false); // State for password
 
     const history=useHistory()
     const sendPostRequest = async (message: LoginMessage) => {
@@ -80,11 +82,24 @@ export function ChefLogin() {
                 />
                 <TextField
                     label="密码"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     fullWidth
                     margin="normal"
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    edge="end"
+                                >
+                                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
                 />
                 <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column'}}>
                     {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
