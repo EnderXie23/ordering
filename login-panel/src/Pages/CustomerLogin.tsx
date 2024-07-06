@@ -9,10 +9,11 @@ import { CustomerLoginMessage } from 'Plugins/CustomerAPI/CustomerLoginMessage'
 export function CustomerLogin() {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
+    const [nickname, setNickname] = useState('');
     const [errorMessage, setErrorMessage] = useState(''); // State for error message
     const [successMessage, setSuccessMessage] = useState('');
     const [showPassword, setShowPassword] = useState(false); // State for password
-    const { setUsername } = useUser()
+    const { setNickName } = useUser()
 
     const history=useHistory()
     const sendPostRequest = async (message: CustomerLoginMessage) => {
@@ -22,14 +23,15 @@ export function CustomerLogin() {
             });
             console.log('Response status:', response.status);
             console.log('Response body:', response.data);
-            if (response.data == 'Valid user') {
+            if (response.data[0] == 'Valid user') {
                 setSuccessMessage('登录成功，跳转中…');
                 setErrorMessage('');
-                setUsername(userName)
+                setNickname(response.data[1])
+                setNickName(response.data[1])
                 setTimeout(() => {
                     history.push('/place-order');
                 }, 1000);
-            } else if (response.data == 'Invalid user') {
+            } else if (response.data[0] == 'Invalid user') {
                 setSuccessMessage('');
                 setErrorMessage('登录失败：用户名或密码错误');
             } else {

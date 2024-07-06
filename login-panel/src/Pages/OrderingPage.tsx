@@ -21,8 +21,8 @@ const dishes: Dish[] = [
 
 
 const OrderingPage: React.FC = () => {
-    const { username } = useUser();
-    const customerName = username;
+    const { nickname } = useUser();
+    const customerName = nickname;
     const history = useHistory();
 
     const [orderCounts, setOrderCounts] = useState<{ [key: string]: number }>({});
@@ -92,7 +92,7 @@ const OrderingPage: React.FC = () => {
                 <Button variant="contained" color="primary" onClick={handleSubmit}>
                     提交订单
                 </Button>
-                <Button color="secondary" onClick={() => {setTimeout(() => {history.push('/')}, 500)}}>
+                <Button color="secondary" onClick={() => {history.push('/')}}>
                     返回主页
                 </Button>
             </Box>
