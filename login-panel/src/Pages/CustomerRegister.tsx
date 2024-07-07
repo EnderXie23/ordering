@@ -67,6 +67,11 @@ export function CustomerRegister() {
             setSuccessMessage('');
             return;
         }
+        if (nickname == '') {
+            setErrorMessage('昵称不能为空');
+            setSuccessMessage('');
+            return;
+        }
         if (password == '' || confirmPassword == '') {
             setErrorMessage('密码不能为空');
             setSuccessMessage('');
