@@ -98,8 +98,8 @@ const ChefPage: React.FC = () => {
     }
 
     const handleComplete = async (order: Order, state: string) => {
-        const completeMessage = new CompleteMessage(`${order.customerName}\n${order.item.dishName}\n${order.item.quantity}\n` + state)
-        const logMessage = new LogMessage(chefName+`\n${order.customerName}\n${order.item.dishName}\n${order.item.quantity}\n` + state)
+        const completeMessage = new CompleteMessage(`${order.customer}\n${order.dish}\n${order.quantity}\n` + state)
+        const logMessage = new LogMessage(chefName+`\n${order.customer}\n${order.dish}\n${order.quantity}\n` + state)
         if (state === "0") {
             console.log('Reject order:', order)
         } else if (state === "1") {

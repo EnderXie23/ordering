@@ -37,7 +37,11 @@ const Layout = () => {
                         <CustomerRegister />
                     </UserProvider>
                 </Route>
-                <Route path="/place-order" exact component={OrderingPage} />
+                <Route path="/place-order" exact>
+                    <UserProvider> {/* Wrap CustomerRegister with CustomerProvider if needed */}
+                        <OrderingPage />
+                    </UserProvider>
+                </Route>
                 <Route path="/chef" exact>
                     <ChefProvider> {/* Wrap ChefPage with ChefProvider */}
                         <ChefPage />
