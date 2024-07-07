@@ -3,14 +3,14 @@ import axios, { isAxiosError } from 'axios';
 import { LoginMessage } from 'Plugins/ChefAPI/LoginMessage';
 import { useHistory } from 'react-router'
 import { Alert, Box, Button, Container, TextField, Typography } from '@mui/material'
-
+import { useChef } from './ChefContext';
 
 export function ChefLogin() {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState(''); // State for error message
     const [successMessage, setSuccessMessage] = useState('');
-
+    const { setChefName } = useChef();
     const history=useHistory()
     const sendPostRequest = async (message: LoginMessage) => {
         try {
@@ -22,6 +22,7 @@ export function ChefLogin() {
             if (response.data == 'Valid user') {
                 setSuccessMessage('登录成功，跳转中…');
                 setErrorMessage('');
+                setChefName(message.userName);
                 setTimeout(() => {
                     history.push('/chef');
                 }, 1000);
@@ -60,7 +61,7 @@ export function ChefLogin() {
         return JSON.stringify(errorData);
     };
 
-    const ChefLogin = () => {
+    const HandleLogin = () => {
         const loginMessage = new LoginMessage(userName, password);
         sendPostRequest(loginMessage);
     };
@@ -89,7 +90,7 @@ export function ChefLogin() {
                 <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column'}}>
                     {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
                     {successMessage && <Alert severity="success">{successMessage}</Alert>}
-                    <Button variant="contained" color="primary" onClick={ChefLogin} fullWidth>
+                    <Button variant="contained" color="primary" onClick={HandleLogin} fullWidth>
                         登录
                     </Button>
                 </Box>

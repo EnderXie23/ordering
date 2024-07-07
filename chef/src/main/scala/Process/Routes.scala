@@ -39,6 +39,11 @@ object Routes:
           .flatMap{m=>
             m.fullPlan.map(_.asJson.toString)
           }
+      case "LogMessage" =>
+        IO(decode[LogMessagePlanner](str).getOrElse(throw new Exception("Invalid JSON for LogMessage")))
+          .flatMap{m=>
+            m.fullPlan.map(_.asJson.toString)
+          }
       case _ =>
         IO.raiseError(new Exception(s"Unknown type: $messageType"))
     }
