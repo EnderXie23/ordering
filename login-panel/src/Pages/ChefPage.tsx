@@ -106,8 +106,8 @@ const ChefPage: React.FC = () => {
 
     return (
         <Container>
-            <Typography variant="h4" gutterBottom>
-                Chef Page
+            <Typography variant="h4" align="center" gutterBottom>
+                厨师页面
             </Typography>
             <Grid container spacing={2}>
                 {orders.map(order => (
@@ -126,7 +126,7 @@ const ChefPage: React.FC = () => {
                                     </Button>
                                 </Grid>
                                 <Grid item>
-                                    <Button variant="contained"     onClick={() => handleComplete(order, "0")} style={{ backgroundColor: '#ff0000', marginBottom: '20px'}}>
+                                    <Button variant="contained"     onClick={() => handleComplete(order, "0")} style={{ backgroundColor: '#ff6666', marginBottom: '20px'}}>
                                         拒绝
                                     </Button>
                                 </Grid>
@@ -137,13 +137,13 @@ const ChefPage: React.FC = () => {
             </Grid>
             <Box
                 display = "flex"
-                justifyContent="center"
+                justifyContent="space-evenly"
                 alignItems="center"
             >
-                <Button variant="contained" color="primary" onClick={handleQuery} style={{ marginBottom: '20px' }}>
+                <Button variant="contained" color="primary" onClick={handleQuery} style={{ margin: '20px' }}>
                     刷新
                 </Button>
-                <Button variant="contained" color="primary" onClick={() => {history.push('/')}} style={{ marginBottom: '20px' }}>
+                <Button color="secondary" onClick={() => {history.push('/')}} style={{ margin: '20px' }}>
                     返回主页
                 </Button>
             </Box>

@@ -25,7 +25,7 @@ export function CustomerLogin() {
             if (response.data[0] == 'Valid user') {
                 setSuccessMessage('登录成功，跳转中…');
                 setErrorMessage('');
-                setNickName(response.data[1])
+                setNickName(response.data[1] || userName)
                 setTimeout(() => {
                     history.push('/place-order');
                 }, 1000);
