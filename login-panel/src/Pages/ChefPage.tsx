@@ -6,15 +6,16 @@ import { QueryMessage } from 'Plugins/ChefAPI/QueryMessage'
 import { CompleteMessage } from 'Plugins/ChefAPI/CompleteMessage'
 
 interface Order {
-    id: string;
-    customerName: string;
-    item: { dishName: string, quantity: number };
+    id: number;
+    customer: string;
+    dish: string;
+    quantity: number;
 }
 
 //parse the order to Order type list
 function parseOrders(input: string): Order[] {
     const strings = input.split('\n');
-    const orders: Order[] = [];
+    const orders: { id: number; customer: string; dish: string; quantity: number }[] = [];
     let currentCustomer: string = '';
 
     strings.forEach((str, index) => {
@@ -27,15 +28,40 @@ function parseOrders(input: string): Order[] {
             if (quantityStr.startsWith('Order Count: ')) {
                 const quantity = parseInt(quantityStr.replace('Order Count: ', '').trim());
                 orders.push({
-                    id: (orders.length + 1).toString(),
-                    customerName: currentCustomer,
-                    item: { dishName: dish, quantity: quantity }
+                    id: orders.length + 1,
+                    customer: currentCustomer,
+                    dish: dish,
+                    quantity: quantity
                 });
             }
         }
     });
 
+    // console.log(orders); // for output
     return orders;
+}
+
+// TODO: use these two functions to realize two patterns of orders showing
+// 按照 dish 分类
+function groupByDish(orders: Order[]): Record<string, Order[]> {
+    return orders.reduce((acc, order) => {
+        if (!acc[order.dish]) {
+            acc[order.dish] = [];
+        }
+        acc[order.dish].push(order);
+        return acc;
+    }, {} as Record<string, Order[]>);
+}
+
+// 按照 customer 分类
+function groupByCustomer(orders: Order[]): Record<string, Order[]> {
+    return orders.reduce((acc, order) => {
+        if (!acc[order.customer]) {
+            acc[order.customer] = [];
+        }
+        acc[order.customer].push(order);
+        return acc;
+    }, {} as Record<string, Order[]>);
 }
 
 const ChefPage: React.FC = () => {
@@ -56,7 +82,7 @@ const ChefPage: React.FC = () => {
     }
 
     const handleComplete = async (order: Order, state: string) => {
-        const completeMessage = new CompleteMessage(`${order.customerName}\n${order.item.dishName}\n${order.item.quantity}\n` + state)
+        const completeMessage = new CompleteMessage(`${order.customer}\n${order.dish}\n${order.quantity}\n` + state)
         if (state === "0") {
             console.log('Reject order:', order)
         } else if (state === "1") {
@@ -115,9 +141,9 @@ const ChefPage: React.FC = () => {
                         <Card>
                             <CardContent>
                                 <Typography variant="h5">
-                                    {order.customerName}的点餐：
+                                    {order.customer}的点餐：
                                 </Typography>
-                                <ListItemText primary={`${order.item.dishName} x ${order.item.quantity}`} />
+                                <ListItemText primary={`${order.dish} x ${order.quantity}`} />
                             </CardContent>
                             <Grid container spacing={1} justifyContent="center" alignItems="center">
                                 <Grid item>
