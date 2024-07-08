@@ -21,7 +21,7 @@ const dishes: Dish[] = [
 
 
 const OrderingPage: React.FC = () => {
-    const { nickname } = useUser();
+    const { nickname, setOrderedDishes } = useUser(); // Added setOrderedDishes
     const customerName = nickname;
     const history = useHistory();
 
@@ -56,6 +56,12 @@ const OrderingPage: React.FC = () => {
         console.log('Orders:', orders)
         const orderMessage = new CustomerOrderMessage(customerName, orders.map(order => order.join(',')).join(';'))
         sendOrderRequest(orderMessage)
+        const formattedOrders = orders.map(order => ({
+            name: order[0],
+            count: parseInt(order[1], 10)
+        }));
+        setOrderedDishes(formattedOrders);
+        history.push('/order-summary');
     }
 
     return (

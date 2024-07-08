@@ -11,6 +11,11 @@ import ChefPage from 'Pages/ChefPage'
 import { UserProvider } from 'Pages/UserContext'
 import { ChefProvider } from 'Pages/ChefContext'
 import { Provider } from 'Pages/Context'
+import OrderSummaryPage from 'Pages/OrderSummaryPage'
+import CustomerFinishPage from 'Pages/CustomerFinishPage'
+
+
+
 
 const Layout = () => {
     return (
@@ -46,6 +51,16 @@ const Layout = () => {
                     <ChefProvider> {/* Wrap ChefPage with ChefProvider */}
                         <ChefPage />
                     </ChefProvider>
+                </Route>
+                <Route path="/order-summary" exact>
+                    <UserProvider>
+                        <OrderSummaryPage />
+                    </UserProvider>
+                </Route>
+                <Route path="/finish" exact>
+                    <UserProvider>
+                        <CustomerFinishPage />
+                    </UserProvider>
                 </Route>
             </Switch>
         </HashRouter>
