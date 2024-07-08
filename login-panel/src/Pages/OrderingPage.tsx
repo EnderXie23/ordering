@@ -6,19 +6,19 @@ import axios from 'axios'
 import { Container, Typography, Box, Button, IconButton, Grid, Card, CardContent, CardMedia } from '@mui/material';
 import { Add, Remove } from '@mui/icons-material';
 // eslint-disable-next-line import/no-unresolved
-import fuxuanImage from 'Images/fuxuan.jpg';
+import * as images from '../images/index'
 
 type Dish = {
     name: string;
+    path: string;
 };
 
 const dishes: Dish[] = [
-    { name: 'Spaghetti Carbonara'},
-    { name: 'Margherita Pizza'},
-    { name: 'Caesar Salad'},
-    { name: 'Tiramisu'},
+    { name: 'Spaghetti Carbonara', path: images.spaghetti_carbonara },
+    { name: 'Margherita Pizza', path: images.margherita_pizza },
+    { name: 'Caesar Salad', path: images.caesar_salad },
+    { name: 'Tiramisu', path: images.tiramisu },
 ];
-
 
 const OrderingPage: React.FC = () => {
     const { nickname } = useUser();
@@ -70,7 +70,7 @@ const OrderingPage: React.FC = () => {
                 {dishes.map((dish) => (
                     <Grid item xs={12} sm={6} md={4} key={dish.name}>
                         <Card style={{maxWidth: '250px', height: '300px'}}>
-                            <CardMedia component="img" height="140" src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.jocooks.com%2Frecipes%2Fmargherita-pizza%2F&psig=AOvVaw205TXyqzfrJYsSs92Jahk7&ust=1720232586106000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCPiL9fbrjocDFQAAAAAdAAAAABAE" alt={dish.name} />
+                            <CardMedia component="img" height="140" src= {dish.path} alt={dish.name} />
                             <CardContent>
                                 <Typography variant="h5">{dish.name}</Typography>
                                 <Box display="flex" alignItems="center">
