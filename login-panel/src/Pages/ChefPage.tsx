@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router'
-import { Grid, Button, Card, CardContent, Typography, ListItemText, Container, Box, IconButton } from '@mui/material'
+import { Grid, Button, Card, CardHeader ,CardContent, Typography, ListItemText, Container, Box, IconButton } from '@mui/material'
+import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios'
 import { QueryMessage } from 'Plugins/ChefAPI/QueryMessage'
 import { CompleteMessage } from 'Plugins/ChefAPI/CompleteMessage'
@@ -138,6 +139,8 @@ const ChefPage: React.FC = () => {
             console.log(response.status)
             console.log(response.data)
             setOrders(parseOrders(response.data).waitingOrders)
+            //console.log(parseOrders(response.data).waitingOrders)
+            //console.log(orders)
         } catch (error) {
             console.error('Error querying order:', error)
         }
@@ -162,65 +165,90 @@ const ChefPage: React.FC = () => {
             })
     }, [])
 
+    const useStyles = makeStyles((theme) => ({
+        container: {
+          height: '80vh',
+          width: '1000px',
+        },
+        grid: {
+            overflowY: 'auto',
+        },
+        box: {
+            position: 'sticky',
+            top: 0,
+            backgroundColor: 'white', // 确保背景色与容器相同或根据需要设置
+            zIndex: 1000, // 确保标题部分在其他内容之上
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingBottom: '10px', // 根据需要添加内边距
+            marginBottom: '20px', // 与下方内容保持一定距离
+        },
+        actionBox: {
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+        },
+        card: {
+            height: '300px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            marginBottom: theme.spacing(1),
+        },
+        cardContent: {
+            width: '90%',
+            flex: '1 1 auto',
+            display: 'flex',
+            flexDirection: 'column',
+            overflowY: 'auto',
+        },
+    }));
+    const classes = useStyles();
+
     const groupedOrders = groupBy === 'dish' ? groupByDish(orders) : groupByCustomer(orders);
     return (
-        <Container style={{height: '70vh', width: '1000px'}}>
-            <Box
-                style={{
-                    position: 'sticky',
-                    top: 0,
-                    backgroundColor: 'white', // 确保背景色与容器相同或根据需要设置
-                    zIndex: 1000, // 确保标题部分在其他内容之上
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    paddingBottom: '10px', // 根据需要添加内边距
-                    marginBottom: '20px', // 与下方内容保持一定距离
-                }}
-            >
+        <Container className={classes.container}>
+            <Box className={classes.box}>
             <Typography variant="h4">厨师页面</Typography>
                 <Button variant="contained" onClick={() => setGroupBy(prev => prev === 'dish' ? 'customer' : 'dish')}>
                     {groupBy === 'dish' ? 'Group by Customer' : 'Group by Dish'}
                 </Button>
             </Box>
-            <Grid container rowSpacing={2} columnSpacing={2} style={{display: 'flex', justifyContent: 'flex-start', alignItems: 'center'}}>
+            <Grid container rowSpacing={2} columnSpacing={2} className={classes.grid}>
                 {Object.keys(groupedOrders).map((key) => (
-                    <Grid item xs={12} sm={6} md={4}  key={key} >
-                        <Card style={{ height: '300px', width:'100%', display: 'flex', flexDirection: 'row', alignItems: 'flex-start', marginBottom: 4 }}>
-                            <CardContent style={{ flex: '1 1 auto', display: 'flex', flexDirection: 'column',  overflowY: 'auto' }}>
-                                <Typography variant="h6">
-                                    {groupBy === 'dish' ? `Dish: ${key}` : `Customer: ${key}`}
-                                </Typography>
+                    <Grid item xs={12} sm={6} md={4} key={key}>
+                        <Card className={classes.card}>
+                            <CardHeader
+                                title={groupBy === 'dish' ? `Dish: ${key}` : `Customer: ${key}`}
+                            />
+                            <CardContent className={classes.cardContent}>
                                 {groupedOrders[key].filter(order => order.state === "waiting")
                                     .map(order => (
-                                    <Box key={order.id} my={1} display="flex" justifyContent="space-between" alignItems="center">
-                                        <ListItemText
-                                            primary={groupBy === 'dish' ? `from: ${order.customer} x${order.quantity}` : `· ${order.dish} x${order.quantity}`}
-                                        />
-                                        <IconButton onClick={() => handleComplete(order, "1")}>
-                                            <CheckIcon />
-                                        </IconButton>
-                                        <IconButton onClick={() => handleComplete(order, "0")}>
-                                            <CloseIcon />
-                                        </IconButton>
-                                    </Box>
-                                ))}
+                                        <Box key={order.id} my={1} display="flex" justifyContent="stretch" alignItems="center">
+                                            <ListItemText
+                                                primary={groupBy === 'dish' ? `from: ${order.customer} x${order.quantity}` : `· ${order.dish} x${order.quantity}`}
+                                            />
+                                            <Box className={classes.actionBox}>
+                                                <IconButton onClick={() => handleComplete(order, "1")}>
+                                                    <CheckIcon />
+                                                </IconButton>
+                                                <IconButton onClick={() => handleComplete(order, "0")}>
+                                                    <CloseIcon />
+                                                </IconButton>
+                                            </Box>
+                                        </Box>
+                                    ))}
                             </CardContent>
                         </Card>
                     </Grid>
                 ))}
             </Grid>
-            <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-            >
+            <Box className={classes.box}>
                 <Button variant="contained" color="primary" onClick={handleQuery} style={{ margin: '20px' }}>
                     刷新
                 </Button>
-                <Button color="secondary" onClick={() => {
-                    history.push('/')
-                }} style={{ margin: '20px' }}>
+                <Button color="secondary" onClick={() => history.push('/')} style={{ margin: '20px' }}>
                     返回主页
                 </Button>
             </Box>
