@@ -4,6 +4,8 @@ import { Grid, Button, Card, CardContent, Typography, ListItemText, Container, B
 import axios from 'axios'
 import { QueryMessage } from 'Plugins/ChefAPI/QueryMessage'
 import { CompleteMessage } from 'Plugins/ChefAPI/CompleteMessage'
+import { LogMessage } from 'Plugins/ChefAPI/LogMessage'
+import { useChef } from './ChefContext';
 
 interface Order {
     id: number;
@@ -13,7 +15,7 @@ interface Order {
     state: string;
 }
 
-//parse the order to Order type list
+
 function parseOrders(input: string): Order[] {
     const strings = input.split('\n');
     let orders: Order[] = [];
@@ -83,6 +85,7 @@ function groupByCustomer(orders: Order[]): Record<string, Order[]> {
 const ChefPage: React.FC = () => {
     const history = useHistory()
     const [orders, setOrders] = useState<Order[]>([])
+    const { chefName } = useChef();
 
     const sendCompleteRequest = async (message: CompleteMessage) => {
         try {
@@ -97,8 +100,22 @@ const ChefPage: React.FC = () => {
         }
     }
 
+    const sendLogRequest = async (message: LogMessage) => {
+        try {
+            const response = await axios.post(message.getURL(), JSON.stringify(message), {
+                headers: { 'Content-Type': 'application/json' },
+            })
+            console.log(response.status)
+            console.log(response.data)
+            await handleQuery()
+        } catch (error) {
+            console.error('Error logging:', error)
+        }
+    }
+
     const handleComplete = async (order: Order, state: string) => {
         const completeMessage = new CompleteMessage(`${order.customer}\n${order.dish}\n${order.quantity}\n` + state)
+        const logMessage = new LogMessage(chefName+`\n${order.customer}\n${order.dish}\n${order.quantity}\n` + state)
         if (state === "0") {
             console.log('Reject order:', order)
         } else if (state === "1") {
@@ -109,6 +126,7 @@ const ChefPage: React.FC = () => {
         }
         try {
             await sendCompleteRequest(completeMessage);
+            await sendLogRequest(logMessage);
         } catch (error) {
             console.error('Error in handleComplete:', error);
         }

@@ -8,11 +8,11 @@
 
 - [x] customer.user_name新增两列：电话、昵称phone, nickname
 
-- [ ] customer.order_rec新增一列：外卖/堂食属性takeout
+- [ ] customer.order_rec新增两列：完成状态finish_state、外卖/堂食属性takeout
 
 - [ ] chef.user_name新增一列：厨师工号uid
 
-- [ ] chef.finished新增表单，四列：dish_name, customer, chef, dish_count
+- [x] chef_log新增表单，五列：dish_name, customer, chef, dish_count, state
 
 - [ ] customer.ratings新增表单，四列：dish_name, customer, chef, rating
 
@@ -20,11 +20,11 @@
 
 - [x] 顾客注册页面新增：昵称，电话号码；
 
+- [ ] 点单页面新增：外卖、堂食选项，外卖需要填写地址；如果检测到有点单，添加按钮：跳转到点单完成页面；
+
 - [ ] 厨师登陆页面新增：检测特殊用户名，跳转至管理员页面；
 
-- [ ] 点单页面新增：外卖、堂食选项，外卖需要填写地址；如果检测到有点单，直接跳转到点单完成页面；
-
-- [ ] 顾客点单完成页面：可以查看自己的点单信息，完成后可以给出评价；
+- [ ] 顾客点单完成页面：可以查看自己的点单信息，完成后可以给出评价；(正在做）
 
 - [ ] 管理员页面：可以查看点餐量、厨师评价、菜品评价，修改菜品等
 
