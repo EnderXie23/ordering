@@ -12,7 +12,7 @@
 
 - [ ] chef.user_name新增一列：厨师工号uid
 
-- [ ] chef.finished新增表单，四列：dish_name, customer, chef, dish_count
+- [x] chef_log新增表单，五列：dish_name, customer, chef, dish_count, state
 
 - [ ] customer.ratings新增表单，四列：dish_name, customer, chef, rating
 
