@@ -46,7 +46,7 @@ case class LogMessagePlanner(log:String, override val planContext: PlanContext) 
                 SqlParameter("String", customerName),
                 SqlParameter("String", dishName),
                 SqlParameter("String", orderCount),
-                SqlParameter("String", state)
+                SqlParameter("String", if state == "1" then "done" else "rejected")
               )
               writeDB(query, params).handleErrorWith { error =>
                 IO.raiseError(new Exception(s"Failed to log dish record: ${error.getMessage}"))

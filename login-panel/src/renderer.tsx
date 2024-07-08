@@ -8,6 +8,7 @@ import { CustomerLogin } from 'Pages/CustomerLogin'
 import { CustomerRegister } from 'Pages/CustomerRegister'
 import OrderingPage from 'Pages/OrderingPage'
 import ChefPage from 'Pages/ChefPage'
+import { AdminPage } from 'Pages/AdminPage'
 import { UserProvider } from 'Pages/UserContext'
 import { ChefProvider } from 'Pages/ChefContext'
 import { Provider } from 'Pages/Context'
@@ -24,6 +25,9 @@ const Layout = () => {
         <HashRouter>
             <Switch>
                 <Route path="/" exact component={Main} />
+                <Route path="/admin" exact>
+                    <AdminPage />
+                </Route>
                 <Route path="/chef-login" exact>
                     <ChefProvider> {/* Wrap ChefLogin with ChefProvider */}
                         <ChefLogin />

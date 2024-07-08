@@ -17,8 +17,9 @@ case class CompleteMessagePlanner(orderdesp: String, override val planContext: P
     val Array(customerName, dishName, orderCount, state) = orderdesp.split("\n")
 
     // Define the SQL query to fetch orders
-    val sqlDeleteQuery = s"""
-      DELETE FROM customer.order_rec
+    val sqlUpdateQuery = s"""
+      UPDATE customer.order_rec
+      SET finish_state = ?
       WHERE ctid = (
         SELECT ctid
         FROM customer.order_rec
@@ -30,10 +31,11 @@ case class CompleteMessagePlanner(orderdesp: String, override val planContext: P
     """
 
     // Execute the SQL query
-    writeDB(sqlDeleteQuery, List(
+    writeDB(sqlUpdateQuery, List(
+      SqlParameter("String", if (state == "1") "done" else "rejected"),
       SqlParameter("String", customerName),
       SqlParameter("String", dishName),
       SqlParameter("String", orderCount)
-    )).map(_ => "Complete OK.")
+    )).map(_ => "Complete dish successfully.")
   }
 }
