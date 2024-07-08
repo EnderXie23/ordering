@@ -18,9 +18,8 @@ interface Order {
     state: string;
 }
 
-function parseOrders(input: string): Order[] {
+function parseOrders(input: string): { waitingOrders: Order[], otherOrders: Order[] } {
     const strings = input.split('\n')
-    let orders: Order[] = []
     let currentCustomer: string = ''
 
     const waitingOrders: Order[] = []
@@ -54,14 +53,10 @@ function parseOrders(input: string): Order[] {
         }
     })
 
-    // Combine waitingOrders and otherOrders, placing waitingOrders at the front
-    orders = [...waitingOrders, ...otherOrders]
-
     // console.log(orders); // for output
-    return orders
+    return {waitingOrders, otherOrders}
 }
 
-// TODO: use these two functions to realize two patterns of orders showing
 // 按照 dish 分类
 function groupByDish(orders: Order[]): Record<string, Order[]> {
     return orders.reduce((acc, order) => {
@@ -142,7 +137,7 @@ const ChefPage: React.FC = () => {
             })
             console.log(response.status)
             console.log(response.data)
-            setOrders(parseOrders(response.data))
+            setOrders(parseOrders(response.data).waitingOrders)
         } catch (error) {
             console.error('Error querying order:', error)
         }
@@ -188,18 +183,19 @@ const ChefPage: React.FC = () => {
                     {groupBy === 'dish' ? 'Group by Customer' : 'Group by Dish'}
                 </Button>
             </Box>
-            <Grid container rowSpacing={2} columnSpacing={2}>
+            <Grid container rowSpacing={2} columnSpacing={2} style={{display: 'flex', justifyContent: 'flex-start', alignItems: 'center'}}>
                 {Object.keys(groupedOrders).map((key) => (
-                    <Grid item xs={12} sm={6} md={4}  key={key} style={{justifyContent:'space-around'}}>
-                        <Card style={{ height: '300px', width:'300px', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: 4 }}>
-                            <CardContent style={{ flex: '1 1 auto', display: 'flex', flexDirection: 'column', justifyContent: 'space-around', overflowY: 'auto' }}>
+                    <Grid item xs={12} sm={6} md={4}  key={key} >
+                        <Card style={{ height: '300px', width:'100%', display: 'flex', flexDirection: 'row', alignItems: 'flex-start', marginBottom: 4 }}>
+                            <CardContent style={{ flex: '1 1 auto', display: 'flex', flexDirection: 'column',  overflowY: 'auto' }}>
                                 <Typography variant="h6">
                                     {groupBy === 'dish' ? `Dish: ${key}` : `Customer: ${key}`}
                                 </Typography>
-                                {groupedOrders[key].map(order => (
+                                {groupedOrders[key].filter(order => order.state === "waiting")
+                                    .map(order => (
                                     <Box key={order.id} my={1} display="flex" justifyContent="space-between" alignItems="center">
                                         <ListItemText
-                                            primary={groupBy === 'dish' ? `from: ${order.customer}` : `· ${order.dish}`}
+                                            primary={groupBy === 'dish' ? `from: ${order.customer} x${order.quantity}` : `· ${order.dish} x${order.quantity}`}
                                         />
                                         <IconButton onClick={() => handleComplete(order, "1")}>
                                             <CheckIcon />
@@ -216,7 +212,7 @@ const ChefPage: React.FC = () => {
             </Grid>
             <Box
                 display="flex"
-                justifyContent="space-evenly"
+                justifyContent="space-between"
                 alignItems="center"
             >
                 <Button variant="contained" color="primary" onClick={handleQuery} style={{ margin: '20px' }}>
