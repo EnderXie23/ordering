@@ -169,18 +169,30 @@ const ChefPage: React.FC = () => {
 
     const groupedOrders = groupBy === 'dish' ? groupByDish(orders) : groupByCustomer(orders);
     return (
-        <Container style={{height: '70vh', width: ''}}>
-            <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                <Typography variant="h4">厨师页面</Typography>
+        <Container style={{height: '70vh', width: '1000px'}}>
+            <Box
+                style={{
+                    position: 'sticky',
+                    top: 0,
+                    backgroundColor: 'white', // 确保背景色与容器相同或根据需要设置
+                    zIndex: 1000, // 确保标题部分在其他内容之上
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    paddingBottom: '10px', // 根据需要添加内边距
+                    marginBottom: '20px', // 与下方内容保持一定距离
+                }}
+            >
+            <Typography variant="h4">厨师页面</Typography>
                 <Button variant="contained" onClick={() => setGroupBy(prev => prev === 'dish' ? 'customer' : 'dish')}>
                     {groupBy === 'dish' ? 'Group by Customer' : 'Group by Dish'}
                 </Button>
             </Box>
-            <Grid container spacing={3}>
+            <Grid container rowSpacing={2} columnSpacing={2}>
                 {Object.keys(groupedOrders).map((key) => (
-                    <Grid item xs={12} sm={6} md={4} key={key}>
-                        <Card style={{ height: '300px', width:'300px', display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'left', marginBottom: 4 }}>
-                            <CardContent style={{ flex: '1 1 auto', display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly', overflowY: 'auto' }}>
+                    <Grid item xs={12} sm={6} md={4}  key={key} style={{justifyContent:'space-around'}}>
+                        <Card style={{ height: '300px', width:'300px', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginBottom: 4 }}>
+                            <CardContent style={{ flex: '1 1 auto', display: 'flex', flexDirection: 'column', justifyContent: 'space-around', overflowY: 'auto' }}>
                                 <Typography variant="h6">
                                     {groupBy === 'dish' ? `Dish: ${key}` : `Customer: ${key}`}
                                 </Typography>
