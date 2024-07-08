@@ -8,7 +8,7 @@
 
 - [x] customer.user_name新增两列：电话、昵称phone, nickname
 
-- [ ] customer.order_rec新增一列：外卖/堂食属性takeout
+- [ ] customer.order_rec新增两列：完成状态finish_state、外卖/堂食属性takeout
 
 - [ ] chef.user_name新增一列：厨师工号uid
 
