@@ -48,10 +48,13 @@ const OrderingPage: React.FC = () => {
         }
     }
 
+    // TODO: Implement takeout
+    const takeout = "false"
+
     const handleSubmit = () => {
     const orders = Object.entries(orderCounts)
-    .filter(([, count]) => count > 0)
-            .map(([dishName, count]) => [dishName, count.toString()])
+            .filter(([, count]) => count > 0)
+            .map(([dishName, count]) => [dishName, count.toString(), takeout])
         console.log('Customer:', customerName)
         console.log('Orders:', orders)
         const orderMessage = new CustomerOrderMessage(customerName, orders.map(order => order.join(',')).join(';'))

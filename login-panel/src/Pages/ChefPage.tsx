@@ -10,13 +10,18 @@ interface Order {
     customer: string;
     dish: string;
     quantity: number;
+    state: string;
 }
 
 //parse the order to Order type list
 function parseOrders(input: string): Order[] {
     const strings = input.split('\n');
-    const orders: { id: number; customer: string; dish: string; quantity: number }[] = [];
+    let orders: Order[] = [];
     let currentCustomer: string = '';
+
+    const waitingOrders: Order[] = [];
+    const otherOrders: Order[] = [];
+    let idCounter = 1;
 
     strings.forEach((str, index) => {
         if (str.startsWith('Customer: ')) {
@@ -25,17 +30,28 @@ function parseOrders(input: string): Order[] {
         } else if (str.startsWith('Dish: ') && currentCustomer) {
             const dish = str.replace('Dish: ', '').trim();
             const quantityStr = strings[index + 1];
+            const finishState = strings[index + 2];
             if (quantityStr.startsWith('Order Count: ')) {
                 const quantity = parseInt(quantityStr.replace('Order Count: ', '').trim());
-                orders.push({
-                    id: orders.length + 1,
+                const state = finishState.replace('State: ', '').trim();
+                const order = {
+                    id: idCounter++,
                     customer: currentCustomer,
                     dish: dish,
-                    quantity: quantity
-                });
+                    quantity: quantity,
+                    state: state
+                };
+                if (state === 'waiting') {
+                    waitingOrders.push(order);
+                } else {
+                    otherOrders.push(order);
+                }
             }
         }
     });
+
+    // Combine waitingOrders and otherOrders, placing waitingOrders at the front
+    orders = [...waitingOrders, ...otherOrders];
 
     // console.log(orders); // for output
     return orders;
@@ -144,19 +160,22 @@ const ChefPage: React.FC = () => {
                                     {order.customer}的点餐：
                                 </Typography>
                                 <ListItemText primary={`${order.dish} x ${order.quantity}`} />
+                                <ListItemText primary={`状态：${order.state}`} />
                             </CardContent>
-                            <Grid container spacing={1} justifyContent="center" alignItems="center">
-                                <Grid item>
-                                    <Button variant="contained" color="primary" onClick={() => handleComplete(order, "1")} style={{ marginBottom: '20px' }}>
-                                        完成
-                                    </Button>
+                            {order.state == "waiting" && (
+                                <Grid container spacing={1} justifyContent="center" alignItems="center">
+                                    <Grid item>
+                                        <Button variant="contained" color="primary" onClick={() => handleComplete(order, "1")} style={{ marginBottom: '20px' }}>
+                                            完成
+                                        </Button>
+                                    </Grid>
+                                    <Grid item>
+                                        <Button variant="contained" onClick={() => handleComplete(order, "0")} style={{ backgroundColor: '#ff6666', marginBottom: '20px'}}>
+                                            拒绝
+                                        </Button>
+                                    </Grid>
                                 </Grid>
-                                <Grid item>
-                                    <Button variant="contained"     onClick={() => handleComplete(order, "0")} style={{ backgroundColor: '#ff6666', marginBottom: '20px'}}>
-                                        拒绝
-                                    </Button>
-                                </Grid>
-                            </Grid>
+                            )}
                         </Card>
                     </Grid>
                 ))}

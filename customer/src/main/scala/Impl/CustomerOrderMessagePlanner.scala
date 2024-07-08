@@ -15,19 +15,21 @@ case class CustomerOrderMessagePlanner(userName: String, orders: String, overrid
     // Insert into database the customer order
     val ordersList = orders.split(";").toList.map { order =>
       val parts = order.split(",")
-      (parts(0), parts(1))
+      (parts(0), parts(1), parts(2))
     };
 
-    val insertStatements = ordersList.map { case (dishName, orderCount) =>
-      writeDB(s"INSERT INTO ${schemaName}.order_rec (customer_name, dish_name, order_count) VALUES (?, ?, ?)",
+    val insertStatements = ordersList.map { case (dishName, orderCount, takeout) =>
+      writeDB(s"INSERT INTO ${schemaName}.order_rec (customer_name, dish_name, order_count, finish_state, takeout) VALUES (?, ?, ?, ?, ?)",
         List(
           SqlParameter("String", userName),
           SqlParameter("String", dishName),
-          SqlParameter("String", orderCount)
+          SqlParameter("String", orderCount),
+          SqlParameter("String", "waiting"),
+          SqlParameter("String", takeout)
         ))
     };
 
     // Combine all the insert statements into one transaction
     startTransaction(insertStatements.reduce(_ >> _)) >>
-    IO.pure(userName);
+    IO.pure("Order placed successfully");
   }
