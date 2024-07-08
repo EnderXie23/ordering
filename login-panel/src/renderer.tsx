@@ -13,6 +13,8 @@ import { ChefProvider } from 'Pages/ChefContext'
 import { Provider } from 'Pages/Context'
 import OrderSummaryPage from 'Pages/OrderSummaryPage'
 import CustomerFinishPage from 'Pages/CustomerFinishPage'
+import OrderingMorePage from 'Pages/OrderingMorePage'
+import CommentPage from 'Pages/CommentPage'
 
 
 
@@ -60,6 +62,16 @@ const Layout = () => {
                 <Route path="/finish" exact>
                     <UserProvider>
                         <CustomerFinishPage />
+                    </UserProvider>
+                </Route>
+                <Route path="/order-more" exact>
+                    <UserProvider>
+                        <OrderingMorePage />
+                    </UserProvider>
+                </Route>
+                <Route path="/comment" exact>
+                    <UserProvider>
+                        <CommentPage />
                     </UserProvider>
                 </Route>
             </Switch>

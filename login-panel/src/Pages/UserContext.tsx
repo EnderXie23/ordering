@@ -14,8 +14,22 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [nickname, setNickName] = useState<string>('');
     const [orderedDishes, setOrderedDishes] = useState<{ name: string, count: number }[]>([]);
 
+    const mergeOrderedDishes = (newDishes: { name: string, count: number }[]) => {
+        setOrderedDishes(prevDishes => {
+            const dishMap = new Map(prevDishes.map(dish => [dish.name, dish.count]));
+            newDishes.forEach(dish => {
+                if (dishMap.has(dish.name)) {
+                    dishMap.set(dish.name, dishMap.get(dish.name)! + dish.count);
+                } else {
+                    dishMap.set(dish.name, dish.count);
+                }
+            });
+            return Array.from(dishMap, ([name, count]) => ({ name, count }));
+        });
+    };
+
     return (
-        <UserContext.Provider value={{ nickname, setNickName, orderedDishes, setOrderedDishes }}>
+        <UserContext.Provider value={{ nickname, setNickName, orderedDishes, setOrderedDishes:mergeOrderedDishes }}>
             {children}
         </UserContext.Provider>
     );
