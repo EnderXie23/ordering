@@ -20,7 +20,7 @@ export function Main() {
                     </Button>
                 </Box>
                 <Box className="button-container">
-                    <Button variant="contained" color="primary" className="custom-button button-spacing"
+                    <Button variant="contained" color="primary" className="button-spacing"
                             //onClick={() => {setTimeout(() => {history.push('/chef-login')}, 500)}} fullWidth>
                             onClick={() => {history.push('/chef-login')}} fullWidth >
                         我是厨师

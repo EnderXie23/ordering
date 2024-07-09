@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router';
-import { useUser } from 'Pages/UserContext';
+import { useUser } from 'Pages/CustomerPages/UserContext';
 import { CustomerOrderMessage } from 'Plugins/CustomerAPI/CustomerOrderMessage'
 import axios from 'axios'
 import { Container, Typography, Box, Button, IconButton, Grid, Card, CardContent, CardMedia } from '@mui/material';
 import { Add, Remove } from '@mui/icons-material';
 // eslint-disable-next-line import/no-unresolved
-import * as images from '../images/index'
+import * as images from '../../images/index'
 
 type Dish = {
     name: string;
@@ -21,8 +21,8 @@ const dishes: Dish[] = [
 ];
 
 const OrderingPage: React.FC = () => {
-    const { nickname, setOrderedDishes } = useUser(); // Added setOrderedDishes
-    const customerName = nickname;
+    const { name, setOrderedDishes } = useUser();
+    const customerName = name.split('\n')[1];
     const history = useHistory();
 
     const [orderCounts, setOrderCounts] = useState<{ [key: string]: number }>({});
@@ -69,9 +69,11 @@ const OrderingPage: React.FC = () => {
 
     return (
         <Container>
-            <Typography variant="h4" gutterBottom>
-                欢迎，{customerName}！请在下面点菜：
-            </Typography>
+            <Box display="flex" justifyContent="space-between" alignItems="center">
+                <Typography variant="h4" gutterBottom>
+                    欢迎，{customerName}！请在下面点菜：
+                </Typography>
+            </Box>
             <Grid container spacing={4}>
                 {dishes.map((dish) => (
                     <Grid item xs={12} sm={6} md={4} key={dish.name}>

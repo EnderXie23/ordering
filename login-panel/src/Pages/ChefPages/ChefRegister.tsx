@@ -4,6 +4,7 @@ import { RegisterMessage } from 'Plugins/ChefAPI/RegisterMessage';
 import { useHistory } from 'react-router'
 import { Container, TextField, Button, Typography, Alert, Box, IconButton, InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import '../index.css'
 
 export function ChefRegister() {
     const [userName, setUserName] = useState('');
@@ -31,7 +32,12 @@ export function ChefRegister() {
             if (isAxiosError(error)) {
                 if (error.response && error.response.data) {
                     console.error('Error sending request:', error.response.data);
-                    setErrorMessage('注册失败：' + extractErrorBody(error.response.data.error) || '注册失败');
+                    const ErrorBody= extractErrorBody(error.response.data.error)
+                    if (ErrorBody == 'already registered') {
+                        setErrorMessage('注册失败：该用户已经存在');
+                    } else {
+                        setErrorMessage('注册失败：' + extractErrorBody(error.response.data.error) || '注册失败');
+                    }
                     setSuccessMessage('');
                 } else {
                     console.error('Error sending request:', error.message);
@@ -57,6 +63,11 @@ export function ChefRegister() {
     const ChefRegister = () => {
         if (userName == '') {
             setErrorMessage('用户名不能为空');
+            setSuccessMessage('');
+            return;
+        }
+        if (userName == 'admin') {
+            setErrorMessage('注册失败：该用户已经存在');
             setSuccessMessage('');
             return;
         }

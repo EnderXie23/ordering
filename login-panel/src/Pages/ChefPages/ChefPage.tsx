@@ -191,6 +191,7 @@ const ChefPage: React.FC = () => {
         },
         card: {
             height: '300px',
+            width: '100%',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'flex-start',
@@ -210,9 +211,9 @@ const ChefPage: React.FC = () => {
     return (
         <Container className={classes.container}>
             <Box className={classes.box}>
-            <Typography variant="h4">厨师页面</Typography>
+            <Typography variant="h4">厨师{ chefName }，您好！</Typography>
                 <Button variant="contained" onClick={() => setGroupBy(prev => prev === 'dish' ? 'customer' : 'dish')}>
-                    {groupBy === 'dish' ? 'Group by Customer' : 'Group by Dish'}
+                    {groupBy === 'dish' ? '按顾客分类' : '按菜品分类'}
                 </Button>
             </Box>
             <Grid container rowSpacing={2} columnSpacing={2} className={classes.grid}>
@@ -243,6 +244,9 @@ const ChefPage: React.FC = () => {
                         </Card>
                     </Grid>
                 ))}
+                {Object.keys(groupedOrders).length < 3 && [...Array(3 - Object.keys(groupedOrders).length)].map((_, index) => (
+                    <Grid item xs={12} sm={6} md={4} key={`empty-${index}`}>
+                        <Card style={{ height: '300px', width:'300px', display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'left', marginBottom: 4,visibility: 'hidden' }} /> </Grid> ))}
             </Grid>
             <Box className={classes.box}>
                 <Button variant="contained" color="primary" onClick={handleQuery} style={{ margin: '20px' }}>

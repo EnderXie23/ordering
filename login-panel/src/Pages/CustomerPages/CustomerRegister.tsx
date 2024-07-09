@@ -3,6 +3,7 @@ import axios, { isAxiosError } from 'axios';
 import { useHistory } from 'react-router'
 import { Container, TextField, Button, Typography, Alert, Box, IconButton, InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import '../index.css'
 import { CustomerRegisterMessage } from 'Plugins/CustomerAPI/CustomerRegisterMessage'
 
 export function CustomerRegister() {

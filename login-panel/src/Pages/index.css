@@ -18,13 +18,14 @@ body, html {
 
 .custom-button {
     margin: 0 10px;
-    border-color: #4caf50;
-    color: #4caf50;
+    border-color: #1565c0; /* Deeper blue color */
+    color: #1565c0; /* Deeper blue color */
+    font-size: 20px; /* Increase font size */
 }
 
 .custom-button:hover {
-    border-color: #45a045;
-    background-color: #e8f5e9;
+    border-color: #0d47a1; /* Even darker blue color */
+    background-color: #bbdefb; /* Light blue background */
 }
 
 .custom-button-secondary {

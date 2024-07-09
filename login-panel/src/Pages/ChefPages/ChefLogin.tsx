@@ -4,6 +4,7 @@ import { LoginMessage } from 'Plugins/ChefAPI/LoginMessage';
 import { useHistory } from 'react-router'
 import { Container, TextField, Button, Typography, Alert, Box, IconButton, InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import '../index.css'
 import { useChef } from './ChefContext';
 
 
@@ -66,7 +67,9 @@ export function ChefLogin() {
 
     const HandleLogin = () => {
         if  (userName == 'admin' && password == 'root') {
-            history.push('/admin')
+            setSuccessMessage('登录成功，跳转中…');
+            setErrorMessage('');
+            setTimeout(() => {history.push('/admin');}, 1000);
             return
         }
         const loginMessage = new LoginMessage(userName, password);

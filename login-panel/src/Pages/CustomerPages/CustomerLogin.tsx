@@ -3,7 +3,8 @@ import axios, { isAxiosError } from 'axios';
 import { useHistory } from 'react-router'
 import { Container, TextField, Button, Typography, Alert, Box, IconButton, InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { useUser } from 'Pages/UserContext'
+import '../index.css'
+import { useUser } from 'Pages/CustomerPages/UserContext'
 import { CustomerLoginMessage } from 'Plugins/CustomerAPI/CustomerLoginMessage'
 
 export function CustomerLogin() {
@@ -12,7 +13,7 @@ export function CustomerLogin() {
     const [errorMessage, setErrorMessage] = useState(''); // State for error message
     const [successMessage, setSuccessMessage] = useState('');
     const [showPassword, setShowPassword] = useState(false); // State for password
-    const { setNickName } = useUser()
+    const { setName } = useUser()
 
     const history=useHistory()
     const sendPostRequest = async (message: CustomerLoginMessage) => {
@@ -25,7 +26,7 @@ export function CustomerLogin() {
             if (response.data[0] == 'Valid user') {
                 setSuccessMessage('登录成功，跳转中…');
                 setErrorMessage('');
-                setNickName(response.data[1] || userName)
+                setName(userName + '\n' + response.data[1])  // userName + \n + nickname
                 setTimeout(() => {
                     history.push('/place-order');
                 }, 1000);
