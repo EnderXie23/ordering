@@ -6,7 +6,7 @@ import axios from 'axios'
 import { Container, Typography, Box, Button, IconButton, Grid, Card, CardContent, CardMedia } from '@mui/material';
 import { Add, Remove } from '@mui/icons-material';
 // eslint-disable-next-line import/no-unresolved
-import * as images from 'Images/index'
+import * as images from '../../images/index'
 
 type Dish = {
     name: string;
