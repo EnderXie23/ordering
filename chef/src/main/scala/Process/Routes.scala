@@ -14,11 +14,6 @@ import org.http4s.dsl.io.*
 object Routes:
   private def executePlan(messageType:String, str: String): IO[String]=
     messageType match {
-      case "AdminQueryMessage" =>
-        IO(decode[AdminQueryMessagePlanner](str).getOrElse(throw new Exception("Invalid JSON for AdminQueryMessage")))
-          .flatMap{m=>
-            m.fullPlan.map(_.asJson.toString)
-          }
       case "CompleteMessage" =>
         IO(decode[CompleteMessagePlanner](str).getOrElse(throw new Exception("Invalid JSON for CompleteMessage")))
           .flatMap{m=>
