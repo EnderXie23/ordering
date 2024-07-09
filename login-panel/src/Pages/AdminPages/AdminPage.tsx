@@ -6,7 +6,7 @@ import ReceiptIcon from '@mui/icons-material/Receipt';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import StarIcon from '@mui/icons-material/Star';
 import axios from 'axios'
-import { AdminQueryMessage } from 'Plugins/ChefAPI/AdminQueryMessage'
+import { AdminQueryMessage } from 'Plugins/AdminAPI/AdminQueryMessage'
 import '../index.css'
 
 export function AdminPage(){
