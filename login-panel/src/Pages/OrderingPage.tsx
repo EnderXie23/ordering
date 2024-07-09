@@ -21,8 +21,8 @@ const dishes: Dish[] = [
 ];
 
 const OrderingPage: React.FC = () => {
-    const { nickname } = useUser();
-    const customerName = nickname;
+    const { name } = useUser();
+    const customerName = name.split('\n')[1];
     const history = useHistory();
 
     const [orderCounts, setOrderCounts] = useState<{ [key: string]: number }>({});
@@ -63,9 +63,11 @@ const OrderingPage: React.FC = () => {
 
     return (
         <Container>
-            <Typography variant="h4" gutterBottom>
-                欢迎，{customerName}！请在下面点菜：
-            </Typography>
+            <Box display="flex" justifyContent="space-between" alignItems="center">
+                <Typography variant="h4" gutterBottom>
+                    欢迎，{customerName}！请在下面点菜：
+                </Typography>
+            </Box>
             <Grid container spacing={4}>
                 {dishes.map((dish) => (
                     <Grid item xs={12} sm={6} md={4} key={dish.name}>

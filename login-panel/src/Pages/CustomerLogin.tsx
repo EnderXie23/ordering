@@ -12,7 +12,7 @@ export function CustomerLogin() {
     const [errorMessage, setErrorMessage] = useState(''); // State for error message
     const [successMessage, setSuccessMessage] = useState('');
     const [showPassword, setShowPassword] = useState(false); // State for password
-    const { setNickName } = useUser()
+    const { setName } = useUser()
 
     const history=useHistory()
     const sendPostRequest = async (message: CustomerLoginMessage) => {
@@ -25,7 +25,7 @@ export function CustomerLogin() {
             if (response.data[0] == 'Valid user') {
                 setSuccessMessage('登录成功，跳转中…');
                 setErrorMessage('');
-                setNickName(response.data[1] || userName)
+                setName(userName + '\n' + response.data[1])  // userName + \n + nickname
                 setTimeout(() => {
                     history.push('/place-order');
                 }, 1000);

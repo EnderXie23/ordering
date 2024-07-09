@@ -210,9 +210,9 @@ const ChefPage: React.FC = () => {
     return (
         <Container className={classes.container}>
             <Box className={classes.box}>
-            <Typography variant="h4">厨师页面</Typography>
+            <Typography variant="h4">厨师{ chefName }，您好！</Typography>
                 <Button variant="contained" onClick={() => setGroupBy(prev => prev === 'dish' ? 'customer' : 'dish')}>
-                    {groupBy === 'dish' ? 'Group by Customer' : 'Group by Dish'}
+                    {groupBy === 'dish' ? '按顾客分类' : '按菜品分类'}
                 </Button>
             </Box>
             <Grid container rowSpacing={2} columnSpacing={2} className={classes.grid}>
