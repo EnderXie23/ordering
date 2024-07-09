@@ -168,7 +168,7 @@ const ChefPage: React.FC = () => {
     const useStyles = makeStyles((theme) => ({
         container: {
           height: '80vh',
-          width: '1000px',
+          width: '100%',
         },
         grid: {
             overflowY: 'auto',
@@ -191,6 +191,7 @@ const ChefPage: React.FC = () => {
         },
         card: {
             height: '300px',
+            width: '100%',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'flex-start',
@@ -243,6 +244,9 @@ const ChefPage: React.FC = () => {
                         </Card>
                     </Grid>
                 ))}
+                {Object.keys(groupedOrders).length < 3 && [...Array(3 - Object.keys(groupedOrders).length)].map((_, index) => (
+                    <Grid item xs={12} sm={6} md={4} key={`empty-${index}`}>
+                        <Card style={{ height: '300px', width:'300px', display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'left', marginBottom: 4,visibility: 'hidden' }} /> </Grid> ))}
             </Grid>
             <Box className={classes.box}>
                 <Button variant="contained" color="primary" onClick={handleQuery} style={{ margin: '20px' }}>
