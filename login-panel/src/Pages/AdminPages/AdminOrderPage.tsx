@@ -3,7 +3,6 @@ import { useHistory } from 'react-router'
 import { Button, Typography, Container, Box, ListItem, ListItemText, Paper } from '@mui/material'
 import axios from 'axios'
 import { AdminQueryMessage } from 'Plugins/AdminAPI/AdminQueryMessage'
-import '../index.css'
 import { List } from 'antd'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -84,11 +83,19 @@ export function AdminOrderPage(){
     }, [])
 
     return (
-        <Container>
-            <Box marginBottom={5} zIndex={1000}>
-                {/*<Typography variant="h4" component="h1" align="center" gutterBottom>*/}
+        <Container style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <Box style = {{position: 'sticky',
+                top: 0,
+                backgroundColor: 'white', // 确保背景色与容器相同或根据需要设置
+                zIndex: 1000, // 确保标题部分在其他内容之上
+                display: 'flex',
+                justifyContent: 'center',
+                paddingBottom: '10px', // 根据需要添加内边距
+                marginBottom: '20px', // 与下方内容保持一定距离
+            }}>
+                <Typography variant="h4" component="h1" align="center" gutterBottom>
                     订单管理页面
-                {/*</Typography>*/}
+                </Typography>
             </Box>
             <Box>
                 {Object.entries(groupedOrders).map(([customerName, orders]) => (
