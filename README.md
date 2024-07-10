@@ -14,11 +14,11 @@
 
 - [x] chef_log新增表单，五列：dish_name, customer, chef, dish_count, state
 
-- [ ] customer.ratings新增表单，四列：dish_name, customer, chef, rating
+- [x] customer.ratings新增表单，七列：customer_name, comment, overall, taste, pack, serv, env
 
-- [ ] admin.dish新增表单，三列：name, path, price
+- [x] admin.dishes新增表单，三列：name, img_path, price
 
-- [ ] customer.user_name新增一列：余额saving
+- [x] customer.user_name新增一列：余额savings
 
 2. 页面类：
 
