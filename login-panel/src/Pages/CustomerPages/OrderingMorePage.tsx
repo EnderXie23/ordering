@@ -21,8 +21,8 @@ const dishes: Dish[] = [
 
 
 const OrderingPage: React.FC = () => {
-    const { nickname, setOrderedDishes } = useUser(); // Added setOrderedDishes
-    const customerName = nickname;
+    const { name, setOrderedDishes } = useUser(); // Added setOrderedDishes
+    const customerName = name;
     const history = useHistory();
 
     const [orderCounts, setOrderCounts] = useState<{ [key: string]: number }>({});

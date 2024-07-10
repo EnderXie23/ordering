@@ -20,7 +20,7 @@ object Init {
       //_ <- writeDB(s"DROP TABLE IF EXISTS ${schemaName}.user_name", List())
       _ <- writeDB(s"CREATE TABLE IF NOT EXISTS ${schemaName}.admin_log (orderID TEXT, user_name TEXT, chef_name TEXT,dish_name TEXT, quantity TEXT, state TEXT)", List())
       _ <- {
-        val query = s"INSERT INTO ${schemaName}.admin_log (orderID, user_name, chef_name, dish_name, quantity, state) VALUES (?, ?, ?, ?, ?)"
+        val query = s"INSERT INTO ${schemaName}.admin_log (orderID, user_name, chef_name, dish_name, quantity, state) VALUES (?, ?, ?, ?, ?, ?)"
         val params = List(
           SqlParameter("String", "0"),
           SqlParameter("String", "0"),

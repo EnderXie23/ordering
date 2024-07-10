@@ -13,9 +13,9 @@ case class OrderIDMessagePlanner(override val planContext: PlanContext) extends 
     // Define the SQL query to fetch orders with specific data content
     val sqlQuery =
       s"""
-        SELECT order_id, user_name, chef_name, dish_name, quantity, state
+        SELECT orderID, user_name, chef_name, dish_name, quantity, state
         FROM admin.admin_log
-        WHERE user_name = '0' AND chef_name = '0' AND dish_name = '0' AND quantity = '0' AND state = '0'
+        WHERE user_name = '0' AND chef_name = '0' AND dish_name = '0' AND quantity = '0' AND state = '2'
       """
 
     val jsonResultsIO: IO[List[Json]] = readDBRows(sqlQuery, List.empty)
@@ -23,7 +23,7 @@ case class OrderIDMessagePlanner(override val planContext: PlanContext) extends 
     // Convert the JSON results to a list of tuples
     val results: IO[List[(String, String, String, String, String, String)]] = jsonResultsIO.map { jsonResults =>
       jsonResults.map { jsonResult =>
-        val orderID = jsonResult.hcursor.downField("order_id").as[String].getOrElse("Unknown OrderID")
+        val orderID = jsonResult.hcursor.downField("orderid").as[String].getOrElse("Unknown OrderID")
         val userName = jsonResult.hcursor.downField("user_name").as[String].getOrElse("Unknown User")
         val chefName = jsonResult.hcursor.downField("chef_name").as[String].getOrElse("Unknown Chef")
         val dishName = jsonResult.hcursor.downField("dish_name").as[String].getOrElse("Unknown Dish")
@@ -36,7 +36,7 @@ case class OrderIDMessagePlanner(override val planContext: PlanContext) extends 
     // Generate the formatted string
     val formattedResults: IO[String] = results.map { resultsList =>
       resultsList.map { case (orderID, userName, chefName, dishName, quantity, state) =>
-        s"Order ID: $orderID\nUser Name: $userName\nChef Name: $chefName\nDish Name: $dishName\nQuantity: $quantity\nState: $state\n"
+        s"$orderID"
       }.mkString("\n")
     }
 
@@ -46,9 +46,9 @@ case class OrderIDMessagePlanner(override val planContext: PlanContext) extends 
         val newOrderID: String = orderID.toIntOption.map(_ + 1).getOrElse(0).toString
         val updateQuery =
           s"""
-          UPDATE chef.chef_log
-          SET order_id = ?
-          WHERE order_id = ?
+          UPDATE admin.admin_log
+          SET orderID = ?
+          WHERE orderID = ?
         """
         val params = List(
           SqlParameter("String", newOrderID),
