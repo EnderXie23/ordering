@@ -167,8 +167,8 @@ const ChefPage: React.FC = () => {
 
     const useStyles = makeStyles((theme) => ({
         container: {
-          height: '80vh',
-          width: '1000px',
+            height: '80vh',
+            width: '1000px',
         },
         grid: {
             overflowY: 'auto',
@@ -216,38 +216,57 @@ const ChefPage: React.FC = () => {
                     {groupBy === 'dish' ? '按顾客分类' : '按菜品分类'}
                 </Button>
             </Box>
-            <Grid container rowSpacing={2} columnSpacing={2} className={classes.grid}>
-                {Object.keys(groupedOrders).map((key) => (
-                    <Grid item xs={12} sm={6} md={4} key={key}>
-                        <Card className={classes.card}>
-                            <CardHeader
-                                title={groupBy === 'dish' ? `Dish: ${key}` : `Customer: ${key}`}
-                            />
-                            <CardContent className={classes.cardContent}>
-                                {groupedOrders[key].filter(order => order.state === "waiting")
-                                    .map(order => (
-                                        <Box key={order.id} my={1} display="flex" justifyContent="stretch" alignItems="center">
-                                            <ListItemText
-                                                primary={groupBy === 'dish' ? `from: ${order.customer} x${order.quantity}` : `· ${order.dish} x${order.quantity}`}
-                                            />
-                                            <Box className={classes.actionBox}>
-                                                <IconButton onClick={() => handleComplete(order, "1")}>
-                                                    <CheckIcon />
-                                                </IconButton>
-                                                <IconButton onClick={() => handleComplete(order, "0")}>
-                                                    <CloseIcon />
-                                                </IconButton>
+            {Object.keys(groupedOrders).length === 0 ? (
+                <Box className={classes.grid} display="flex" alignItems="center" justifyContent="center" height="400px" width="1000px">
+                    <Typography variant="h6" align="center">No orders available</Typography>
+                </Box>
+            ) : (
+                <Grid container rowSpacing={2} columnSpacing={2} className={classes.grid}>
+                    {Object.keys(groupedOrders).map((key) => (
+                        <Grid item xs={12} sm={6} md={4} key={key}>
+                            <Card className={classes.card}>
+                                <CardHeader title={groupBy === 'dish' ? `Dish: ${key}` : `Customer: ${key}`} />
+                                <CardContent className={classes.cardContent}>
+                                    {groupedOrders[key]
+                                        .filter((order) => order.state === 'waiting')
+                                        .map((order) => (
+                                            <Box key={order.id} my={1} display="flex" justifyContent="stretch" alignItems="center">
+                                                <ListItemText
+                                                    primary={groupBy === 'dish' ? `from: ${order.customer} x${order.quantity}` : `· ${order.dish} x${order.quantity}`}
+                                                />
+                                                <Box className={classes.actionBox}>
+                                                    <IconButton onClick={() => handleComplete(order, '1')}>
+                                                        <CheckIcon />
+                                                    </IconButton>
+                                                    <IconButton onClick={() => handleComplete(order, '0')}>
+                                                        <CloseIcon />
+                                                    </IconButton>
+                                                </Box>
                                             </Box>
-                                        </Box>
-                                    ))}
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                ))}
-                {Object.keys(groupedOrders).length < 3 && [...Array(3 - Object.keys(groupedOrders).length)].map((_, index) => (
-                    <Grid item xs={12} sm={6} md={4} key={`empty-${index}`}>
-                        <Card style={{ height: '300px', width:'300px', display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'left', marginBottom: 4,visibility: 'hidden' }} /> </Grid> ))}
-            </Grid>
+                                        ))}
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    ))}
+                    {Object.keys(groupedOrders).length < 3 &&
+                        [...Array(3 - Object.keys(groupedOrders).length)].map((_, index) => (
+                            <Grid item xs={12} sm={6} md={4} key={`empty-${index}`}>
+                                <Card
+                                    style={{
+                                        height: '300px',
+                                        width: '300px',
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        justifyContent: 'space-evenly',
+                                        alignItems: 'left',
+                                        marginBottom: 4,
+                                        visibility: 'hidden',
+                                    }}
+                                />
+                            </Grid>
+                        ))}
+                </Grid>
+            )}
             <Box className={classes.box}>
                 <Button variant="contained" color="primary" onClick={handleQuery} style={{ margin: '20px' }}>
                     刷新

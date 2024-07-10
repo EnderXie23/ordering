@@ -9,8 +9,9 @@ import { CustomerRegister } from 'Pages/CustomerPages/CustomerRegister'
 import OrderingPage from 'Pages/CustomerPages/OrderingPage'
 import ChefPage from 'Pages/ChefPages/ChefPage'
 import { AdminPage } from 'Pages/AdminPages/AdminPage'
-import { UserProvider } from 'Pages/UserContext'
-import { ChefProvider } from 'Pages/ChefContext'
+import { AdminOrderPage } from 'Pages/AdminPages/AdminOrderPage'
+import { UserProvider } from 'Pages/CustomerPages/UserContext'
+import { ChefProvider } from 'Pages/ChefPages/ChefContext'
 import { Provider } from 'Pages/Context'
 import OrderSummaryPage from 'Pages/CustomerPages/OrderSummaryPage'
 import CustomerFinishPage from 'Pages/CustomerPages/CustomerFinishPage'
@@ -27,6 +28,9 @@ const Layout = () => {
                 <Route path="/" exact component={Main} />
                 <Route path="/admin" exact>
                     <AdminPage />
+                </Route>
+                <Route path="/admin-order" exact>
+                    <AdminOrderPage />
                 </Route>
                 <Route path="/chef-login" exact>
                     <ChefProvider> {/* Wrap ChefLogin with ChefProvider */}
