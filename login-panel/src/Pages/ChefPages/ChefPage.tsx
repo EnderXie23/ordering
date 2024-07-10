@@ -167,8 +167,8 @@ const ChefPage: React.FC = () => {
 
     const useStyles = makeStyles((theme) => ({
         container: {
-          height: '80vh',
-          width: '1000px',
+            height: '80vh',
+            maxWidth: '1000px',
         },
         grid: {
             overflowY: 'auto',
