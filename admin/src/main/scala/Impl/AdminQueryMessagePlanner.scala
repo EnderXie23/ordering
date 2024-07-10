@@ -32,7 +32,7 @@ case class AdminQueryMessagePlanner(override val planContext: PlanContext) exten
     // Convert the list of tuples to a formatted string
     results.map { resultsList =>
       resultsList.map { case (chefName, customerName, dishName, orderCount, finishState) =>
-        s"Chef: $chefName\nCustomer: $customerName\nDish: $dishName\nOrder Count: $orderCount\nState: $finishState\n"
+        s"Chef: $chefName,Customer: $customerName,Dish: $dishName,Order Count: $orderCount,State: $finishState"
       }.mkString("\n")
     }
   }
