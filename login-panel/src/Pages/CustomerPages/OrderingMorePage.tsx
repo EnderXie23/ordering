@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 import { useUser } from 'Pages/UserContext';
 import { CustomerOrderMessage } from 'Plugins/CustomerAPI/CustomerOrderMessage'
@@ -6,25 +6,23 @@ import axios from 'axios'
 import { Container, Typography, Box, Button, IconButton, Grid, Card, CardContent, CardMedia } from '@mui/material';
 import { Add, Remove } from '@mui/icons-material';
 // eslint-disable-next-line import/no-unresolved
-import * as images from '../../Images/index'
-import { OrderIDMessage } from 'Plugins/AdminAPI/OrderIDMessage'
-import { LogMessage } from 'Plugins/ChefAPI/LogMessage'
+import fuxuanImage from 'Images/fuxuan.jpg';
 
 type Dish = {
     name: string;
-    path: string;
 };
 
 const dishes: Dish[] = [
-    { name: 'Spaghetti Carbonara', path: images.spaghetti_carbonara },
-    { name: 'Margherita Pizza', path: images.margherita_pizza },
-    { name: 'Caesar Salad', path: images.caesar_salad },
-    { name: 'Tiramisu', path: images.tiramisu },
+    { name: 'Spaghetti Carbonara'},
+    { name: 'Margherita Pizza'},
+    { name: 'Caesar Salad'},
+    { name: 'Tiramisu'},
 ];
 
+
 const OrderingPage: React.FC = () => {
-    const { name, setOrderedDishes } = useUser();
-    const customerName = name.split('\n')[1];
+    const { name, setOrderedDishes } = useUser(); // Added setOrderedDishes
+    const customerName = name;
     const history = useHistory();
 
     const [orderCounts, setOrderCounts] = useState<{ [key: string]: number }>({});
@@ -50,71 +48,32 @@ const OrderingPage: React.FC = () => {
         }
     }
 
-    const [orderID, setOrderID] = useState<string | null>(null);
-
-    const sendOrderIDRequest = async (message: OrderIDMessage) => {
-        try {
-            const response = await axios.post(message.getURL(), JSON.stringify(message), {
-                headers: { 'Content-Type': 'application/json' },
-            });
-            console.log(response.status);
-            console.log(response.data);
-            const { orderId } = response.data; // Assuming orderId is part of the response data
-            setOrderID(orderId);
-        } catch (error) {
-            console.error('Error querying order:', error);
-        }
-    };
-
-    const handleOrderID = async () => {
-        const queryMessage = new OrderIDMessage('0'); // Adjust this to your actual service
-        try {
-            await sendOrderIDRequest(queryMessage);
-        } catch (error) {
-            console.error('Error in handleQuery:', error);
-        }
-    };
-
-    useEffect(() => {
-        handleOrderID()
-            .then(() => {
-            })
-            .catch(error => {
-                console.error('Error in handleComplete:', error);
-            });
-    }, []);
-    // TODO: Implement takeout
-    const takeout = "false"
-
     const handleSubmit = () => {
         const orders = Object.entries(orderCounts)
             .filter(([, count]) => count > 0)
-            .map(([dishName, count]) => [dishName, count.toString(), takeout])
-        console.log('Customer:', customerName)
-        console.log('Orders:', orders)
-        const orderMessage = new CustomerOrderMessage(customerName, orders.map(order => order.join(',')).join(';'))
-        const orderMessage2 = new CustomerOrderMessage(orderID, orders.map(order => order.join(',')).join(';'))
-        sendOrderRequest(orderMessage)
+            .map(([dishName, count]) => [dishName, count.toString()]);
+        console.log('Customer:', customerName);
+        console.log('Orders:', orders);
+        const orderMessage = new CustomerOrderMessage(customerName, orders.map(order => order.join(',')).join(';'));
+        sendOrderRequest(orderMessage);
         const formattedOrders = orders.map(order => ({
             name: order[0],
             count: parseInt(order[1], 10)
         }));
-        setOrderedDishes(formattedOrders);
+        setOrderedDishes(formattedOrders);  // Use mergeOrderedDishes here
         history.push('/order-summary');
     }
 
     return (
         <Container>
-            <Box display="flex" justifyContent="space-between" alignItems="center">
-                <Typography variant="h4" gutterBottom>
-                    欢迎，{customerName}！请在下面点菜：
-                </Typography>
-            </Box>
+            <Typography variant="h4" gutterBottom>
+                欢迎，{customerName}！请在下面点菜：
+            </Typography>
             <Grid container spacing={4}>
                 {dishes.map((dish) => (
                     <Grid item xs={12} sm={6} md={4} key={dish.name}>
                         <Card style={{maxWidth: '250px', height: '300px'}}>
-                            <CardMedia component="img" height="140" src= {dish.path} alt={dish.name} />
+                            <CardMedia component="img" height="140" src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.jocooks.com%2Frecipes%2Fmargherita-pizza%2F&psig=AOvVaw205TXyqzfrJYsSs92Jahk7&ust=1720232586106000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCPiL9fbrjocDFQAAAAAdAAAAABAE" alt={dish.name} />
                             <CardContent>
                                 <Typography variant="h5">{dish.name}</Typography>
                                 <Box display="flex" alignItems="center">

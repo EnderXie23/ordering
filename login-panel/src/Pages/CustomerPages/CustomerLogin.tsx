@@ -4,7 +4,7 @@ import { useHistory } from 'react-router'
 import { Container, TextField, Button, Typography, Alert, Box, IconButton, InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import '../index.css'
-import { useUser } from 'Pages/CustomerPages/UserContext'
+import { useUser } from 'Pages/UserContext'
 import { CustomerLoginMessage } from 'Plugins/CustomerAPI/CustomerLoginMessage'
 
 export function CustomerLogin() {

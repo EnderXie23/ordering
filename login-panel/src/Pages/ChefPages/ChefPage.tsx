@@ -6,7 +6,7 @@ import axios from 'axios'
 import { QueryMessage } from 'Plugins/ChefAPI/QueryMessage'
 import { CompleteMessage } from 'Plugins/ChefAPI/CompleteMessage'
 import { LogMessage } from 'Plugins/ChefAPI/LogMessage'
-import { useChef } from './ChefContext';
+import { useChef } from '../ChefContext';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 
