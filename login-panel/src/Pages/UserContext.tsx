@@ -4,8 +4,8 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 interface UserContextType {
     name: string;
     setName: (nickname: string) => void;
-    orderedDishes: { name: string, count: number }[];
-    setOrderedDishes: (dishes: { name: string, count: number }[]) => void;
+    orderedDishes: { name: string, path: string, count: number }[];
+    setOrderedDishes: (dishes: { name: string, path: string, count: number }[]) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -13,19 +13,24 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
     const [name, setName] = useState<string>('');
-    const [orderedDishes, setOrderedDishes] = useState<{ name: string, count: number }[]>([]);
+    const [orderedDishes, setOrderedDishes] =
+        useState<{ name: string, path: string, count: number }[]>([]);
 
-    const mergeOrderedDishes = (newDishes: { name: string, count: number }[]) => {
+    const mergeOrderedDishes = (newDishes: { name: string, path: string, count: number }[]) => {
         setOrderedDishes(prevDishes => {
-            const dishMap = new Map(prevDishes.map(dish => [dish.name, dish.count]));
+            const dishMap = new Map(prevDishes.map(dish => [dish.name, { ...dish }]));
             newDishes.forEach(dish => {
                 if (dishMap.has(dish.name)) {
-                    dishMap.set(dish.name, dishMap.get(dish.name)! + dish.count);
+                    const existingDish = dishMap.get(dish.name)!;
+                    dishMap.set(dish.name, {
+                        ...existingDish,
+                        count: existingDish.count + dish.count,
+                    });
                 } else {
-                    dishMap.set(dish.name, dish.count);
+                    dishMap.set(dish.name, { ...dish });
                 }
             });
-            return Array.from(dishMap, ([name, count]) => ({ name, count }));
+            return Array.from(dishMap.values());
         });
     };
 

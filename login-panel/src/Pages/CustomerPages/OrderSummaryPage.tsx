@@ -1,8 +1,9 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useUser } from 'Pages/UserContext';
-import { Container, Typography,List, ListItem, ListItemAvatar, ListItemText,Avatar, Box, Button, Grid, Card, CardContent } from '@mui/material';
+import { Container, Typography,List, ListItem, ListItemAvatar, ListItemText,Avatar, Box, Button} from '@mui/material';
 import CustomerSidebar from 'Pages/CustomerPages/CustomerSidebar'
+import * as images from '../../Images/index'
 
 const OrderSummaryPage: React.FC = () => {
     const { orderedDishes } = useUser();
@@ -20,7 +21,7 @@ const OrderSummaryPage: React.FC = () => {
                 {orderedDishes.map((dish) => (
                     <ListItem key={dish.name}>
                         <ListItemAvatar>
-                            <Avatar src={`1.jpg`} alt={dish.name} />
+                            <Avatar src={dish.path} alt={dish.name} />
                         </ListItemAvatar>
                         <ListItemText
                             primary={dish.name}

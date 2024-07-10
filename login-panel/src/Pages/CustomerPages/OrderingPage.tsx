@@ -97,6 +97,7 @@ const OrderingPage: React.FC = () => {
         sendOrderRequest(orderMessage)
         const formattedOrders = orders.map(order => ({
             name: order[0],
+            path: dishes.find(d => d.name === order[0]).path,
             count: parseInt(order[1], 10)
         }));
         setOrderedDishes(formattedOrders);
