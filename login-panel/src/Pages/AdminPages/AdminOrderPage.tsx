@@ -83,15 +83,15 @@ export function AdminOrderPage(){
     }, [])
 
     return (
-        <Container style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        <Container style={{ maxHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <Box style = {{position: 'sticky',
                 top: 0,
                 backgroundColor: 'white', // 确保背景色与容器相同或根据需要设置
                 zIndex: 1000, // 确保标题部分在其他内容之上
                 display: 'flex',
                 justifyContent: 'center',
-                paddingBottom: '10px', // 根据需要添加内边距
-                marginBottom: '20px', // 与下方内容保持一定距离
+                padding: '20px', // 根据需要添加内边距
+                margin: '10px', // 与下方内容保持一定距离
             }}>
                 <Typography variant="h4" component="h1" align="center" gutterBottom>
                     订单管理页面
@@ -99,7 +99,7 @@ export function AdminOrderPage(){
             </Box>
             <Box>
                 {Object.entries(groupedOrders).map(([customerName, orders]) => (
-                    <Paper key={customerName} style={{ margin: '20px', padding: '10px' }}>
+                    <Paper key={customerName} style={{ margin: '20px', padding: '10px'}}>
                         <Typography variant="h6">{customerName}</Typography>
                         <List>
                             {orders.map((order, index) => (
