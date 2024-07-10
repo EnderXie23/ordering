@@ -118,9 +118,14 @@ export function AdminOrderPage(){
                 <Button color="primary" onClick={handleAdminQuery}>
                     刷新
                 </Button>
-                <Button color="secondary" onClick={() => {history.push('/')}}>
-                    主页
-                </Button>
+                <Box display="flex" mt={2} className="button-container">
+                    <Button color="secondary" onClick={() => {history.push('/customer-register')}}>
+                        返回
+                    </Button>
+                    <Button color="secondary" onClick={() => {history.push('/')}}>
+                        主页
+                    </Button>
+                </Box>
             </Box>
         </Container>
     )
