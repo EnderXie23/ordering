@@ -119,7 +119,7 @@ export function AdminOrderPage(){
                     刷新
                 </Button>
                 <Box display="flex" mt={2} className="button-container">
-                    <Button color="secondary" onClick={() => {history.push('/customer-register')}}>
+                    <Button color="secondary" onClick={() => {history.push('/admin')}}>
                         返回
                     </Button>
                     <Button color="secondary" onClick={() => {history.push('/')}}>

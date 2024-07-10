@@ -111,7 +111,7 @@ export function CustomerLogin() {
                     </Button>
                 </Box>
                 <Box display="flex" mt={2} className="button-container">
-                    <Button color="secondary" onClick={() => {history.push('/admin-order')}}>
+                    <Button color="secondary" onClick={() => {history.push('/customer-register')}}>
                         新用户注册
                     </Button>
                     <Button color="secondary" onClick={() => {history.push('/')}}>
