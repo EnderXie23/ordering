@@ -5,9 +5,9 @@ import { CustomerOrderMessage } from 'Plugins/CustomerAPI/CustomerOrderMessage'
 import axios from 'axios'
 import { Container, Typography, Box, Button, IconButton, Grid, Card, CardContent, CardMedia } from '@mui/material';
 import { Add, Remove } from '@mui/icons-material';
-// eslint-disable-next-line import/no-unresolved
 import * as images from '../../Images/index'
 import { OrderIDMessage } from 'Plugins/AdminAPI/OrderIDMessage'
+import CustomerSidebar from './CustomerSidebar'
 import { LogMessage } from 'Plugins/ChefAPI/LogMessage'
 
 type Dish = {
@@ -109,6 +109,7 @@ const OrderingPage: React.FC = () => {
                 <Typography variant="h4" gutterBottom>
                     欢迎，{customerName}！请在下面点菜：
                 </Typography>
+                <CustomerSidebar/>
             </Box>
             <Grid container spacing={4}>
                 {dishes.map((dish) => (

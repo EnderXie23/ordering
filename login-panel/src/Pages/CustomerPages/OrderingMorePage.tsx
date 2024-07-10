@@ -5,6 +5,7 @@ import { CustomerOrderMessage } from 'Plugins/CustomerAPI/CustomerOrderMessage'
 import axios from 'axios'
 import { Container, Typography, Box, Button, IconButton, Grid, Card, CardContent, CardMedia } from '@mui/material';
 import { Add, Remove } from '@mui/icons-material';
+import CustomerSidebar from './CustomerSidebar'
 // eslint-disable-next-line import/no-unresolved
 import fuxuanImage from 'Images/fuxuan.jpg';
 
@@ -66,9 +67,12 @@ const OrderingPage: React.FC = () => {
 
     return (
         <Container>
-            <Typography variant="h4" gutterBottom>
-                欢迎，{customerName}！请在下面点菜：
-            </Typography>
+            <Box display="flex" justifyContent="space-between" alignItems="center">
+                <Typography variant="h4" gutterBottom>
+                    欢迎，{customerName}！请在下面点菜：
+                </Typography>
+                <CustomerSidebar/>
+            </Box>
             <Grid container spacing={4}>
                 {dishes.map((dish) => (
                     <Grid item xs={12} sm={6} md={4} key={dish.name}>

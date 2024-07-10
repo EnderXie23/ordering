@@ -1,6 +1,7 @@
 import { useHistory } from 'react-router-dom';
 import { useUser } from 'Pages/UserContext';
 import React, { useState } from 'react';
+import CustomerSidebar from './CustomerSidebar'
 import { Container, Typography, Box, Button, TextField } from '@mui/material';
 
 const CustomerFinishPage: React.FC = () => {
@@ -17,9 +18,12 @@ const CustomerFinishPage: React.FC = () => {
 
     return (
         <Container>
-            <Typography variant="h4" gutterBottom>
-                订单完成
-            </Typography>
+            <Box display="flex" justifyContent="space-between" alignItems="center">
+                <Typography variant="h4" gutterBottom>
+                    订单完成
+                </Typography>
+                <CustomerSidebar/>
+            </Box>
             <Typography variant="body1" gutterBottom>
                 感谢您的订购！
             </Typography>

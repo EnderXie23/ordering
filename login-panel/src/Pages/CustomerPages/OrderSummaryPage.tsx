@@ -2,6 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useUser } from 'Pages/UserContext';
 import { Container, Typography,List, ListItem, ListItemAvatar, ListItemText,Avatar, Box, Button, Grid, Card, CardContent } from '@mui/material';
+import CustomerSidebar from 'Pages/CustomerPages/CustomerSidebar'
 
 const OrderSummaryPage: React.FC = () => {
     const { orderedDishes } = useUser();
@@ -9,9 +10,12 @@ const OrderSummaryPage: React.FC = () => {
 
     return (
         <Container>
-            <Typography variant="h4" gutterBottom>
-                订单总结
-            </Typography>
+            <Box display="flex" justifyContent="space-between" alignItems="center">
+                <Typography variant="h4" gutterBottom>
+                    订单总结
+                </Typography>
+                <CustomerSidebar/>
+            </Box>
             <List>
                 {orderedDishes.map((dish) => (
                     <ListItem key={dish.name}>
