@@ -10,16 +10,13 @@ import OrderingPage from 'Pages/CustomerPages/OrderingPage'
 import ChefPage from 'Pages/ChefPages/ChefPage'
 import { AdminPage } from 'Pages/AdminPages/AdminPage'
 import { AdminOrderPage } from 'Pages/AdminPages/AdminOrderPage'
-import { UserProvider } from 'Pages/CustomerPages/UserContext'
-import { ChefProvider } from 'Pages/ChefPages/ChefContext'
+import { UserProvider } from 'Pages/UserContext'
+import { ChefProvider } from 'Pages/ChefContext'
 import { Provider } from 'Pages/Context'
 import OrderSummaryPage from 'Pages/CustomerPages/OrderSummaryPage'
 import CustomerFinishPage from 'Pages/CustomerPages/CustomerFinishPage'
 import OrderingMorePage from 'Pages/CustomerPages/OrderingMorePage'
 import CommentPage from 'Pages/CustomerPages/CommentPage'
-
-
-
 
 const Layout = () => {
     return (
