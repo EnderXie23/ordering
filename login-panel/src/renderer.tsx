@@ -18,9 +18,6 @@ import CustomerFinishPage from 'Pages/CustomerPages/CustomerFinishPage'
 import OrderingMorePage from 'Pages/CustomerPages/OrderingMorePage'
 import CommentPage from 'Pages/CustomerPages/CommentPage'
 
-
-
-
 const Layout = () => {
     return (
         <HashRouter>
