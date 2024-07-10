@@ -16,7 +16,7 @@
 
 - [ ] customer.ratings新增表单，四列：dish_name, customer, chef, rating
 
-- [ ] admin.dish新增表单，两列：name, path
+- [ ] admin.dish新增表单，三列：name, path, price
 
 - [ ] customer.user_name新增一列：余额
 
