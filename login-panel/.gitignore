@@ -94,6 +94,7 @@ out/
 
 
 config.json
+package-lock.json
 .idea
 src/Utils/pdfjs-dist/
 
