@@ -5,7 +5,6 @@ import { CustomerOrderMessage } from 'Plugins/CustomerAPI/CustomerOrderMessage'
 import axios from 'axios'
 import { Container, Typography, Box, Button, IconButton, Grid, Card, CardContent, CardMedia } from '@mui/material';
 import { Add, Remove } from '@mui/icons-material';
-import * as images from '../../Images/index'
 import { OrderIDMessage } from 'Plugins/AdminAPI/OrderIDMessage'
 import CustomerSidebar from './CustomerSidebar'
 import { LogMessage } from 'Plugins/ChefAPI/LogMessage'
@@ -15,11 +14,14 @@ type Dish = {
     path: string;
 };
 
+//const image = require.context('../../Images', true, /\.jpg$/);
+//const imagePath = image.keys().map(path => path.split('/')[1]);
+
 const dishes: Dish[] = [
-    { name: 'Spaghetti Carbonara', path: images.spaghetti_carbonara },
-    { name: 'Margherita Pizza', path: images.margherita_pizza },
-    { name: 'Caesar Salad', path: images.caesar_salad },
-    { name: 'Tiramisu', path: images.tiramisu },
+    { name: 'Spaghetti Carbonara', path: 'spaghetti_carbonara.jpg' },
+    { name: 'Margherita Pizza', path: 'margherita_pizza.jpg' },
+    { name: 'Caesar Salad', path: 'caesar_salad.jpg' },
+    { name: 'Tiramisu', path: 'tiramisu.jpg' },
 ];
 
 const OrderingPage: React.FC = () => {
@@ -116,7 +118,7 @@ const OrderingPage: React.FC = () => {
                 {dishes.map((dish) => (
                     <Grid item xs={12} sm={6} md={4} key={dish.name}>
                         <Card style={{maxWidth: '250px', height: '300px'}}>
-                            <CardMedia component="img" height="140" src= {dish.path} alt={dish.name} />
+                            <CardMedia component="img" height="140" src= {require('../../Images/' + dish.path).default} alt={dish.name} />
                             <CardContent>
                                 <Typography variant="h5">{dish.name}</Typography>
                                 <Box display="flex" alignItems="center">
