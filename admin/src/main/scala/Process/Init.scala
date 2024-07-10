@@ -35,6 +35,7 @@ object Init {
     for {
       _ <- API.init(config.maximumClientConnection)
       _ <- initSchema(schemaName)
+      _ <- writeDB(s"CREATE TABLE IF NOT EXISTS ${schemaName}.dishes (name TEXT, img_path TEXT, price TEXT)", List())
       _ <- writeDB(s"CREATE TABLE IF NOT EXISTS ${schemaName}.admin_log (orderID TEXT, user_name TEXT, chef_name TEXT, dish_name TEXT, quantity TEXT, state TEXT)", List())
       rows <- readDBRows(checkQuery, checkParams)
       result <- if (rows.isEmpty) {
