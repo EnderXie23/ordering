@@ -30,7 +30,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
 
     return (
-        <UserContext.Provider value={{ name, setName, orderedDishes, setOrderedDishes:mergeOrderedDishes }}>x
+        <UserContext.Provider value={{ name, setName, orderedDishes, setOrderedDishes:mergeOrderedDishes }}>
             {children}
         </UserContext.Provider>
     );
