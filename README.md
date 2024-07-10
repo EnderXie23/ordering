@@ -18,7 +18,7 @@
 
 - [ ] admin.dish新增表单，三列：name, path, price
 
-- [ ] customer.user_name新增一列：余额
+- [ ] customer.user_name新增一列：余额saving
 
 2. 页面类：
 
