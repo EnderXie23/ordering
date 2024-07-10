@@ -11,12 +11,14 @@ import {
     ListItem,
     ListItemText,
     Card,
-    CircularProgress, Grid,
+    Rating,
+    CircularProgress, Grid, Alert,
 } from '@mui/material'
 import { makeStyles } from '@material-ui/core/styles';
 import { List } from 'antd'
-import { Rating } from '@mui/material'
-import * as test from 'node:test'
+import { useUser } from 'Pages/UserContext'
+import { CustomerCommentMessage } from 'Plugins/CustomerAPI/CustomerCommentMessage'
+import { useHistory } from 'react-router'
 
 interface Comment {
     id: number;
@@ -51,7 +53,13 @@ const CommentPage: React.FC = () => {
     const { postId } = useParams<Params>();
     const [comments, setComments] = useState<Comment[]>([]);
     const [loading, setLoading] = useState(true);
-    const [author, setAuthor] = useState('');
+    const history = useHistory();
+    const {name} = useUser()
+    const username = name.split('\n')[1]
+    const [errorMessage, setErrorMessage] = useState(''); // State for error message
+    const [successMessage, setSuccessMessage] = useState('');
+
+    const [author, setAuthor] = useState(username);
     const [text, setText] = useState('');
     const [overallRating, setOverallRating] = useState(0);
     const [tasteRating, setTasteRating] = useState(0);
@@ -87,26 +95,36 @@ const CommentPage: React.FC = () => {
         fetchComments();
     }, [postId]);
 
-    const addComment = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const customerCommentRequest = async (message: CustomerCommentMessage) => {
         try {
-            const response = await axios.post(`/api/posts/${postId}/comments`, {
-                author,
-                text,
-                overallRating,
-                tasteRating,
-                packagingRating,
-            });
-            setComments([...comments, response.data]);
-            setAuthor('');
-            setText('');
-            setOverallRating(0);
-            setTasteRating(0);
-            setPackagingRating(0);
+            const response = await axios.post(message.getURL(), JSON.stringify(message), {
+                headers: { 'Content-Type': 'application/json' },
+            })
+            console.log(response.status)
+            console.log(response.data)
         } catch (error) {
-            console.error('Error adding comment', error);
+            console.error('Error submitting comment:', error)
         }
-    };
+    }
+
+    const handleSubmit = async () => {
+        if (author === '' || text === '') {
+            setErrorMessage('姓名或评价不能为空');
+            return;
+        }
+        if (overallRating === 0 || tasteRating === 0 || packagingRating === 0 || serviceRating === 0 || envRating === 0) {
+            setErrorMessage('请给出完整评分');
+            return;
+        }
+        const commentMessage = new CustomerCommentMessage(author, text, overallRating.toString(), tasteRating.toString(), packagingRating.toString(), serviceRating.toString(), envRating.toString());
+        try {
+            await customerCommentRequest(commentMessage);
+            setSuccessMessage('评价成功');
+            setErrorMessage('');
+        } catch (error) {
+            console.error('Error in handleQuery:', error);
+        }
+    }
 
     return (
         <Container maxWidth="md">
@@ -146,7 +164,7 @@ const CommentPage: React.FC = () => {
                 <Typography variant="h4" gutterBottom>
                     评价
                 </Typography>
-                <form onSubmit={addComment} style={{ marginTop: '20px' }}>
+                <form style={{ marginTop: '20px' }}>
                     <TextField
                         label="姓名"
                         variant="outlined"
@@ -197,10 +215,15 @@ const CommentPage: React.FC = () => {
                             </Box>
                         </Grid>
                     </Grid>
-                    <Button type="submit" variant="contained" color="primary" fullWidth style={{ marginTop: '20px' }} onClick={() => {console.log()}}>
+                    <Button variant="contained" color="primary" fullWidth style={{ marginTop: '20px' }} onClick={handleSubmit}>
                         Submit
                     </Button>
+                    <Button variant="contained" color="secondary" fullWidth style={{ marginTop: '10px' }} onClick={() => history.push("/finish")}>
+                        Back
+                    </Button>
                 </form>
+                {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+                {successMessage && <Alert severity="success">{successMessage}</Alert>}
             </Paper>
         </Container>
     );
