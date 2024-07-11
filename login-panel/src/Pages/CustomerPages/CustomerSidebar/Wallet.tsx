@@ -1,10 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, Button, Alert } from '@mui/material'
 import WalletCharge from './WalletCharge'
-import { CustomerQueryProfileMessage } from 'Plugins/CustomerAPI/CustomerProfileMessage'
+import { CustomerQueryProfileMessage, CustomerChargeMessage } from 'Plugins/CustomerAPI/CustomerProfileMessage'
 import axios from 'axios'
 import { useUser } from 'Pages/UserContext'
-import { CustomerChargeMessage } from 'Plugins/CustomerAPI/CustomerProfileMessage';
 
 interface WalletProps {
     open: boolean;
@@ -68,7 +67,7 @@ const Wallet: React.FC<WalletProps> = ({ open,  onClose }) => {
     };
 
     const handleCharge = (amount: number) => {
-        const new_amount = (balance + amount).toString();
+        const new_amount = (Number(balance) + Number(amount)).toString();
         const cmessage = new CustomerChargeMessage(username, new_amount);
         ChargeRequest(cmessage);
 
