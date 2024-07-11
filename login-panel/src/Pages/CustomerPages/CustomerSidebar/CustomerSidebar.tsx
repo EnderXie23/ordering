@@ -23,6 +23,7 @@ const CustomerSidebar: React.FC = () => {
         setProfileOpen(true);
     };
     const handleProfileClose = () => {
+        setDrawerOpen(true);
         setProfileOpen(false);
     };
 

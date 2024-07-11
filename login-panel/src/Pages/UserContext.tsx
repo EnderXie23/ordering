@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface UserContextType {
     name: string;
-    setName: (nickname: string) => void;
+    setName: (newName: string) => void;
     orderedDishes: { name: string, path: string, count: number }[];
     setOrderedDishes: (dishes: { name: string, path: string, count: number }[]) => void;
 }

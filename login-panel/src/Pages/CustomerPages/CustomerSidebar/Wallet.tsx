@@ -24,7 +24,7 @@ const Wallet: React.FC<WalletProps> = ({ open,  onClose }) => {
                 headers: { 'Content-Type': 'application/json' },
             });
             console.log(response.data)
-            setBalance(response.data.split('\n')[1])
+            setBalance(response.data.split('\n')[2])
         } catch (error) {
             console.error('Unexpected error:', error);
         }
@@ -39,6 +39,9 @@ const Wallet: React.FC<WalletProps> = ({ open,  onClose }) => {
             if (response.data == 'Savings updated successfully'){
                 setSuccessMessage('充值成功');
                 setErrorMessage('');
+                setTimeout(() => {
+                    setSuccessMessage('');
+                },1500);
             } else {
                 setErrorMessage('充值失败');
                 setSuccessMessage('');
@@ -50,13 +53,6 @@ const Wallet: React.FC<WalletProps> = ({ open,  onClose }) => {
         }
     };
 
-    useEffect(() => {
-        if (open) {
-            const message = new CustomerQueryProfileMessage(username);
-            QueryProfileRequest(message);
-        }
-    }, [open]);
-
     // wallet-charge
     const [chargeWalletOpen, setWalletChargeOpen] = useState(false);
     const handleWalletChargeOpen = () => {
@@ -66,10 +62,10 @@ const Wallet: React.FC<WalletProps> = ({ open,  onClose }) => {
         setWalletChargeOpen(false);
     };
 
-    const handleCharge = (amount: number) => {
+    const handleCharge = async(amount: number) => {
         const new_amount = (Number(balance) + Number(amount)).toString();
         const cmessage = new CustomerChargeMessage(username, new_amount);
-        ChargeRequest(cmessage);
+        await ChargeRequest(cmessage);
 
         const qmessage = new CustomerQueryProfileMessage(username);
         QueryProfileRequest(qmessage)
@@ -80,6 +76,15 @@ const Wallet: React.FC<WalletProps> = ({ open,  onClose }) => {
         setSuccessMessage('');
         onClose();
     }
+
+    useEffect(() => {
+        if (open) {
+            const message = new CustomerQueryProfileMessage(username);
+            QueryProfileRequest(message);
+            setErrorMessage('');
+            setSuccessMessage('');
+        }
+    }, [open]);
 
     return (
         <>

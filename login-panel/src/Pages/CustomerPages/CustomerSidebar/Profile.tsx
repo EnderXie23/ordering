@@ -14,7 +14,7 @@ import { AccountCircle } from '@mui/icons-material';
 import ProfileEdit from './ProfileEdit';
 import ProfileChangePassword from './ProfileChangePassword';
 import { useUser } from 'Pages/UserContext'
-import { CustomerChangePwdMessage, CustomerQueryProfileMessage } from 'Plugins/CustomerAPI/CustomerProfileMessage'
+import { CustomerQueryProfileMessage } from 'Plugins/CustomerAPI/CustomerProfileMessage'
 import axios from 'axios'
 
 const useStyles = makeStyles((theme) => ({
@@ -59,15 +59,13 @@ interface UserProfileDialogProps {
 const Profile: React.FC<UserProfileDialogProps> = ({ open, onClose }) => {
     const classes = useStyles();
 
-    const { name } = useUser();
+    const { name,setName } = useUser();
     const username = name.split('\n')[0];
     const alias = name.split('\n')[1];
     const [phoneNumber, setPhoneNumber] = useState('1234567890');
     const [editOpen, setEditOpen] = useState(false);
     const [passwordOpen, setPasswordOpen] = useState(false);
     const [balance, setBalance] = useState(0);
-    const [errorMessage, setErrorMessage] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
 
 
     const handleEditOpen = () => {
@@ -76,6 +74,7 @@ const Profile: React.FC<UserProfileDialogProps> = ({ open, onClose }) => {
 
     const handleEditClose = () => {
         setEditOpen(false);
+        loadProfile();
     };
 
     const handlePasswordOpen = () => {
@@ -92,12 +91,11 @@ const Profile: React.FC<UserProfileDialogProps> = ({ open, onClose }) => {
                 headers: { 'Content-Type': 'application/json' },
             });
             console.log(response.data)
-            setPhoneNumber(response.data.split('\n')[0])
-            setBalance(response.data.split('\n')[1])
+            setName(username + '\n' + response.data.split('\n')[0])
+            setPhoneNumber(response.data.split('\n')[1])
+            setBalance(response.data.split('\n')[2])
         } catch (error) {
             console.error('Unexpected error:', error);
-            setErrorMessage('Unexpected error occurred');
-            setSuccessMessage('');
         }
     };
 
@@ -167,7 +165,7 @@ const Profile: React.FC<UserProfileDialogProps> = ({ open, onClose }) => {
                     关闭
                 </Button>
             </DialogActions>
-            <ProfileEdit open={editOpen} onClose={handleEditClose} />
+            <ProfileEdit open={editOpen} onClose={handleEditClose}/>
             <ProfileChangePassword open={passwordOpen} onClose={handlePasswordClose} />
         </Dialog>
     );

@@ -44,7 +44,7 @@ const ProfileChangePassword: React.FC<ProfileChangePasswordProps> = ({open, onCl
                 setErrorMessage('');
                 setTimeout(() => {
                     handleClose();
-                }, 1000);
+                }, 1500);
             }
         } catch (error) {
             console.error('Change password error:', error);

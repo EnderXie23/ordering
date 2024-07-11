@@ -22,6 +22,19 @@ export class CustomerQueryProfileMessage extends CustomerMessage {
     }
 }
 
+export class CustomerEditProfileMessage extends CustomerMessage {
+    userName: string;
+    nickname: string;
+    phone: string;
+
+    constructor(userName: string, nickname: string, phone: string) {
+        super();
+        this.userName = userName;
+        this.nickname = nickname;
+        this.phone = phone;
+    }
+}
+
 export class CustomerChargeMessage extends CustomerMessage {
     userName: string;
     amount: string;

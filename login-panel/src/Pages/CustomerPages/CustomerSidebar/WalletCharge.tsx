@@ -16,6 +16,7 @@ const WalletCharge: React.FC<WalletChargeProps> = ({ open, onClose, onCharge }) 
             onCharge(amount);
             setChargeAmount('');
         }
+        onClose();
     };
 
     return (
