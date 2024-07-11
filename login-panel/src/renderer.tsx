@@ -17,7 +17,6 @@ import OrderSummaryPage from 'Pages/CustomerPages/OrderSummaryPage'
 import CustomerFinishPage from 'Pages/CustomerPages/CustomerFinishPage'
 import OrderingMorePage from 'Pages/CustomerPages/OrderingMorePage'
 import CommentPage from 'Pages/CustomerPages/CommentPage'
-import Profile from 'Pages/CustomerPages/CustomerSidebar/Profile'
 
 const Layout = () => {
     return (
