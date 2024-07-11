@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useUser } from 'Pages/UserContext';
 import { Container, Typography,List, ListItem, ListItemAvatar, ListItemText,Avatar, Box, Button} from '@mui/material';
-import CustomerSidebar from 'Pages/CustomerPages/CustomerSidebar'
+import CustomerSidebar from 'Pages/CustomerPages/CustomerSidebar/CustomerSidebar'
 
 const OrderSummaryPage: React.FC = () => {
     const { orderedDishes } = useUser();

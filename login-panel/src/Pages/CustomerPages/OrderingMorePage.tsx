@@ -5,7 +5,7 @@ import { CustomerOrderMessage } from 'Plugins/CustomerAPI/CustomerOrderMessage'
 import axios from 'axios'
 import { Container, Typography, Box, Button, IconButton, Grid, Card, CardContent, CardMedia } from '@mui/material';
 import { Add, Remove } from '@mui/icons-material';
-import CustomerSidebar from './CustomerSidebar'
+import CustomerSidebar from './CustomerSidebar/CustomerSidebar'
 
 type Dish = {
     name: string;

@@ -6,7 +6,7 @@ import axios from 'axios'
 import { Container, Typography, Box, Button, IconButton, Grid, Card, CardContent, CardMedia } from '@mui/material';
 import { Add, Remove } from '@mui/icons-material';
 import { OrderIDMessage } from 'Plugins/AdminAPI/OrderIDMessage'
-import CustomerSidebar from './CustomerSidebar'
+import CustomerSidebar from './CustomerSidebar/CustomerSidebar'
 import { LogMessage } from 'Plugins/ChefAPI/LogMessage'
 
 type Dish = {

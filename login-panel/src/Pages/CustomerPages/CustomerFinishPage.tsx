@@ -1,7 +1,7 @@
 import { useHistory } from 'react-router-dom';
 import { useUser } from 'Pages/UserContext';
 import React, { useState } from 'react';
-import CustomerSidebar from './CustomerSidebar'
+import CustomerSidebar from './CustomerSidebar/CustomerSidebar'
 import { Container, Typography, Box, Button, TextField } from '@mui/material';
 
 const CustomerFinishPage: React.FC = () => {
