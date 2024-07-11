@@ -6,8 +6,6 @@ import axios from 'axios'
 import { Container, Typography, Box, Button, IconButton, Grid, Card, CardContent, CardMedia } from '@mui/material';
 import { Add, Remove } from '@mui/icons-material';
 import CustomerSidebar from './CustomerSidebar'
-// eslint-disable-next-line import/no-unresolved
-
 
 type Dish = {
     name: string;
