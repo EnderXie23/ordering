@@ -7,7 +7,7 @@ import Wallet from './Wallet';
 
 const CustomerSidebar: React.FC = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
-    const { name } = useUser(); // Replace with actual username
+    const { name } = useUser();
     const username = name.split('\n')[1];
 
     const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {

@@ -11,12 +11,11 @@ const WalletCharge: React.FC<WalletChargeProps> = ({ open, onClose, onCharge }) 
     const [chargeAmount, setChargeAmount] = useState('');
 
     const handleChargeClick = () => {
-        const amount = parseInt(chargeAmount, 10);
+        const amount = parseFloat(chargeAmount);
         if (!isNaN(amount)) {
             onCharge(amount);
             setChargeAmount('');
         }
-        onClose();
     };
 
     return (
