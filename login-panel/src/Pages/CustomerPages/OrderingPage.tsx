@@ -153,7 +153,7 @@ const OrderingPage: React.FC = () => {
 
         const orders = Object.entries(orderCounts)
             .filter(([, count]) => count > 0)
-            .map(([dishName, count]) => [dishName, count.toString(), dishes.find(dish => dish.name === 'Tiramisu')?.price ,takeout])
+            .map(([dishName, count]) => [dishName, count.toString(), dishes.find(dish => dish.name === dishName)?.price ,takeout])
         console.log('Customer:', customerName)
         console.log('Orders:', orders)
         const orderMessage = new CustomerOrderMessage(customerName, orders.map(order => order.join(',')).join(';'))
