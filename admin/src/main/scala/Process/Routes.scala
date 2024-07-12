@@ -14,6 +14,16 @@ import org.http4s.dsl.io.*
 object Routes:
   private def executePlan(messageType:String, str: String): IO[String]=
     messageType match {
+      case "DishDeleteMessage" =>
+        IO(decode[DishDeleteMessagePlanner](str).getOrElse(throw new Exception("Invalid JSON for DishDeleteMessage")))
+          .flatMap{m=>
+            m.fullPlan.map(_.asJson.toString)
+          }
+      case "DishPriceMessage" =>
+        IO(decode[DishPriceMessagePlanner](str).getOrElse(throw new Exception("Invalid JSON for DishPriceMessage")))
+          .flatMap{m=>
+            m.fullPlan.map(_.asJson.toString)
+          }
       case "DishChangeMessage" =>
         IO(decode[DishChangeMessagePlanner](str).getOrElse(throw new Exception("Invalid JSON for DishChangeMessage")))
           .flatMap{m=>

@@ -19,3 +19,22 @@ export class DishChangeMessage extends AdminMessage {
     }
 }
 
+export class DishPriceMessage extends AdminMessage {
+    name: string;
+    price: string;
+
+    constructor(name: string, price: string) {
+        super();
+        this.name = name;
+        this.price = price;
+    }
+}
+
+export class DishDeleteMessage extends AdminMessage {
+    name: string;
+
+    constructor(name: string) {
+        super();
+        this.name = name;
+    }
+}
