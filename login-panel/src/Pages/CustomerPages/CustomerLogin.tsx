@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios, { isAxiosError } from 'axios';
 import { useHistory } from 'react-router'
-import { Container, TextField, Button, Typography, Alert, Box, IconButton, InputAdornment } from '@mui/material';
+import { Container, TextField, Button, Typography, Alert, Box, IconButton, InputAdornment, Grid } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import '../index.css'
 import { useUser } from 'Pages/UserContext'
@@ -88,55 +88,80 @@ export function CustomerLogin() {
     };
 
     return (
-        <Container maxWidth="sm" className="container">
-            <Typography variant="h4" component="h1" align="center" gutterBottom>
-                顾客登录
-            </Typography>
-            <form onSubmit={(e) => e.preventDefault()}>
-                <TextField
-                    label="用户名"
-                    value={userName}
-                    onChange={(e) => setUserName(e.target.value)}
-                    fullWidth
-                    margin="normal"
-                />
-                <TextField
-                    label="密码"
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    fullWidth
-                    margin="normal"
-                    InputProps={{
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <IconButton
-                                    aria-label="toggle password visibility"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    edge="end"
-                                >
-                                    {showPassword ? <Visibility /> : <VisibilityOff />}
-                                </IconButton>
-                            </InputAdornment>
-                        ),
-                    }}
-                />
-                <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column'}}>
-                    {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
-                    {successMessage && <Alert severity="success">{successMessage}</Alert>}
-                    <Button variant="contained" color="primary" onClick={CustomerLogin} fullWidth>
-                        登录
-                    </Button>
-                </Box>
-                <Box display="flex" mt={2} className="button-container">
-                    <Button color="secondary" onClick={() => {history.push('/customer-register')}}>
-                        新用户注册
-                    </Button>
-                    <Button color="secondary" onClick={() => {history.push('/')}}>
-                        主页
-                    </Button>
-                </Box>
-            </form>
+        <Container maxWidth="md" className="container" sx={{
+            backgroundColor: '#f5f5f5',
+            borderRadius: '10px',
+            padding: '2rem',
+            boxShadow: '0 3px 10px rgba(0, 0, 0, 0.2)',
+        }}>
+            <Grid container spacing={2}>
+                <Grid item xs={12} sm={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <img src={require(`../../Images/tiramisu.jpg`).default} alt="Login illustration" style={{ width: '100%', borderRadius: '10px' }} />
+                </Grid>
+                <Grid item xs={12} sm={8}>
+                    <Typography variant="h4" component="h1" align="center" gutterBottom sx={{
+                        fontSize: '2rem',
+                        fontWeight: 'bold',
+                        marginBottom: '1rem'
+                    }}>
+                        顾客登录
+                    </Typography>
+                    <form onSubmit={(e) => e.preventDefault()}>
+                        <TextField
+                            label="用户名"
+                            value={userName}
+                            onChange={(e) => setUserName(e.target.value)}
+                            fullWidth
+                            margin="normal"
+                            sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
+                        />
+                        <TextField
+                            label="密码"
+                            type={showPassword ? 'text' : 'password'}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            fullWidth
+                            margin="normal"
+                            sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            edge="end"
+                                        >
+                                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+                        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', marginTop: '1rem' }}>
+                            {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+                            {successMessage && <Alert severity="success">{successMessage}</Alert>}
+                            <Button variant="contained" color="primary" onClick={CustomerLogin} fullWidth sx={{
+                                backgroundColor: '#1976d2',
+                                color: '#fff',
+                                padding: '0.75rem',
+                                borderRadius: '5px',
+                                fontWeight: 'bold',
+                                fontSize: '1rem'
+                            }}>
+                                登录
+                            </Button>
+                        </Box>
+                        <Box display="flex" mt={2} justifyContent="space-between" className="button-container">
+                            <Button color="secondary" onClick={() => {history.push('/customer-register')}} sx={{ textTransform: 'none', fontWeight: 'bold' }}>
+                                新用户注册
+                            </Button>
+                            <Button color="secondary" onClick={() => {history.push('/')}} sx={{ textTransform: 'none', fontWeight: 'bold' }}>
+                                主页
+                            </Button>
+                        </Box>
+                    </form>
+                </Grid>
+            </Grid>
         </Container>
     );
 }
