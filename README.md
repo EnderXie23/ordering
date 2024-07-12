@@ -2,6 +2,10 @@
 
 ### This is a basic implementation of a restaurant ordering system.
 
+### Bugs:
+
+- [ ] 在orderingpage页面上充值，显示余额不会刷新，需要手动重启
+
 #### TO-DO:
 
 1. 表单类：
@@ -38,7 +42,7 @@
 
 - [ ] 顾客历史订单页面：查看此前的订单及是否完成
 
-- [ ] 点单页面新增：给每种菜品添加价格
+- [x] 点单页面新增：给每种菜品添加价格
 
 3. 方法类：
 
