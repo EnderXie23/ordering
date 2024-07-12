@@ -28,9 +28,6 @@ type Dish = {
     price: string;
 };
 
-//const image = require.context('../../Images', true, /\.jpg$/);
-//const imagePath = image.keys().map(path => path.split('/')[1]);
-
 let dishes: Dish[] = [
     { name: 'Spaghetti Carbonara', path: 'spaghetti_carbonara.jpg', price: '125' },
     { name: 'Margherita Pizza', path: 'margherita_pizza.jpg', price: '100' },
@@ -130,6 +127,14 @@ const OrderingPage: React.FC = () => {
         }
     };
 
+    const getImagePath = (path: string): string => {
+        try {
+            return require(`../../Images/${path}`).default;
+        } catch (error) {
+            return require(`../../Images/default.jpg`).default;
+        }
+    };
+
     useEffect(() => {
         readDishesInfo()
         handleOrderID()
@@ -176,7 +181,7 @@ const OrderingPage: React.FC = () => {
                 {dishes.map((dish) => (
                     <Grid item xs={12} sm={6} md={4} key={dish.name}>
                         <Card style={{maxWidth: '250px', height: '300px'}}>
-                            <CardMedia component="img" height="140" src= {require('../../Images/' + dish.path).default} alt={dish.name} />
+                            <CardMedia component="img" height="140" src= {getImagePath(dish.path)} alt={dish.name} />
                             <CardContent>
                                 <Typography variant="h5">{dish.name}</Typography>
                                 <Box display="flex" alignItems="center">

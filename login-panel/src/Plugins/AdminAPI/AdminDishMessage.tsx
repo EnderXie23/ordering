@@ -7,11 +7,15 @@ export class DishQueryMessage extends AdminMessage {
 }
 
 export class DishChangeMessage extends AdminMessage {
-    userName: string;
+    name: string;
+    imgPath: string;
+    price: string;
 
-    constructor(userName: string) {
+    constructor(name: string, imgPath: string, price: string) {
         super();
-        this.userName = userName;
+        this.name = name;
+        this.imgPath = imgPath;
+        this.price = price;
     }
 }
 

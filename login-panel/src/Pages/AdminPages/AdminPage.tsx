@@ -16,7 +16,7 @@ export function AdminPage(){
                 管理员页面
             </Typography>
             <Box display="flex" flexDirection="column" alignItems="stretch" mt={2} className="button-container" gap={2}>
-                <Button variant="outlined" className="custom-button" startIcon={<RestaurantMenuIcon />} >
+                <Button variant="outlined" className="custom-button" startIcon={<RestaurantMenuIcon />} onClick={() => history.push("/admin-dish")}>
                     查看菜品
                 </Button>
                 <Button variant="outlined" className="custom-button" startIcon={<ReceiptIcon />} onClick={() => history.push("/admin-order")}>

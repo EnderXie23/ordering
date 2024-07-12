@@ -10,6 +10,7 @@ import OrderingPage from 'Pages/CustomerPages/OrderingPage'
 import ChefPage from 'Pages/ChefPages/ChefPage'
 import { AdminPage } from 'Pages/AdminPages/AdminPage'
 import { AdminOrderPage } from 'Pages/AdminPages/AdminOrderPage'
+import { AdminDishPage } from 'Pages/AdminPages/AdminDishPage'
 import { UserProvider } from 'Pages/UserContext'
 import { ChefProvider } from 'Pages/ChefContext'
 import { Provider } from 'Pages/Context'
@@ -28,6 +29,9 @@ const Layout = () => {
                 </Route>
                 <Route path="/admin-order" exact>
                     <AdminOrderPage />
+                </Route>
+                <Route path="/admin-dish" exact>
+                    <AdminDishPage />
                 </Route>
                 <Route path="/chef-login" exact>
                     <ChefProvider> {/* Wrap ChefLogin with ChefProvider */}
