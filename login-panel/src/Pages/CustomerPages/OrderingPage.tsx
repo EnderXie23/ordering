@@ -180,7 +180,7 @@ const OrderingPage: React.FC = () => {
             <Grid container spacing={4}>
                 {dishes.map((dish) => (
                     <Grid item xs={12} sm={6} md={4} key={dish.name}>
-                        <Card style={{maxWidth: '250px', height: '300px'}}>
+                        <Card style={{maxWidth: '250px', height: '300px', justifyContent:'center'}}>
                             <CardMedia component="img" height="140" src= {getImagePath(dish.path)} alt={dish.name} />
                             <CardContent>
                                 <Typography variant="h5">{dish.name}</Typography>
@@ -201,7 +201,7 @@ const OrderingPage: React.FC = () => {
                     </Grid>
                 ))}
             </Grid>
-            <Box display="flex" justifyContent="center" alignItems="center" mt={4}>
+            <Box display="flex" justifyContent="center" alignItems="center" mt={4} marginBottom={5}>
                 <Paper elevation={3} style={{ padding: '16px', borderRadius: '8px', backgroundColor: '#f5f5f5' }}>
                     <Typography variant="h6" color="primary" alignItems="center">
                         您的余额: <span style={{ fontWeight: 'bold', color: '#227aff' }}>{balance} 元</span>

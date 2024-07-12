@@ -34,13 +34,17 @@ const useStyles = makeStyles((theme) => ({
     },
     infoItem: {
         display: 'flex',
+        height: '64px',
         justifyContent: 'center',
-        marginBottom: theme.spacing(1),
     },
     label: {
-        width: '30%',
         textAlign: 'right',
         paddingRight: theme.spacing(1),
+    },
+    text: {
+        margin: 0,
+        padding: 0,
+        flex: 1,
     },
     value: {
         width: '70%',
@@ -115,39 +119,39 @@ const Profile: React.FC<UserProfileDialogProps> = ({ open, onClose }) => {
             <DialogTitle>用户信息</DialogTitle>
             <DialogContent>
                 <CardContent>
-                    <Grid container justifyContent="center" alignItems="center">
+                    <Grid container justifyContent="center" alignItems="center" spacing={2}>
                         <AccountCircle className={classes.icon} />
                     </Grid>
                     <Grid container direction="column" className={classes.infoContainer}>
                         <Grid item className={classes.infoItem}>
-                            <Typography variant="h6" className={classes.label}>
-                                用户名:
+                            <Typography variant="h6" className={`${classes.label} ${classes.text}`}>
+                                用户名：
                             </Typography>
-                            <Typography variant="h6" className={classes.value}>
+                            <Typography variant="h6" className={`${classes.value} ${classes.text}`}>
                                 {username}
                             </Typography>
                         </Grid>
                         <Grid item className={classes.infoItem}>
-                            <Typography variant="h6" className={classes.label}>
-                                昵称:
+                            <Typography variant="h6" className={`${classes.label} ${classes.text}`}>
+                                昵称：
                             </Typography>
-                            <Typography variant="h6" className={classes.value}>
+                            <Typography variant="h6" className={`${classes.value} ${classes.text}`}>
                                 {alias}
                             </Typography>
                         </Grid>
                         <Grid item className={classes.infoItem}>
-                            <Typography variant="h6" className={classes.label}>
-                                电话号码:
+                            <Typography variant="h6" className={`${classes.label} ${classes.text}`}>
+                                电话号码：
                             </Typography>
-                            <Typography variant="h6" className={classes.value}>
+                            <Typography variant="h6" className={`${classes.value} ${classes.text}`}>
                                 {phoneNumber}
                             </Typography>
                         </Grid>
                         <Grid item className={classes.infoItem}>
-                            <Typography variant="h6" className={classes.label}>
-                                余额:
+                            <Typography variant="h6" className={`${classes.label} ${classes.text}`}>
+                                余额：
                             </Typography>
-                            <Typography variant="h6" className={classes.value}>
+                            <Typography variant="h6" className={`${classes.value} ${classes.text}`}>
                                 {balance}
                             </Typography>
                         </Grid>
