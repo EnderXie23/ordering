@@ -21,6 +21,7 @@ import CustomerSidebar from './CustomerSidebar/CustomerSidebar'
 import { CustomerChargeMessage } from 'Plugins/CustomerAPI/CustomerProfileMessage'
 import { LogMessage } from 'Plugins/ChefAPI/LogMessage'
 import { DishQueryMessage } from 'Plugins/AdminAPI/AdminDishMessage'
+import { makeStyles } from '@material-ui/core'
 
 type Dish = {
     name: string;
@@ -170,60 +171,60 @@ const OrderingPage: React.FC = () => {
     }
 
     return (
-        <Container>
-            <Box display="flex" justifyContent="space-between" alignItems="center">
-                <Typography variant="h4" gutterBottom>
-                    欢迎，{customerName}！请在下面点菜：
-                </Typography>
-                <CustomerSidebar />
-            </Box>
-            <Grid container spacing={4}>
-                {dishes.map((dish) => (
-                    <Grid item xs={12} sm={6} md={4} key={dish.name}>
-                        <Card style={{maxWidth: '250px', height: '300px', justifyContent:'center'}}>
-                            <CardMedia component="img" height="140" src= {getImagePath(dish.path)} alt={dish.name} />
-                            <CardContent>
-                                <Typography variant="h5">{dish.name}</Typography>
-                                <Box display="flex" alignItems="center">
-                                    <IconButton onClick={() => handleCountChange(dish.name, (orderCounts[dish.name] || 0) - 1)}>
-                                        <Remove />
-                                    </IconButton>
-                                    <Typography variant="body1">{orderCounts[dish.name] || 0}</Typography>
-                                    <IconButton onClick={() => handleCountChange(dish.name, (orderCounts[dish.name] || 0) + 1)}>
-                                        <Add />
-                                    </IconButton>
-                                </Box>
-                                <Box display="flex" alignItems="center">
-                                    <Typography variant="body1">价格：{dish.price}元</Typography>
-                                </Box>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                ))}
-            </Grid>
-            <Box display="flex" justifyContent="center" alignItems="center" mt={4} marginBottom={5}>
-                <Paper elevation={3} style={{ padding: '16px', borderRadius: '8px', backgroundColor: '#f5f5f5' }}>
-                    <Typography variant="h6" color="primary" alignItems="center">
-                        您的余额: <span style={{ fontWeight: 'bold', color: '#227aff' }}>{balance} 元</span>
+            <Container>
+                <Box display="flex" justifyContent="space-between" alignItems="center">
+                    <Typography variant="h4" gutterBottom>
+                        欢迎，{customerName}！请在下面点菜：
                     </Typography>
-                    <Typography variant="h6" color="primary" alignItems="center">
-                        总价: <span style={{ fontWeight: 'bold', color: '#ff5722' }}>{calculateTotalCost()} 元</span>
-                    </Typography>
-                </Paper>
-            </Box>
-            <Box
-                display = "flex"
-                justifyContent="center"
-                alignItems="center"
-            >
-                <Button variant="contained" color="primary" onClick={handleSubmit}>
-                    提交订单
-                </Button>
-                <Button color="secondary" onClick={() => {history.push('/')}}>
-                    返回主页
-                </Button>
-            </Box>
-        </Container>
+                    <CustomerSidebar />
+                </Box>
+                <Grid container spacing={4}>
+                    {dishes.map((dish) => (
+                        <Grid item xs={12} sm={6} md={4} key={dish.name}>
+                            <Card style={{maxWidth: '250px', height: '300px', justifyContent:'center'}}>
+                                <CardMedia component="img" height="140" src= {getImagePath(dish.path)} alt={dish.name} />
+                                <CardContent>
+                                    <Typography variant="h5">{dish.name}</Typography>
+                                    <Box display="flex" alignItems="center">
+                                        <IconButton onClick={() => handleCountChange(dish.name, (orderCounts[dish.name] || 0) - 1)}>
+                                            <Remove />
+                                        </IconButton>
+                                        <Typography variant="body1">{orderCounts[dish.name] || 0}</Typography>
+                                        <IconButton onClick={() => handleCountChange(dish.name, (orderCounts[dish.name] || 0) + 1)}>
+                                            <Add />
+                                        </IconButton>
+                                    </Box>
+                                    <Box display="flex" alignItems="center">
+                                        <Typography variant="body1">价格：{dish.price}元</Typography>
+                                    </Box>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    ))}
+                </Grid>
+                <Box display="flex" justifyContent="center" alignItems="center" mt={4} marginBottom={2}>
+                    <Paper elevation={3} style={{ padding: '16px', borderRadius: '8px', backgroundColor: '#f5f5f5' }}>
+                        <Typography variant="h6" color="primary" alignItems="center">
+                            您的余额: <span style={{ fontWeight: 'bold', color: '#227aff' }}>{balance} 元</span>
+                        </Typography>
+                        <Typography variant="h6" color="primary" alignItems="center">
+                            总价: <span style={{ fontWeight: 'bold', color: '#ff5722' }}>{calculateTotalCost()} 元</span>
+                        </Typography>
+                    </Paper>
+                </Box>
+                <Box
+                    display = "flex"
+                    justifyContent="center"
+                    alignItems="center"
+                >
+                    <Button variant="contained" color="primary" onClick={handleSubmit}>
+                        提交订单
+                    </Button>
+                    <Button color="secondary" onClick={() => {history.push('/')}}>
+                        返回主页
+                    </Button>
+                </Box>
+            </Container>
     );
 };
 
