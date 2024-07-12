@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useUser } from 'Pages/UserContext';
-import { Box, Drawer, List, ListItem, ListItemText, IconButton, ListItemIcon, Typography, Modal, Button } from '@mui/material'
+import { Box, Drawer, List, ListItem, ListItemText, IconButton, ListItemIcon, Typography,  Button } from '@mui/material'
 import { AccountCircle, AccountBalanceWallet, History, Person } from '@mui/icons-material';
 import Profile from './Profile';
 import Wallet from './Wallet';
