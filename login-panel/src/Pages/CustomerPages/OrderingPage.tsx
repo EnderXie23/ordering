@@ -3,33 +3,53 @@ import { useHistory } from 'react-router';
 import { useUser } from 'Pages/UserContext';
 import { CustomerOrderMessage } from 'Plugins/CustomerAPI/CustomerOrderMessage'
 import axios from 'axios'
-import { Container, Typography, Box, Button, IconButton, Grid, Card, CardContent, CardMedia } from '@mui/material';
+import {
+    Container,
+    Typography,
+    Box,
+    Button,
+    IconButton,
+    Grid,
+    Card,
+    CardContent,
+    CardMedia,
+    Paper,
+} from '@mui/material'
 import { Add, Remove } from '@mui/icons-material';
 import { OrderIDMessage } from 'Plugins/AdminAPI/OrderIDMessage'
 import CustomerSidebar from './CustomerSidebar/CustomerSidebar'
+import { CustomerChargeMessage } from 'Plugins/CustomerAPI/CustomerProfileMessage'
 import { LogMessage } from 'Plugins/ChefAPI/LogMessage'
 
 type Dish = {
     name: string;
     path: string;
+    price: string;
 };
 
 //const image = require.context('../../Images', true, /\.jpg$/);
 //const imagePath = image.keys().map(path => path.split('/')[1]);
 
 const dishes: Dish[] = [
-    { name: 'Spaghetti Carbonara', path: 'spaghetti_carbonara.jpg' },
-    { name: 'Margherita Pizza', path: 'margherita_pizza.jpg' },
-    { name: 'Caesar Salad', path: 'caesar_salad.jpg' },
-    { name: 'Tiramisu', path: 'tiramisu.jpg' },
+    { name: 'Spaghetti Carbonara', path: 'spaghetti_carbonara.jpg', price: '125' },
+    { name: 'Margherita Pizza', path: 'margherita_pizza.jpg', price: '100' },
+    { name: 'Caesar Salad', path: 'caesar_salad.jpg', price: '25' },
+    { name: 'Tiramisu', path: 'tiramisu.jpg', price: '50' },
 ];
 
 const OrderingPage: React.FC = () => {
-    const { name, setOrderedDishes } = useUser();
+    const { name, balance , setOrderedDishes } = useUser();
     const customerName = name.split('\n')[1];
     const history = useHistory();
 
     const [orderCounts, setOrderCounts] = useState<{ [key: string]: number }>({});
+
+    const calculateTotalCost = () => {
+        return dishes.reduce((total, dish) => {
+            const count = orderCounts[dish.name] || 0;
+            return total + count * parseFloat(dish.price);
+        }, 0).toFixed(2);
+    };
 
     const handleCountChange = (dishName: string, count: number) => {
         if (count < 0)
@@ -68,6 +88,19 @@ const OrderingPage: React.FC = () => {
         }
     };
 
+    const sendChargeRequest = async (amount: string) => {
+        const cmessage = new CustomerChargeMessage(name.split('\n')[0], '-' + amount);
+        try {
+            const response = await axios.post(cmessage.getURL(), JSON.stringify(cmessage), {
+                headers: { 'Content-Type': 'application/json' },
+            });
+            console.log("charge -" + amount);
+            console.log(response.data);
+        } catch (error) {
+            console.error('Error querying order:', error);
+        }
+    }
+
     const handleOrderID = async () => {
         const queryMessage = new OrderIDMessage('0'); // Adjust this to your actual service
         try {
@@ -89,6 +122,11 @@ const OrderingPage: React.FC = () => {
     const takeout = "false"
 
     const handleSubmit = () => {
+        if (Number(parseFloat(calculateTotalCost())) > balance) {
+            alert("You have not enough money!");
+            return;
+        }
+
         const orders = Object.entries(orderCounts)
             .filter(([, count]) => count > 0)
             .map(([dishName, count]) => [dishName, count.toString(), takeout])
@@ -97,6 +135,7 @@ const OrderingPage: React.FC = () => {
         const orderMessage = new CustomerOrderMessage(customerName, orders.map(order => order.join(',')).join(';'))
         const orderMessage2 = new CustomerOrderMessage(orderID, orders.map(order => order.join(',')).join(';'))
         sendOrderRequest(orderMessage)
+        sendChargeRequest(calculateTotalCost())
         const formattedOrders = orders.map(order => ({
             name: order[0],
             path: dishes.find(d => d.name === order[0]).path,
@@ -112,7 +151,7 @@ const OrderingPage: React.FC = () => {
                 <Typography variant="h4" gutterBottom>
                     欢迎，{customerName}！请在下面点菜：
                 </Typography>
-                <CustomerSidebar/>
+                <CustomerSidebar />
             </Box>
             <Grid container spacing={4}>
                 {dishes.map((dish) => (
@@ -130,11 +169,24 @@ const OrderingPage: React.FC = () => {
                                         <Add />
                                     </IconButton>
                                 </Box>
+                                <Box display="flex" alignItems="center">
+                                    <Typography variant="body1">价格：{dish.price}元</Typography>
+                                </Box>
                             </CardContent>
                         </Card>
                     </Grid>
                 ))}
             </Grid>
+            <Box display="flex" justifyContent="center" alignItems="center" mt={4}>
+                <Paper elevation={3} style={{ padding: '16px', borderRadius: '8px', backgroundColor: '#f5f5f5' }}>
+                    <Typography variant="h6" color="primary" alignItems="center">
+                        您的余额: <span style={{ fontWeight: 'bold', color: '#227aff' }}>{balance} 元</span>
+                    </Typography>
+                    <Typography variant="h6" color="primary" alignItems="center">
+                        总价: <span style={{ fontWeight: 'bold', color: '#ff5722' }}>{calculateTotalCost()} 元</span>
+                    </Typography>
+                </Paper>
+            </Box>
             <Box
                 display = "flex"
                 justifyContent="center"

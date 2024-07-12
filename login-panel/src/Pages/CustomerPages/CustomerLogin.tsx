@@ -6,6 +6,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import '../index.css'
 import { useUser } from 'Pages/UserContext'
 import { CustomerLoginMessage } from 'Plugins/CustomerAPI/CustomerLoginMessage'
+import { CustomerQueryProfileMessage } from 'Plugins/CustomerAPI/CustomerProfileMessage'
 
 export function CustomerLogin() {
     const [userName, setUserName] = useState('');
@@ -13,9 +14,25 @@ export function CustomerLogin() {
     const [errorMessage, setErrorMessage] = useState(''); // State for error message
     const [successMessage, setSuccessMessage] = useState('');
     const [showPassword, setShowPassword] = useState(false); // State for password
-    const { setName } = useUser()
+    const { setName, setBalance } = useUser()
 
     const history=useHistory()
+
+    const updateProfile = async () =>{
+        const qmessage = new CustomerQueryProfileMessage(userName);
+        try{
+            const response = await axios.post(qmessage.getURL(), JSON.stringify(qmessage), {
+                headers: { 'Content-Type': 'application/json' },
+            });
+            setBalance(Number(parseFloat(response.data.split('\n')[2])));
+            console.log(response.data.split('\n'));
+        }catch(error){
+            console.error('Unexpected error:', error);
+            setErrorMessage('Unexpected error occurred');
+            setSuccessMessage('');
+        }
+    }
+
     const sendPostRequest = async (message: CustomerLoginMessage) => {
         try {
             const response = await axios.post(message.getURL(), JSON.stringify(message), {
@@ -26,7 +43,7 @@ export function CustomerLogin() {
             if (response.data[0] == 'Valid user') {
                 setSuccessMessage('登录成功，跳转中…');
                 setErrorMessage('');
-                setName(userName + '\n' + response.data[1])  // userName + \n + nickname
+                setName(userName + '\n' + response.data[1]);
                 setTimeout(() => {
                     history.push('/place-order');
                 }, 1000);
@@ -67,6 +84,7 @@ export function CustomerLogin() {
     const CustomerLogin = () => {
         const loginMessage = new CustomerLoginMessage(userName, password);
         sendPostRequest(loginMessage);
+        updateProfile();
     };
 
     return (

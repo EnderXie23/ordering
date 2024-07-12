@@ -4,6 +4,8 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 interface UserContextType {
     name: string;
     setName: (newName: string) => void;
+    balance: number;
+    setBalance: (newBalance: number) => void;
     orderedDishes: { name: string, path: string, count: number }[];
     setOrderedDishes: (dishes: { name: string, path: string, count: number }[]) => void;
 }
@@ -13,6 +15,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
     const [name, setName] = useState<string>('');
+    const [balance, setBalance] = useState<number>(0.0);
     const [orderedDishes, setOrderedDishes] =
         useState<{ name: string, path: string, count: number }[]>([]);
 
@@ -35,7 +38,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
 
     return (
-        <UserContext.Provider value={{ name, setName, orderedDishes, setOrderedDishes:mergeOrderedDishes }}>
+        <UserContext.Provider value={{ name, setName, balance, setBalance, orderedDishes, setOrderedDishes:mergeOrderedDishes }}>
             {children}
         </UserContext.Provider>
     );
