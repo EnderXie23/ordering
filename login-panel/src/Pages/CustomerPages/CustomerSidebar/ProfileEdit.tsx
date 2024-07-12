@@ -18,7 +18,6 @@ const ProfileEdit: React.FC<ProfileEditProps> = ({ open, onClose }) => {
     const { name } = useUser();
     const username = name.split('\n')[0];
 
-
     const sendPostRequest = async (message: CustomerEditProfileMessage) => {
         try {
             const response = await axios.post(message.getURL(), JSON.stringify(message), {

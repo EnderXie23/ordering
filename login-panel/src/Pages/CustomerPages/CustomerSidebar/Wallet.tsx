@@ -17,14 +17,13 @@ const Wallet: React.FC<WalletProps> = ({ open,  onClose }) => {
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
 
-
     const QueryProfileRequest = async (message: CustomerQueryProfileMessage) => {
         try {
             const response = await axios.post(message.getURL(), JSON.stringify(message), {
                 headers: { 'Content-Type': 'application/json' },
             });
             console.log(response.data)
-            setBalance(response.data.split('\n')[2])
+            setBalance(Number(parseFloat(response.data.split('\n')[2])));
         } catch (error) {
             console.error('Unexpected error:', error);
         }

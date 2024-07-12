@@ -20,6 +20,7 @@ import { OrderIDMessage } from 'Plugins/AdminAPI/OrderIDMessage'
 import CustomerSidebar from './CustomerSidebar/CustomerSidebar'
 import { CustomerChargeMessage } from 'Plugins/CustomerAPI/CustomerProfileMessage'
 import { LogMessage } from 'Plugins/ChefAPI/LogMessage'
+import { DishQueryMessage } from 'Plugins/AdminAPI/AdminDishMessage'
 
 type Dish = {
     name: string;
@@ -30,7 +31,7 @@ type Dish = {
 //const image = require.context('../../Images', true, /\.jpg$/);
 //const imagePath = image.keys().map(path => path.split('/')[1]);
 
-const dishes: Dish[] = [
+let dishes: Dish[] = [
     { name: 'Spaghetti Carbonara', path: 'spaghetti_carbonara.jpg', price: '125' },
     { name: 'Margherita Pizza', path: 'margherita_pizza.jpg', price: '100' },
     { name: 'Caesar Salad', path: 'caesar_salad.jpg', price: '25' },
@@ -43,6 +44,25 @@ const OrderingPage: React.FC = () => {
     const history = useHistory();
 
     const [orderCounts, setOrderCounts] = useState<{ [key: string]: number }>({});
+
+    const parseDishes = (data: string): Dish[] => {
+        return data.split('\n').map(line => {
+            const [name, path, price] = line.split(',');
+            return { name, path, price };
+        });
+    };
+
+    const readDishesInfo = async () => {
+        const qmessage = new DishQueryMessage();
+        try {
+            const response = await axios.post(qmessage.getURL(), JSON.stringify(qmessage), {
+                headers: { 'Content-Type': 'application/json' },
+            });
+            dishes = parseDishes(response.data);
+        } catch (error) {
+            console.error('Error querying dishes:', error);
+        }
+    }
 
     const calculateTotalCost = () => {
         return dishes.reduce((total, dish) => {
@@ -89,7 +109,7 @@ const OrderingPage: React.FC = () => {
     };
 
     const sendChargeRequest = async (amount: string) => {
-        const cmessage = new CustomerChargeMessage(name.split('\n')[0], '-' + amount);
+        const cmessage = new CustomerChargeMessage(name.split('\n')[0], (balance - Number(parseFloat(amount))).toString());
         try {
             const response = await axios.post(cmessage.getURL(), JSON.stringify(cmessage), {
                 headers: { 'Content-Type': 'application/json' },
@@ -111,9 +131,8 @@ const OrderingPage: React.FC = () => {
     };
 
     useEffect(() => {
+        readDishesInfo()
         handleOrderID()
-            .then(() => {
-            })
             .catch(error => {
                 console.error('Error in handleComplete:', error);
             });
