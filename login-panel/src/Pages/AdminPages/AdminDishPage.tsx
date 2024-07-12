@@ -1,6 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
-import { List, Button, Typography, Container, Box, ListItem, ListItemText, TextField } from '@mui/material'
+import {
+    List,
+    Button,
+    Typography,
+    Container,
+    Box,
+    ListItem,
+    ListItemText,
+    TextField,
+    CardMedia,
+    Card,
+} from '@mui/material'
 import axios from 'axios'
 import { DishChangeMessage, DishQueryMessage } from 'Plugins/AdminAPI/AdminDishMessage'
 
@@ -14,6 +25,7 @@ export function AdminDishPage(){
     const history=useHistory()
     const [newDish, setNewDish] = useState<Dish>({ name: '', path: '', price: '' });
     const [dishes, setDishes] = useState<Dish[]>([]);
+    const [previewImage, setPreviewImage] = useState<string>('');
 
     const parseDishes = (data: string): Dish[] => {
         return data.split('\n').map(line => {
@@ -37,6 +49,15 @@ export function AdminDishPage(){
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setNewDish(prev => ({ ...prev, [name]: value }));
+
+        if (name === 'path') {
+            try {
+                const previewPath = require(`../../Images/${value}`).default;
+                setPreviewImage(previewPath);
+            } catch (error) {
+                setPreviewImage('');
+            }
+        }
     };
 
     const handleAddDish = async () => {
@@ -49,6 +70,7 @@ export function AdminDishPage(){
             console.log(response.data)
             setDishes(prev => [...prev, newDish]);
             setNewDish({ name: '', path: '', price: '' });
+            setPreviewImage('');
         } catch (error){
             console.error('Error admin dish adding:', error)
         }
@@ -85,6 +107,11 @@ export function AdminDishPage(){
                     fullWidth
                     margin="normal"
                 />
+                {previewImage && (
+                    <Card style={{maxWidth: '100vh', height: '300px'}}>
+                        <CardMedia component="img" src= {previewImage} />
+                    </Card>
+                )}
                 <TextField
                     label="Price"
                     name="price"
@@ -96,7 +123,7 @@ export function AdminDishPage(){
                 <Button variant="contained" color="primary" onClick={handleAddDish} style={{ marginTop: '10px' }}>
                     添加菜品
                 </Button>
-                <Button variant="contained" color="secondary" onClick={() => {history.push('/')}} style={{ marginTop: '10px' }}>
+                <Button variant="contained" color="secondary" onClick={() => {history.push('/admin')}} style={{ marginTop: '10px' }}>
                     返回
                 </Button>
             </div>
