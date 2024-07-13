@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router';
 import { useUser } from 'Pages/UserContext';
 import { CustomerOrderMessage } from 'Plugins/CustomerAPI/CustomerOrderMessage'
+import { OrderLogMessage } from 'Plugins/AdminAPI/OrderLogMessage'
 import axios from 'axios'
 import { Container, Typography, Box, Button, IconButton, Grid, Card, CardContent, CardMedia } from '@mui/material';
 import { Add, Remove } from '@mui/icons-material';
@@ -25,7 +26,7 @@ const dishes: Dish[] = [
 ];
 
 const OrderingPage: React.FC = () => {
-    const { name, setOrderedDishes } = useUser();
+    const { name,OrderID, updateOrderID,incrementOrderPart, setOrderedDishes } = useUser();
     const customerName = name.split('\n')[1];
     const history = useHistory();
 
@@ -54,6 +55,35 @@ const OrderingPage: React.FC = () => {
 
     const [orderID, setOrderID] = useState<string | null>(null);
 
+    const sendOrderLogRequest = async (message: OrderLogMessage) => {
+        try {
+            const response = await axios.post(message.getURL(), JSON.stringify(message), {
+                headers: { 'Content-Type': 'application/json' },
+            })
+            console.log(response.status)
+            console.log(response.data)
+        } catch (error) {
+            console.error('Error logging:', error)
+        }
+    }
+
+    const handleOrderLog = async () => {
+        const orders = Object.entries(orderCounts)
+            .filter(([, count]) => count > 0)
+            .map(([dishName, count]) => [dishName, count.toString(), takeout]);
+        // Send each order separately
+        orders.forEach(order => {
+            const log = `Customer: ${customerName}\nOrderID: ${OrderID}\nStatus: 0\n` +order.join('\n')
+            const singleOrderLogMessage = new OrderLogMessage(log);
+            try {
+                sendOrderLogRequest(singleOrderLogMessage)
+            } catch (error) {
+                console.error('Error in handleLog:', error);
+            }
+        });
+
+    };
+
     const sendOrderIDRequest = async (message: OrderIDMessage) => {
         try {
             const response = await axios.post(message.getURL(), JSON.stringify(message), {
@@ -62,7 +92,10 @@ const OrderingPage: React.FC = () => {
             console.log(response.status);
             console.log(response.data);
             const { orderId } = response.data; // Assuming orderId is part of the response data
+            updateOrderID(response.data)
+            incrementOrderPart()
             setOrderID(orderId);
+            console.log("OrderID3:", response.data);
         } catch (error) {
             console.error('Error querying order:', error);
         }
@@ -94,9 +127,10 @@ const OrderingPage: React.FC = () => {
             .map(([dishName, count]) => [dishName, count.toString(), takeout])
         console.log('Customer:', customerName)
         console.log('Orders:', orders)
-        const orderMessage = new CustomerOrderMessage(customerName, orders.map(order => order.join(',')).join(';'))
-        const orderMessage2 = new CustomerOrderMessage(orderID, orders.map(order => order.join(',')).join(';'))
-        sendOrderRequest(orderMessage)
+        console.log('OrderID:', OrderID)
+        const orderMessage = new CustomerOrderMessage(customerName, OrderID,"0", orders.map(order => order.join(',')).join(';'))
+        handleOrderLog().then()
+        sendOrderRequest(orderMessage).then()
         const formattedOrders = orders.map(order => ({
             name: order[0],
             path: dishes.find(d => d.name === order[0]).path,

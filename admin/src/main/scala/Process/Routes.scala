@@ -24,6 +24,16 @@ object Routes:
           .flatMap{m=>
             m.fullPlan.map(_.asJson.toString)
           }
+      case "OrderHistoryMessage" =>
+        IO(decode[OrderHistoryMessagePlanner](str).getOrElse(throw new Exception("Invalid JSON for OrderIDMessage")))
+          .flatMap{m=>
+            m.fullPlan.map(_.asJson.toString)
+          }
+      case "OrderLogMessage" =>
+        IO(decode[OrderLogMessagePlanner](str).getOrElse(throw new Exception("Invalid JSON for OrderIDMessage")))
+          .flatMap{m=>
+            m.fullPlan.map(_.asJson.toString)
+          }
       case _ =>
         IO.raiseError(new Exception(s"Unknown type: $messageType"))
     }

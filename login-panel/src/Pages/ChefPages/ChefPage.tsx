@@ -125,9 +125,13 @@ const ChefPage: React.FC = () => {
         }
         try {
             await sendCompleteRequest(completeMessage)
-            await sendLogRequest(logMessage)
         } catch (error) {
             console.error('Error in handleComplete:', error)
+        }
+        try {
+            await sendLogRequest(logMessage)
+        } catch (error) {
+            console.error('Error in handleLog:', error)
         }
     }
 

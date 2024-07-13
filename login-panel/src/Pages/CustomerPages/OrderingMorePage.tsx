@@ -21,7 +21,7 @@ const dishes: Dish[] = [
 
 
 const OrderingPage: React.FC = () => {
-    const { name, setOrderedDishes } = useUser(); // Added setOrderedDishes
+    const { name,OrderID,OrderPart,incrementOrderPart, setOrderedDishes } = useUser(); // Added setOrderedDishes
     const customerName = name.split('\n')[1];
     const history = useHistory();
 
@@ -47,15 +47,18 @@ const OrderingPage: React.FC = () => {
             console.error('Error submitting order:', error)
         }
     }
-
+    const takeout = "false"
     const handleSubmit = () => {
         const orders = Object.entries(orderCounts)
             .filter(([, count]) => count > 0)
-            .map(([dishName, count]) => [dishName, count.toString()]);
+            .map(([dishName, count]) => [dishName, count.toString(),takeout]);
         console.log('Customer:', customerName);
         console.log('Orders:', orders);
-        const orderMessage = new CustomerOrderMessage(customerName, orders.map(order => order.join(',')).join(';'));
+        const orderMessage = new CustomerOrderMessage(customerName, OrderID,OrderPart, orders.map(order => order.join(',')).join(';'))
         sendOrderRequest(orderMessage);
+        console.log('OrderID:', OrderID);
+        console.log('OrderPart:', OrderPart);
+        incrementOrderPart()
         const formattedOrders = orders.map(order => ({
             name: order[0],
             path: dishes.find(d => d.name === order[0]).path,
