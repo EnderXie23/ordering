@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
-import { Box, TextField, IconButton, List, ListItem, Paper, ListItemText, Fab, Drawer } from '@mui/material';
+import { Box, TextField, IconButton, List, ListItem, Paper, ListItemText, Fab, Drawer, Typography, AppBar, Toolbar, CircularProgress }
+    from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import ChatIcon from '@mui/icons-material/Chat';
 import { useUser } from 'Pages/UserContext'
@@ -18,6 +19,7 @@ const ChatPanel = () => {
     const [messages, setMessages] = useState<message[]>([]);
     const [input, setInput] = useState('');
     const [open, setOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     let APIKEY = api.api_key;
 
@@ -57,24 +59,39 @@ const ChatPanel = () => {
         }).join(',');
     };
 
-
     const getReply = () => {
         try{
             axios(config)
                 .then((response) => {
-                    setMessages([...messages, { content: response.data.choices[0].message.content, role: "Bot" }]);
+                    setMessages((prevMessages) =>
+                        prevMessages.map((message, index) =>
+                            index === prevMessages.length - 1 && message.role === "loading"
+                                ? { content: response.data.choices[0].message.content, role: "Bot" }
+                                : message
+                        )
+                    );
                 })
-                .catch((error) => {
-                    console.log(error);
-                });
         } catch (error){
-            console.error('Error in handleSendMessage:', error)
+            setMessages((prevMessages) =>
+                prevMessages.map((message, index) =>
+                    index === prevMessages.length - 1 && message.role === "loading"
+                        ? { content: 'Error: Failed to get response', role: "Bot" }
+                        : message
+                )
+            );
+            console.error('Error in handleSendMessage:', error);
+        } finally {
+            setLoading(false);
         }
     }
 
     const handleSendMessage = () => {
         if (input.trim()) {
-            setMessages([...messages, { content: input, role: userName }]);
+            setMessages((prevMessages) => [
+                ...prevMessages,
+                { content: input, role: userName },
+                { content: '', role: 'loading' },
+            ]);
             setInput('');
         }
     };
@@ -101,7 +118,7 @@ const ChatPanel = () => {
     }
 
     useEffect(() => {
-        if(messages.length > 0 && messages[messages.length - 1].role == userName){
+        if(messages.length > 0 && messages[messages.length - 1].role == 'loading'){
             getReply();
         }
     }, [messages]);
@@ -137,36 +154,59 @@ const ChatPanel = () => {
                 onClose={handleClose}
                 sx={{
                     '& .MuiDrawer-paper': {
-                        width: 350,
+                        width: 400,
                         height: '70%',
                         bottom: 0,
                         top: 'auto',
                         position: 'fixed',
+                        borderRadius: '16px 16px 0 0',
+                        boxShadow: 3,
                     },
                 }}
             >
-                <Box sx={{ padding: 2, height: '100%', display: 'flex', flexDirection: 'column' }}>
+                <AppBar position="static" color="primary">
+                    <Toolbar>
+                        <Typography variant="h6" sx={{ flexGrow: 1 }}>
+                            AI助手
+                        </Typography>
+                    </Toolbar>
+                </AppBar>
+                <Box sx={{ padding: 2, height: '85.5%', display: 'flex', flexDirection: 'column' }}>
                     <List sx={{ flexGrow: 1, overflow: 'auto' }}>
                         {messages
                             .filter((message) => message.role !== "system")
                             .map((message, index) => (
-                            <ListItem key={index} sx={{ display: 'flex', justifyContent: message.role === userName ? 'flex-end' : 'flex-start' }}>
-                                <Paper sx={{ padding: 1, borderRadius: 2, maxWidth: '75%', backgroundColor: message.role === userName ? '#DCF8C6' : '#FFF' }}>
-                                    <ListItemText primary={message.content} secondary={message.role} />
-                                </Paper>
-                            </ListItem>
-                        ))}
+                                <ListItem key={index} sx={{ display: 'flex', justifyContent: message.role === userName ? 'flex-end' : 'flex-start' }}>
+                                    <Paper sx={{
+                                        padding: 1,
+                                        borderRadius: 2,
+                                        maxWidth: '75%',
+                                        background: message.role === userName
+                                            ? 'linear-gradient(135deg, #DCF8C6 0%, #A1F0A1 100%)'
+                                            : 'linear-gradient(135deg, #FFF 0%, #EEE 100%)',
+                                    }}>
+                                        <ListItemText primary={message.content} secondary={message.role === "loading" ? <CircularProgress size={20} /> : message.role} />
+                                    </Paper>
+                                </ListItem>
+                            ))}
                     </List>
                     <Box sx={{ display: 'flex', mt: 2 }}>
                         <TextField
                             fullWidth
                             variant="outlined"
-                            placeholder="Type a message"
+                            placeholder="输入您的问题…"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                            sx={{
+                                '& .MuiOutlinedInput-root': {
+                                    borderRadius: 2,
+                                    backgroundColor: '#FFF',
+                                    boxShadow: 1,
+                                }
+                            }}
                         />
-                        <IconButton color="primary" onClick={handleSendMessage}>
+                        <IconButton color="primary" onClick={handleSendMessage} sx={{ ml: 1 }}>
                             <SendIcon />
                         </IconButton>
                     </Box>

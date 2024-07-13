@@ -1,7 +1,17 @@
 import React, { useState } from 'react';
 import { useUser } from 'Pages/UserContext';
-import { Box, Drawer, List, ListItem, ListItemText, IconButton, ListItemIcon, Typography,  Button } from '@mui/material'
+import {
+    Box,
+    Drawer,
+    List,
+    ListItem,
+    ListItemText,
+    ListItemIcon,
+    Typography,
+    Fab,
+} from '@mui/material'
 import { AccountCircle, AccountBalanceWallet, History, Person } from '@mui/icons-material';
+import  AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Profile from './Profile';
 import Wallet from './Wallet';
 
@@ -39,14 +49,13 @@ const CustomerSidebar: React.FC = () => {
 
     return (
         <>
-            <IconButton
-                edge="end"
-                color="inherit"
-                aria-label="account of current user"
+            <Fab
+                color="primary"
                 onClick={toggleDrawer(true)}
+                sx={{ position: 'fixed', top: 16, right: 16 }}
             >
-                <AccountCircle fontSize="large" />
-            </IconButton>
+                <AccountCircleIcon />
+            </Fab>
             <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
                 <Box
                     sx={{ width: 250 }}
