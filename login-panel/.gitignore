@@ -58,7 +58,7 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
+src/.env
 .env.test
 
 # parcel-bundler cache (https://parceljs.org/)
@@ -99,5 +99,7 @@ package-lock.json
 src/Utils/pdfjs-dist/
 
 *.flog
+*.env
+src/api.js
 
 .webpack_last

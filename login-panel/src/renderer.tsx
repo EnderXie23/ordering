@@ -25,13 +25,19 @@ const Layout = () => {
             <Switch>
                 <Route path="/" exact component={Main} />
                 <Route path="/admin" exact>
-                    <AdminPage />
+                    <UserProvider>
+                        <AdminPage />
+                    </UserProvider>
                 </Route>
                 <Route path="/admin-order" exact>
-                    <AdminOrderPage />
+                    <UserProvider>
+                        <AdminOrderPage />
+                    </UserProvider>
                 </Route>
                 <Route path="/admin-dish" exact>
-                    <AdminDishPage />
+                    <UserProvider>
+                        <AdminDishPage />
+                    </UserProvider>
                 </Route>
                 <Route path="/chef-login" exact>
                     <ChefProvider> {/* Wrap ChefLogin with ChefProvider */}

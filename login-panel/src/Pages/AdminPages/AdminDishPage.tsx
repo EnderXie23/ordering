@@ -8,12 +8,12 @@ import {
     Dialog,
     TextField,
     CardMedia,
-    Input,
     Card, Grid, CardContent, DialogTitle, DialogContent, DialogContentText, DialogActions,
 } from '@mui/material'
 import axios from 'axios'
 import { DishChangeMessage, DishQueryMessage, DishPriceMessage, DishDeleteMessage } from 'Plugins/AdminAPI/AdminDishMessage'
 import { styled } from '@mui/styles'
+import ChatPanel from 'Plugins/CommonUtils/ChatPanel'
 
 interface Dish {
     name: string;
@@ -312,6 +312,7 @@ export function AdminDishPage(){
                     </Button>
                 </DialogActions>
             </Dialog>
+            <ChatPanel />
         </Container>
     )
 }

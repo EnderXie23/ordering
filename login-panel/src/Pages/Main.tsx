@@ -1,10 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react'
 import { useHistory } from 'react-router';
 import { Box, Button, Container, Typography } from '@mui/material'
 import './index.css'; // Importing the CSS file
 
 export function Main() {
     const history = useHistory();
+
+    const clearAllChats = () => {
+        // Clear all chat messages from local storage
+        for (const key in localStorage) {
+            if (key.startsWith('chatMessages_') || key=='chatMessages') {
+                localStorage.removeItem(key);
+            }
+        }
+        console.log('All chat histories have been cleared.');
+    };
+
+    useEffect(() => {
+        clearAllChats();
+    }, [])
 
     return (
         <Container maxWidth="sm" className="container">
