@@ -88,7 +88,7 @@ export function ChefRegister() {
     };
 
     return (
-        <Container maxWidth="md" className="container" sx={{
+        <Container className="container" sx={{
             position: 'relative',
             borderRadius: '10px',
             padding: '2rem',
