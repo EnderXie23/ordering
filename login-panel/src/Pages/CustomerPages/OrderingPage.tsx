@@ -19,7 +19,7 @@ import { Add, Remove } from '@mui/icons-material';
 import { OrderIDMessage } from 'Plugins/AdminAPI/OrderIDMessage'
 import CustomerSidebar from './CustomerSidebar/CustomerSidebar'
 import { CustomerChargeMessage } from 'Plugins/CustomerAPI/CustomerProfileMessage'
-import { LogMessage } from 'Plugins/ChefAPI/LogMessage'
+import ChatPanel from 'Plugins/CommonUtils/ChatPanel'
 import { DishQueryMessage } from 'Plugins/AdminAPI/AdminDishMessage'
 import 'Pages/index.css'
 
@@ -227,6 +227,7 @@ const OrderingPage: React.FC = () => {
                     </Button>
                 </Box>
             </Container>
+            <ChatPanel />
         </div>
     );
 };

@@ -19,7 +19,7 @@ object Init {
 //      _ <- writeDB(s"DROP TABLE IF EXISTS ${schemaName}.user_name", List())
       _ <- writeDB(s"CREATE TABLE IF NOT EXISTS ${schemaName}.user_name (user_name TEXT, password TEXT, nickname TEXT, phone TEXT, savings TEXT)", List())
       _ <- writeDB(s"CREATE TABLE IF NOT EXISTS ${schemaName}.order_rec (customer_name TEXT, dish_name TEXT, order_count TEXT, price TEXT, finish_state TEXT, takeout TEXT)", List())
-      _ <- writeDB(s"CREATE TABLE IF NOT EXISTS ${schemaName}.ratings (customer_name TEXT, comment TEXT, overall TEXT, taste TEXT, pack TEXT, serv TEXT, env TEXT)", List())
+      _ <- writeDB(s"CREATE TABLE IF NOT EXISTS ${schemaName}.ratings (customer_name TEXT, chef_name TEXT, comment TEXT, overall TEXT, taste TEXT, pack TEXT, serv TEXT, env TEXT)", List())
       _ <- writeDB(s"DELETE FROM ${schemaName}.order_rec", List.empty)
     } yield ()
 

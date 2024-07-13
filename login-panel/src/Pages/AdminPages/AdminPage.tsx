@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
-import { Button, Typography, Container, Box } from '@mui/material'
-import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
-import ReceiptIcon from '@mui/icons-material/Receipt';
-import RateReviewIcon from '@mui/icons-material/RateReview';
-import StarIcon from '@mui/icons-material/Star';
+import { Box, Button, Container, Typography } from '@mui/material'
+import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu'
+import ReceiptIcon from '@mui/icons-material/Receipt'
+import RateReviewIcon from '@mui/icons-material/RateReview'
+import StarIcon from '@mui/icons-material/Star'
 import '../index.css'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import ChatPanel from 'Plugins/CommonUtils/ChatPanel'
 import { useUser } from 'Pages/UserContext'
 
@@ -34,7 +36,7 @@ export function AdminPage(){
                 <Button variant="outlined" className="custom-button" startIcon={<RateReviewIcon />} >
                     菜品评价
                 </Button>
-                <Button variant="outlined" className="custom-button" startIcon={<StarIcon />} >
+                <Button variant="outlined" className="custom-button" startIcon={<StarIcon />} onClick={() => {history.push('/admin-chef')}}>
                     厨师评价
                 </Button>
                 <ChatPanel />

@@ -116,7 +116,15 @@ const CommentPage: React.FC = () => {
             setErrorMessage('请给出完整评分');
             return;
         }
-        const commentMessage = new CustomerCommentMessage(author, text, overallRating.toString(), tasteRating.toString(), packagingRating.toString(), serviceRating.toString(), envRating.toString());
+        const commentMessage = new CustomerCommentMessage(
+            author,
+            "user",
+            text,
+            overallRating.toString(),
+            tasteRating.toString(),
+            packagingRating.toString(),
+            serviceRating.toString(),
+            envRating.toString());
         try {
             await customerCommentRequest(commentMessage);
             setSuccessMessage('评价成功');

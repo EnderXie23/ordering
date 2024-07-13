@@ -4,6 +4,7 @@ import { Box, TextField, IconButton, List, ListItem, Paper, ListItemText, Fab, D
 import SendIcon from '@mui/icons-material/Send';
 import ChatIcon from '@mui/icons-material/Chat';
 import { useUser } from 'Pages/UserContext'
+import { DishQueryMessage } from 'Plugins/AdminAPI/AdminDishMessage'
 import api from '../../api'
 
 interface message{
@@ -12,11 +13,12 @@ interface message{
 }
 
 const ChatPanel = () => {
-    const [messages, setMessages] = useState<message[]>([{content: "You're a helpful assistant.", role: "system"}]);
-    const [input, setInput] = useState('');
-    const [open, setOpen] = useState(false);
     const {name} = useUser();
     const userName = name.split('\n')[0];
+    const [messages, setMessages] = useState<message[]>([]);
+    const [input, setInput] = useState('');
+    const [open, setOpen] = useState(false);
+
     let APIKEY = api.api_key;
 
     let data = JSON.stringify({
@@ -48,11 +50,18 @@ const ChatPanel = () => {
         data : data
     };
 
+    const dishesInfo = (data: string): string => {
+        return data.split('\n').map(line => {
+            const [name, path, price] = line.split(',');
+            return name+ '(' +price+'元)';
+        }).join(',');
+    };
+
+
     const getReply = () => {
         try{
             axios(config)
                 .then((response) => {
-                    // console.log(JSON.stringify(response.data));
                     setMessages([...messages, { content: response.data.choices[0].message.content, role: "Bot" }]);
                 })
                 .catch((error) => {
@@ -70,8 +79,29 @@ const ChatPanel = () => {
         }
     };
 
+    const welcomeCustomer = async() => {
+        const qmessage = new DishQueryMessage();
+        try {
+            const response = await axios.post(qmessage.getURL(), JSON.stringify(qmessage), {
+                headers: { 'Content-Type': 'application/json' },
+            });
+            setMessages([{ content: '现在你是米麒麟餐厅的介绍员，餐厅内有' +
+                    dishesInfo(response.data) +
+                    '除去上述菜品之外，餐厅暂时没有其他菜品。' +
+                    '请你为顾客提供服务，耐心解答他们的问题，并向他们推荐菜品。', role: 'system' },
+                { content: '你好，我是米麒麟餐厅的介绍员，有什么可以帮到您的吗？', role: 'Bot' }]);
+        } catch (error) {
+            setMessages([{ content: '现在你是米麒麟餐厅的介绍员，餐厅内有Spaghetti Carbonara(125元),' +
+                    'Margherita Pizza(100元),Caesar Salad(25元),Tiramisu(50元),' +
+                    '除去上述菜品之外，餐厅暂时没有其他菜品。' +
+                    '请你为顾客提供服务，耐心解答他们的问题，并向他们推荐菜品。', role: 'system' },
+                { content: '你好，我是米麒麟餐厅的介绍员，有什么可以帮到您的吗？', role: 'Bot' }]);
+            console.error('Error querying dishes:', error);
+        }
+    }
+
     useEffect(() => {
-        if(messages[messages.length - 1].role == userName){
+        if(messages.length > 0 && messages[messages.length - 1].role == userName){
             getReply();
         }
     }, [messages]);
@@ -81,6 +111,9 @@ const ChatPanel = () => {
         const storedMessages = localStorage.getItem(`chatMessages_${userName}`);
         if (storedMessages) {
             setMessages(JSON.parse(storedMessages));
+        }
+        if (messages.length === 0 && userName != "admin") {
+            welcomeCustomer();
         }
     };
 

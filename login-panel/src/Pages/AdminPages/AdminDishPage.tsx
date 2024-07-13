@@ -13,6 +13,8 @@ import {
 import axios from 'axios'
 import { DishChangeMessage, DishQueryMessage, DishPriceMessage, DishDeleteMessage } from 'Plugins/AdminAPI/AdminDishMessage'
 import { styled } from '@mui/styles'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import ChatPanel from 'Plugins/CommonUtils/ChatPanel'
 
 interface Dish {
