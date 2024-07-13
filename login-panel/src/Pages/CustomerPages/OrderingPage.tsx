@@ -210,7 +210,24 @@ const OrderingPage: React.FC = () => {
 
     return (
         <div className="content-wrap">
-            <Container>
+            <Container sx={{
+                height: '100vh',
+                overflowY: 'auto',
+                '&::-webkit-scrollbar': {
+                    width: '12px',
+                },
+                '&::-webkit-scrollbar-track': {
+                    background: '#f1f1f1',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                    backgroundColor: '#888',
+                    borderRadius: '10px',
+                    border: '3px solid #f1f1f1',
+                },
+                '&::-webkit-scrollbar-thumb:hover': {
+                    backgroundColor: '#555',
+                },
+            }}>
                 <Box display="flex" justifyContent="space-between" alignItems="center">
                     <Typography variant="h4" gutterBottom>
                         欢迎，{customerName}！请在下面点菜：

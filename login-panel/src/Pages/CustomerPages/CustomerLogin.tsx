@@ -68,7 +68,7 @@ export function CustomerLogin() {
                 }
             } else {
                 console.error('Unexpected error:', error);
-                setErrorMessage('Unexpected error occurred');
+                setErrorMessage('登录失败');
                 setSuccessMessage('');
             }
         }

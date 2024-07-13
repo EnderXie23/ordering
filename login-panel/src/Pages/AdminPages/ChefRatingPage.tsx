@@ -131,7 +131,7 @@ export function ChefRatingPage() {
                         Chefs and Their Completed Dishes
                     </ListSubheader>
                 }
-                style={{ width: "70vh", maxWidth: "1000px" }}
+                style={{ width: "70vw", maxWidth: "1000px" }}
             >
                 {Object.keys(chefCounts).map((chef) => (
                     <React.Fragment key={chef}>
