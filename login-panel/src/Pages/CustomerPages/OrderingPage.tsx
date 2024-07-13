@@ -38,7 +38,7 @@ let dishes: Dish[] = [
 ];
 
 const OrderingPage: React.FC = () => {
-    const { name,OrderID, updateOrderID,incrementOrderPart,balance , setOrderedDishes } = useUser();
+    const { name,OrderID, updateOrderID,OrderPart,incrementOrderPart,balance , setOrderedDishes } = useUser();
     const customerName = name.split('\n')[1];
     const history = useHistory();
 
@@ -111,7 +111,7 @@ const OrderingPage: React.FC = () => {
             .map(([dishName, count]) => [dishName, count.toString(), takeout]);
         // Send each order separately
         orders.forEach(order => {
-            const log = `${OrderID}\n0\n${customerName}\n0\n` +order.join('\n')+`\n3`
+            const log = `${OrderID}\n${OrderPart}\n${customerName}\n0\n` +order.join('\n')+`\n3`
             const singleOrderLogMessage = new OrderLogMessage(log);
             try {
                 sendOrderLogRequest(singleOrderLogMessage)
@@ -194,7 +194,8 @@ const OrderingPage: React.FC = () => {
             .map(([dishName, count]) => [dishName, count.toString(), dishes.find(dish => dish.name === dishName)?.price ,takeout])
         console.log('Customer:', customerName)
         console.log('Orders:', orders)
-        const orderMessage = new CustomerOrderMessage(customerName, OrderID,"0", orders.map(order => order.join(',')).join(';'))
+        console.log("OrderParts:",OrderPart)
+        const orderMessage = new CustomerOrderMessage(customerName, OrderID,OrderPart, orders.map(order => order.join(',')).join(';'))
         sendChargeRequest(calculateTotalCost())
         handleOrderLog().then()
         sendOrderRequest(orderMessage)
@@ -204,6 +205,7 @@ const OrderingPage: React.FC = () => {
             count: parseInt(order[1], 10)
         }));
         setOrderedDishes(formattedOrders);
+        console.log(OrderPart)
         incrementOrderPart()
         history.push('/order-summary');
     }

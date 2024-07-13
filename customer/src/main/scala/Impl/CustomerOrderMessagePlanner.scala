@@ -27,7 +27,7 @@ case class CustomerOrderMessagePlanner(userName: String,orderID:String,orderPart
           SqlParameter("String", dishName),
           SqlParameter("String", orderCount),
           SqlParameter("String", price),
-          SqlParameter("String", "waiting"),
+          SqlParameter("String", "processing"),
           SqlParameter("String", takeout)
         ))
     };

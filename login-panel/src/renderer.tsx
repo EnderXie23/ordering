@@ -17,7 +17,6 @@ import { Provider } from 'Pages/Context'
 import { ChefRatingPage } from 'Pages/AdminPages/ChefRatingPage'
 import OrderSummaryPage from 'Pages/CustomerPages/OrderSummaryPage'
 import CustomerFinishPage from 'Pages/CustomerPages/CustomerFinishPage'
-import OrderingMorePage from 'Pages/CustomerPages/OrderingMorePage'
 import CommentPage from 'Pages/CustomerPages/CommentPage'
 
 const Layout = () => {
