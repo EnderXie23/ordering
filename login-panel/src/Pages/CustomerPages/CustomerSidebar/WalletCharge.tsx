@@ -39,7 +39,6 @@ const WalletCharge: React.FC<WalletChargeProps> = ({ open, onClose, onCharge }) 
                         onChange={(e) => setChargeAmount(e.target.value)}
                         variant="outlined"
                         fullWidth
-                        defaultValue=""
                     />
                 </Box>
             </DialogContent>

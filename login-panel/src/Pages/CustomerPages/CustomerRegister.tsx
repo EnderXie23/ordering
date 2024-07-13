@@ -105,7 +105,6 @@ export function CustomerRegister() {
                     onChange={(e) => setUserName(e.target.value)}
                     fullWidth
                     margin="normal"
-                    defaultValue=""
                 />
                 <TextField
                     label="昵称"
@@ -113,7 +112,6 @@ export function CustomerRegister() {
                     onChange={(e) => setNickname(e.target.value)}
                     fullWidth
                     margin="normal"
-                    defaultValue=""
                 />
                 <TextField
                     label="电话"
@@ -121,7 +119,6 @@ export function CustomerRegister() {
                     onChange={(e) => setPhone(e.target.value)}
                     fullWidth
                     margin="normal"
-                    defaultValue=""
                 />
                 <TextField
                     label="密码"
@@ -130,7 +127,6 @@ export function CustomerRegister() {
                     onChange={(e) => setPassword(e.target.value)}
                     fullWidth
                     margin="normal"
-                    defaultValue=""
                     InputProps={{
                         endAdornment: (
                             <InputAdornment position="end">
@@ -152,7 +148,6 @@ export function CustomerRegister() {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     fullWidth
                     margin="normal"
-                    defaultValue=""
                     InputProps={{
                         endAdornment: (
                             <InputAdornment position="end">

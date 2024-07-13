@@ -4,7 +4,7 @@ import { useHistory } from 'react-router'
 import { Container, TextField, Button, Typography, Alert, Box, IconButton, InputAdornment, Grid } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import '../index.css'
-import backgroundImage from '../../Images/tiramisu.jpg';
+import backgroundImage from '../../Images/background.png';
 import { useUser } from 'Pages/UserContext'
 import { CustomerLoginMessage } from 'Plugins/CustomerAPI/CustomerLoginMessage'
 import { CustomerQueryProfileMessage } from 'Plugins/CustomerAPI/CustomerProfileMessage'
@@ -113,7 +113,7 @@ export function CustomerLogin() {
                 left: 0,
                 width: '100%',
                 height: '100%',
-                backgroundColor: 'rgba(255, 255, 255, 0.6)', // 调整透明度以达到淡化效果
+                backgroundColor: 'rgba(255, 255, 255, 0.8)', // 调整透明度以达到淡化效果
                 zIndex: 2,
             }} />
             <Grid container spacing={2} sx={{
@@ -139,7 +139,6 @@ export function CustomerLogin() {
                             onChange={(e) => setUserName(e.target.value)}
                             fullWidth
                             margin="normal"
-                            defaultValue=""
                             sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
                         />
                         <TextField
@@ -149,7 +148,6 @@ export function CustomerLogin() {
                             onChange={(e) => setPassword(e.target.value)}
                             fullWidth
                             margin="normal"
-                            defaultValue=""
                             sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
                             InputProps={{
                                 endAdornment: (

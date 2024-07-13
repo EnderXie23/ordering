@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import axios, { isAxiosError } from 'axios';
 import { LoginMessage } from 'Plugins/ChefAPI/LoginMessage';
 import { useHistory } from 'react-router'
-import { Container, TextField, Button, Typography, Alert, Box, IconButton, InputAdornment } from '@mui/material';
+import { Container, TextField, Button, Typography, Alert, Box, IconButton, InputAdornment, Grid } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import '../index.css'
+import backgroundImage from '../../Images/tiramisu.jpg';
 import { useChef } from '../ChefContext';
 
 
@@ -77,57 +78,105 @@ export function ChefLogin() {
     };
 
     return (
-        <Container maxWidth="sm" className="container">
-            <Typography variant="h4" component="h1" align="center" gutterBottom>
-                厨师登录
-            </Typography>
-            <form onSubmit={(e) => e.preventDefault()}>
-                <TextField
-                    label="用户名"
-                    value={userName}
-                    onChange={(e) => setUserName(e.target.value)}
-                    fullWidth
-                    margin="normal"
-                    defaultValue=""
-                />
-                <TextField
-                    label="密码"
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    fullWidth
-                    margin="normal"
-                    defaultValue=""
-                    InputProps={{
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <IconButton
-                                    aria-label="toggle password visibility"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    edge="end"
-                                >
-                                    {showPassword ? <Visibility /> : <VisibilityOff />}
-                                </IconButton>
-                            </InputAdornment>
-                        ),
-                    }}
-                />
-                <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column'}}>
-                    {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
-                    {successMessage && <Alert severity="success">{successMessage}</Alert>}
-                    <Button variant="contained" color="primary" onClick={HandleLogin} fullWidth>
-                        登录
-                    </Button>
-                </Box>
-                <Box display="flex" mt={2} className="button-container">
-                    <Button color="secondary" onClick={() => {history.push('/chef-register')}}>
-                        新用户注册
-                    </Button>
-                    <Button color="secondary" onClick={() => {history.push('/')}}>
-                        主页
-                    </Button>
-                </Box>
-            </form>
+        <Container maxWidth="md" className="container" sx={{
+            position: 'relative',
+            borderRadius: '10px',
+            padding: '2rem',
+            boxShadow: '0 3px 10px rgba(0, 0, 0, 0.2)',
+            overflow: 'hidden', // 确保子元素不溢出
+        }}>
+            <Box sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                backgroundImage: `url(${backgroundImage})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                zIndex: 1,
+            }} />
+            <Box sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'rgba(255, 255, 255, 0.8)', // 调整透明度以达到淡化效果
+                zIndex: 2,
+            }} />
+            <Grid container spacing={2} sx={{
+                position: 'relative',
+                zIndex: 3,
+                borderRadius: '10px',
+                padding: '2rem',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}>
+                <Grid item xs={12} sm={8}>
+                    <Typography variant="h4" component="h1" align="center" gutterBottom sx={{
+                        fontSize: '2rem',
+                        fontWeight: 'bold',
+                        marginBottom: '1rem'
+                    }}>
+                        厨师登录
+                    </Typography>
+                    <form onSubmit={(e) => e.preventDefault()}>
+                        <TextField
+                            label="用户名"
+                            value={userName}
+                            onChange={(e) => setUserName(e.target.value)}
+                            fullWidth
+                            margin="normal"
+                            sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
+                        />
+                        <TextField
+                            label="密码"
+                            type={showPassword ? 'text' : 'password'}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            fullWidth
+                            margin="normal"
+                            sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            edge="end"
+                                        >
+                                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+                        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', marginTop: '1rem' }}>
+                            {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+                            {successMessage && <Alert severity="success">{successMessage}</Alert>}
+                            <Button variant="contained" color="primary" onClick={HandleLogin} fullWidth sx={{
+                                backgroundColor: '#1976d2',
+                                color: '#fff',
+                                padding: '0.75rem',
+                                borderRadius: '5px',
+                                fontWeight: 'bold',
+                                fontSize: '1rem'
+                            }}>
+                                登录
+                            </Button>
+                        </Box>
+                        <Box display="flex" mt={2} justifyContent="space-between" className="button-container">
+                            <Button color="secondary" onClick={() => {history.push('/chef-register')}}>
+                                新用户注册
+                            </Button>
+                            <Button color="secondary" onClick={() => {history.push('/')}}>
+                                主页
+                            </Button>
+                        </Box>
+                    </form>
+                </Grid>
+            </Grid>
         </Container>
     );
 }
