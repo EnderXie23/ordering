@@ -78,7 +78,7 @@ export function ChefLogin() {
     };
 
     return (
-        <Container maxWidth="md" className="container" sx={{
+        <Container className="container" sx={{
             position: 'relative',
             borderRadius: '10px',
             padding: '2rem',
@@ -167,10 +167,12 @@ export function ChefLogin() {
                             </Button>
                         </Box>
                         <Box display="flex" mt={2} justifyContent="space-between" className="button-container">
-                            <Button color="secondary" onClick={() => {history.push('/chef-register')}}>
+                            <Button color="secondary" onClick={() => {history.push('/chef-register')}}
+                                    sx={{ textTransform: 'none', fontWeight: 'bold' }}>
                                 新用户注册
                             </Button>
-                            <Button color="secondary" onClick={() => {history.push('/')}}>
+                            <Button color="secondary" onClick={() => {history.push('/')}}
+                                    sx={{ textTransform: 'none', fontWeight: 'bold' }}>
                                 主页
                             </Button>
                         </Box>

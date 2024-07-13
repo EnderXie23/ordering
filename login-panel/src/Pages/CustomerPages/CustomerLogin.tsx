@@ -178,10 +178,12 @@ export function CustomerLogin() {
                             </Button>
                         </Box>
                         <Box display="flex" mt={2} justifyContent="space-between" className="button-container">
-                            <Button color="secondary" onClick={() => {history.push('/customer-register')}} sx={{ textTransform: 'none', fontWeight: 'bold' }}>
+                            <Button color="secondary" onClick={() => {history.push('/customer-register')}}
+                                    sx={{ textTransform: 'none', fontWeight: 'bold' }}>
                                 新用户注册
                             </Button>
-                            <Button color="secondary" onClick={() => {history.push('/')}} sx={{ textTransform: 'none', fontWeight: 'bold' }}>
+                            <Button color="secondary" onClick={() => {history.push('/')}}
+                                    sx={{ textTransform: 'none', fontWeight: 'bold' }}>
                                 主页
                             </Button>
                         </Box>

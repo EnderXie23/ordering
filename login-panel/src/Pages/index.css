@@ -1,5 +1,6 @@
 body, html {
     height: 100%;
+    width: 100%;
     margin: 0;
     padding: 0;
     display: flex;
@@ -9,18 +10,11 @@ body, html {
     font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
 }
 
-.root {
-    width: 100%;
-    min-height: 700px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .container {
     background-color: #ffffff;
     padding: 20px;
     border-radius: 8px;
+    width: 100vh;
 }
 
 .custom-button {
@@ -47,7 +41,7 @@ body, html {
 
 .button-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     margin-top: 16px; /* 2 * theme.spacing(2) */
     margin-bottom: 20px;
 }
