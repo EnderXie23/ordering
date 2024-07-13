@@ -194,7 +194,7 @@ const OrderingPage: React.FC = () => {
             .map(([dishName, count]) => [dishName, count.toString(), dishes.find(dish => dish.name === dishName)?.price ,takeout])
         console.log('Customer:', customerName)
         console.log('Orders:', orders)
-        const orderMessage = new CustomerOrderMessage(customerName, orderID,"0", orders.map(order => order.join(',')).join(';'))
+        const orderMessage = new CustomerOrderMessage(customerName, OrderID,"0", orders.map(order => order.join(',')).join(';'))
         sendChargeRequest(calculateTotalCost())
         handleOrderLog().then()
         sendOrderRequest(orderMessage)
