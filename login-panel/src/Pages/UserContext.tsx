@@ -8,6 +8,9 @@ interface UserContextType {
     updateOrderID: (newOrderID: string) => void;
     OrderPart:string
     incrementOrderPart: () => void;
+    balance: number;
+    setBalance: (newBalance: number) => void;
+
     orderedDishes: { name: string, path: string, count: number }[];
     setOrderedDishes: (dishes: { name: string, path: string, count: number }[]) => void;
 }
@@ -19,6 +22,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [name, setName] = useState<string>('');
     const [OrderID, SetOrderID] = useState<string>('');
     const [OrderPart, SetOrderPart] = useState<string>('0');
+    const [balance, setBalance] = useState<number>(0.0);
     const [orderedDishes, setOrderedDishes] =
         useState<{ name: string, path: string, count: number }[]>([]);
 
@@ -49,7 +53,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
 
     return (
-        <UserContext.Provider value={{ name, setName, OrderID,updateOrderID, OrderPart, incrementOrderPart, orderedDishes, setOrderedDishes:mergeOrderedDishes }}>
+        <UserContext.Provider value={{ name, setName,balance, setBalance, OrderID,updateOrderID, OrderPart, incrementOrderPart, orderedDishes, setOrderedDishes:mergeOrderedDishes }}>
             {children}
         </UserContext.Provider>
     );

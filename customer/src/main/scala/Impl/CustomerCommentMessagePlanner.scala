@@ -8,10 +8,11 @@ import Common.DBAPI.{readDBRows, readDBString, startTransaction, writeDB}
 import Common.Object.SqlParameter
 import Common.ServiceUtils.schemaName
 
-case class CustomerCommentMessagePlanner(customerName:String, comment: String, overall: String, taste: String, pack: String, serv: String, env: String, override val planContext: PlanContext) extends Planner[String]:
+case class CustomerCommentMessagePlanner(customerName:String, chefName: String, comment: String, overall: String, taste: String, pack: String, serv: String, env: String, override val planContext: PlanContext) extends Planner[String]:
   override def plan(using PlanContext): IO[String] = {
-    writeDB(s"INSERT INTO ${schemaName}.ratings (customer_name, comment, overall, taste, pack, serv, env) VALUES (?, ?, ?, ?, ?, ?, ?)",
+    writeDB(s"INSERT INTO ${schemaName}.ratings (customer_name, chef_name, comment, overall, taste, pack, serv, env) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
       List(SqlParameter("String", customerName),
+        SqlParameter("String", chefName),
         SqlParameter("String", comment),
         SqlParameter("String", overall),
         SqlParameter("String", taste),

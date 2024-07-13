@@ -30,7 +30,7 @@ const OrderSummaryPage: React.FC = () => {
                 ))}
             </List>
             <Box display="flex" justifyContent="center" alignItems="center" mt={4}>
-                <Button variant="contained" color="primary" onClick={() => { history.push('/order-more') }}>
+                <Button variant="contained" color="primary" onClick={() => { history.push('/place-order') }}>
                     继续点菜
                 </Button>
                 <Button variant="contained" color="secondary" onClick={() => { history.push('/finish') }} style={{ marginLeft: '16px' }}>

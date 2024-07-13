@@ -4,7 +4,6 @@ import { Button, Typography, Container, Box, ListItem, ListItemText, Paper } fro
 import axios from 'axios'
 import { AdminQueryMessage } from 'Plugins/AdminAPI/AdminQueryMessage'
 import { List } from 'antd'
-import { makeStyles } from '@material-ui/core/styles'
 
 interface finishedOrder{
     chefName: string,
@@ -74,9 +73,6 @@ export function AdminOrderPage(){
 
     useEffect(() => {
         handleAdminQuery()
-        .then(() => {
-
-        })
         .catch(error => {
             console.error('Error in handleComplete:', error) // Added error handling
         })

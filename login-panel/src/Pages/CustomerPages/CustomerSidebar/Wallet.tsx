@@ -17,14 +17,13 @@ const Wallet: React.FC<WalletProps> = ({ open,  onClose }) => {
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
 
-
     const QueryProfileRequest = async (message: CustomerQueryProfileMessage) => {
         try {
             const response = await axios.post(message.getURL(), JSON.stringify(message), {
                 headers: { 'Content-Type': 'application/json' },
             });
             console.log(response.data)
-            setBalance(response.data.split('\n')[2])
+            setBalance(Number(parseFloat(response.data.split('\n')[2])));
         } catch (error) {
             console.error('Unexpected error:', error);
         }
@@ -63,7 +62,7 @@ const Wallet: React.FC<WalletProps> = ({ open,  onClose }) => {
     };
 
     const handleCharge = async(amount: number) => {
-        const new_amount = (Number(balance) + Number(amount)).toString();
+        const new_amount = (Number(balance) + Number(amount)).toFixed(2);
         const cmessage = new CustomerChargeMessage(username, new_amount);
         await ChargeRequest(cmessage);
 
@@ -91,7 +90,7 @@ const Wallet: React.FC<WalletProps> = ({ open,  onClose }) => {
             <Dialog open={open} onClose={handleClose} aria-labelledby="user-balance-dialog">
                 <DialogTitle id="user-balance-dialog">用户余额</DialogTitle>
                 <DialogContent>
-                    <Typography>您的当前余额是: {balance} 元</Typography>
+                    <Typography>您的当前余额是: {balance.toFixed(2)} 元</Typography>
                 </DialogContent>
                 {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
                 {successMessage && <Alert severity="success">{successMessage}</Alert>}

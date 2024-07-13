@@ -6,6 +6,7 @@ import axios from 'axios'
 import { Container, Typography, Box, Button, IconButton, Grid, Card, CardContent, CardMedia } from '@mui/material';
 import { Add, Remove } from '@mui/icons-material';
 import CustomerSidebar from './CustomerSidebar/CustomerSidebar'
+import { OrderLogMessage } from 'Plugins/AdminAPI/OrderLogMessage'
 
 type Dish = {
     name: string;
@@ -36,6 +37,34 @@ const OrderingPage: React.FC = () => {
         });
     };
 
+    const sendOrderLogRequest = async (message: OrderLogMessage) => {
+        try {
+            const response = await axios.post(message.getURL(), JSON.stringify(message), {
+                headers: { 'Content-Type': 'application/json' },
+            })
+            console.log(response.status)
+            console.log(response.data)
+        } catch (error) {
+            console.error('Error logging:', error)
+        }
+    }
+
+    const handleOrderLog = async () => {
+        const orders = Object.entries(orderCounts)
+            .filter(([, count]) => count > 0)
+            .map(([dishName, count]) => [dishName, count.toString(), takeout]);
+        // Send each order separately
+        orders.forEach(order => {
+            const log = `${OrderID}\n${OrderPart}\n0\n${customerName}\n` +order.join('\n')+`\n3`
+            const singleOrderLogMessage = new OrderLogMessage(log);
+            try {
+                sendOrderLogRequest(singleOrderLogMessage)
+            } catch (error) {
+                console.error('Error in handleLog:', error);
+            }
+        });
+    };
+
     const sendOrderRequest = async (message: CustomerOrderMessage) => {
         try {
             const response = await axios.post(message.getURL(), JSON.stringify(message), {
@@ -56,6 +85,7 @@ const OrderingPage: React.FC = () => {
         console.log('Orders:', orders);
         const orderMessage = new CustomerOrderMessage(customerName, OrderID,OrderPart, orders.map(order => order.join(',')).join(';'))
         sendOrderRequest(orderMessage);
+        handleOrderLog().then()
         console.log('OrderID:', OrderID);
         console.log('OrderPart:', OrderPart);
         incrementOrderPart()

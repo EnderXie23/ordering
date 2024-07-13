@@ -10,9 +10,11 @@ import OrderingPage from 'Pages/CustomerPages/OrderingPage'
 import ChefPage from 'Pages/ChefPages/ChefPage'
 import { AdminPage } from 'Pages/AdminPages/AdminPage'
 import { AdminOrderPage } from 'Pages/AdminPages/AdminOrderPage'
+import { AdminDishPage } from 'Pages/AdminPages/AdminDishPage'
 import { UserProvider } from 'Pages/UserContext'
 import { ChefProvider } from 'Pages/ChefContext'
 import { Provider } from 'Pages/Context'
+import { ChefRatingPage } from 'Pages/AdminPages/ChefRatingPage'
 import OrderSummaryPage from 'Pages/CustomerPages/OrderSummaryPage'
 import CustomerFinishPage from 'Pages/CustomerPages/CustomerFinishPage'
 import OrderingMorePage from 'Pages/CustomerPages/OrderingMorePage'
@@ -24,10 +26,24 @@ const Layout = () => {
             <Switch>
                 <Route path="/" exact component={Main} />
                 <Route path="/admin" exact>
-                    <AdminPage />
+                    <UserProvider>
+                        <AdminPage />
+                    </UserProvider>
                 </Route>
                 <Route path="/admin-order" exact>
-                    <AdminOrderPage />
+                    <UserProvider>
+                        <AdminOrderPage />
+                    </UserProvider>
+                </Route>
+                <Route path="/admin-dish" exact>
+                    <UserProvider>
+                        <AdminDishPage />
+                    </UserProvider>
+                </Route>
+                <Route path="/admin-chef" exact>
+                    <UserProvider>
+                        <ChefRatingPage />
+                    </UserProvider>
                 </Route>
                 <Route path="/chef-login" exact>
                     <ChefProvider> {/* Wrap ChefLogin with ChefProvider */}
@@ -69,11 +85,7 @@ const Layout = () => {
                         <CustomerFinishPage />
                     </UserProvider>
                 </Route>
-                <Route path="/order-more" exact>
-                    <UserProvider>
-                        <OrderingMorePage />
-                    </UserProvider>
-                </Route>
+
                 <Route path="/comment" exact>
                     <UserProvider>
                         <CommentPage />
