@@ -113,6 +113,7 @@ export function CustomerLogin() {
                             onChange={(e) => setUserName(e.target.value)}
                             fullWidth
                             margin="normal"
+                            defaultValue=""
                             sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
                         />
                         <TextField
@@ -122,6 +123,7 @@ export function CustomerLogin() {
                             onChange={(e) => setPassword(e.target.value)}
                             fullWidth
                             margin="normal"
+                            defaultValue=""
                             sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
                             InputProps={{
                                 endAdornment: (

@@ -21,7 +21,7 @@ import CustomerSidebar from './CustomerSidebar/CustomerSidebar'
 import { CustomerChargeMessage } from 'Plugins/CustomerAPI/CustomerProfileMessage'
 import { LogMessage } from 'Plugins/ChefAPI/LogMessage'
 import { DishQueryMessage } from 'Plugins/AdminAPI/AdminDishMessage'
-import { makeStyles } from '@material-ui/core'
+import 'Pages/index.css'
 
 type Dish = {
     name: string;
@@ -171,6 +171,7 @@ const OrderingPage: React.FC = () => {
     }
 
     return (
+        <div className="content-wrap">
             <Container>
                 <Box display="flex" justifyContent="space-between" alignItems="center">
                     <Typography variant="h4" gutterBottom>
@@ -216,6 +217,7 @@ const OrderingPage: React.FC = () => {
                     display = "flex"
                     justifyContent="center"
                     alignItems="center"
+                    marginBottom={2}
                 >
                     <Button variant="contained" color="primary" onClick={handleSubmit}>
                         提交订单
@@ -225,6 +227,7 @@ const OrderingPage: React.FC = () => {
                     </Button>
                 </Box>
             </Container>
+        </div>
     );
 };
 

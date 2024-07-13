@@ -88,6 +88,7 @@ export function ChefLogin() {
                     onChange={(e) => setUserName(e.target.value)}
                     fullWidth
                     margin="normal"
+                    defaultValue=""
                 />
                 <TextField
                     label="密码"
@@ -96,6 +97,7 @@ export function ChefLogin() {
                     onChange={(e) => setPassword(e.target.value)}
                     fullWidth
                     margin="normal"
+                    defaultValue=""
                     InputProps={{
                         endAdornment: (
                             <InputAdornment position="end">
