@@ -92,7 +92,6 @@ std.flog
 # Electron-Forge
 out/
 
-
 config.json
 package-lock.json
 .idea
@@ -101,3 +100,5 @@ src/Utils/pdfjs-dist/
 *.flog
 
 .webpack_last
+
+api.js

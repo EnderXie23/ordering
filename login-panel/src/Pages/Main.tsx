@@ -3,6 +3,7 @@ import { useHistory } from 'react-router';
 import { Box, Button, Container, Typography, Grid } from '@mui/material'
 import './index.css'; // Importing the CSS file
 import backgroundImage from '../Images/background.png';
+<<<<<<< Updated upstream
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles((theme) => ({
@@ -52,10 +53,11 @@ const useStyles = makeStyles((theme) => ({
         },
     },
 }));
+=======
+>>>>>>> Stashed changes
 
 export function Main() {
     const history = useHistory();
-    const classes = useStyles();
 
     const clearAllChats = () => {
         // Clear all chat messages from local storage
@@ -72,17 +74,9 @@ export function Main() {
     }, [])
 
     return (
-        <div className={classes.root}>
-            <Box sx={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                backgroundColor: 'rgba(255, 255, 255, 0.3)', // 调整透明度以达到淡化效果
-                zIndex: 1,
-            }} />
-            <Box className={classes.loginBox} sx={{zIndex: 2}}>
+        <div className='root' style={{backgroundImage: `url(${backgroundImage})`}}>
+            <Box className='cover' />
+            <Box className='login-box'>
                 <Typography variant="h1" component="h1" align="center" gutterBottom sx={{
                     fontSize: '3rem',
                     fontWeight: 'bold',

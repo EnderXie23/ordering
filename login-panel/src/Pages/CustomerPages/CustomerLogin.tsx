@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import axios, { isAxiosError } from 'axios';
 import { useHistory } from 'react-router'
-import { Container, TextField, Button, Typography, Alert, Box, IconButton, InputAdornment, Grid } from '@mui/material'
+import { TextField, Button, Typography, Alert, Box, IconButton, InputAdornment, Grid } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import '../index.css'
 import backgroundImage from '../../Images/background.png';
+import tiramisuImage from '../../Images/tiramisu.jpg';
 import { useUser } from 'Pages/UserContext'
 import { CustomerLoginMessage } from 'Plugins/CustomerAPI/CustomerLoginMessage'
 import { CustomerQueryProfileMessage } from 'Plugins/CustomerAPI/CustomerProfileMessage'
@@ -89,41 +90,9 @@ export function CustomerLogin() {
     };
 
     return (
-        <Container maxWidth="md" className="container" sx={{
-            position: 'relative',
-            borderRadius: '10px',
-            padding: '2rem',
-            boxShadow: '0 3px 10px rgba(0, 0, 0, 0.2)',
-            overflow: 'hidden', // 确保子元素不溢出
-        }}>
-            <Box sx={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                backgroundImage: `url(${backgroundImage})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                zIndex: 1,
-            }} />
-            <Box sx={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                backgroundColor: 'rgba(255, 255, 255, 0.8)', // 调整透明度以达到淡化效果
-                zIndex: 2,
-            }} />
-            <Grid container spacing={2} sx={{
-                position: 'relative',
-                zIndex: 3,
-                borderRadius: '10px',
-                padding: '2rem',
-                justifyContent: 'center',
-                alignItems: 'center',
-            }}>
+        <div className='root' style={{backgroundImage: `url(${backgroundImage})`}}>
+            <Box className='cover' />
+            <Box className='login-box'>
                 <Grid item xs={12} sm={8}>
                     <Typography variant="h4" component="h1" align="center" gutterBottom sx={{
                         fontSize: '2rem',
@@ -178,18 +147,22 @@ export function CustomerLogin() {
                             </Button>
                         </Box>
                         <Box display="flex" mt={2} justifyContent="space-between" className="button-container">
-                            <Button color="secondary" onClick={() => {history.push('/customer-register')}}
+                            <Button color="secondary" onClick={() => {
+                                history.push('/customer-register')
+                            }}
                                     sx={{ textTransform: 'none', fontWeight: 'bold' }}>
                                 新用户注册
                             </Button>
-                            <Button color="secondary" onClick={() => {history.push('/')}}
+                            <Button color="secondary" onClick={() => {
+                                history.push('/')
+                            }}
                                     sx={{ textTransform: 'none', fontWeight: 'bold' }}>
                                 主页
                             </Button>
                         </Box>
                     </form>
                 </Grid>
-            </Grid>
-        </Container>
+            </Box>
+        </div>
     );
 }
