@@ -4,6 +4,7 @@ import { useHistory } from 'react-router'
 import { Container, TextField, Button, Typography, Alert, Box, IconButton, InputAdornment, Grid } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import '../index.css'
+import backgroundImage from '../../Images/tiramisu.jpg';
 import { useUser } from 'Pages/UserContext'
 import { CustomerLoginMessage } from 'Plugins/CustomerAPI/CustomerLoginMessage'
 import { CustomerQueryProfileMessage } from 'Plugins/CustomerAPI/CustomerProfileMessage'
@@ -89,15 +90,40 @@ export function CustomerLogin() {
 
     return (
         <Container maxWidth="md" className="container" sx={{
-            backgroundColor: '#f5f5f5',
+            position: 'relative',
             borderRadius: '10px',
             padding: '2rem',
             boxShadow: '0 3px 10px rgba(0, 0, 0, 0.2)',
+            overflow: 'hidden', // 确保子元素不溢出
         }}>
-            <Grid container spacing={2}>
-                <Grid item xs={12} sm={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <img src={require(`../../Images/tiramisu.jpg`).default} alt="Login illustration" style={{ width: '100%', borderRadius: '10px' }} />
-                </Grid>
+            <Box sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                backgroundImage: `url(${backgroundImage})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                zIndex: 1,
+            }} />
+            <Box sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'rgba(255, 255, 255, 0.6)', // 调整透明度以达到淡化效果
+                zIndex: 2,
+            }} />
+            <Grid container spacing={2} sx={{
+                position: 'relative',
+                zIndex: 3,
+                borderRadius: '10px',
+                padding: '2rem',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}>
                 <Grid item xs={12} sm={8}>
                     <Typography variant="h4" component="h1" align="center" gutterBottom sx={{
                         fontSize: '2rem',
