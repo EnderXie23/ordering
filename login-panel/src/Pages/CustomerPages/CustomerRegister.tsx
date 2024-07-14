@@ -5,6 +5,7 @@ import { TextField, Button, Typography, Alert, Box, IconButton, InputAdornment, 
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import '../index.css'
 import backgroundImage from '../../Images/background.png';
+import frontImage from '../../Images/tiramisu.jpg';
 import { CustomerRegisterMessage } from 'Plugins/CustomerAPI/CustomerRegisterMessage'
 
 export function CustomerRegister() {
@@ -97,8 +98,13 @@ export function CustomerRegister() {
     return (
         <div className='root' style={{backgroundImage: `url(${backgroundImage})`}}>
             <Box className='cover' />
-            <Box className='login-box'>
-                <Grid item xs={12} sm={8}>
+            <Box className='main-box' sx={{ display: 'flex', alignItems: 'stretch', padding: 0, width:'60%'}}>
+                <Grid item width='40%'
+                      sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}>
+                    <img src={frontImage} alt="Login illustration"
+                         style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '10px 0 0 10px' }} />
+                </Grid>
+                <Grid item width='60%' sx={{ padding: '2rem'}}>
                     <Typography variant="h4" component="h1" align="center" gutterBottom sx={{
                         fontSize: '2rem',
                         fontWeight: 'bold',

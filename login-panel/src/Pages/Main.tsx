@@ -24,7 +24,7 @@ export function Main() {
     return (
         <div className='root' style={{backgroundImage: `url(${backgroundImage})`}}>
             <Box className='cover' />
-            <Box className='login-box' style={{width: '30%'}}>
+            <Box className='main-box' style={{width: '30%'}}>
                 <Typography variant="h1" component="h1" align="center" gutterBottom sx={{
                     fontSize: '3rem',
                     fontWeight: 'bold',
