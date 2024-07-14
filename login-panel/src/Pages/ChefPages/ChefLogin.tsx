@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import axios, { isAxiosError } from 'axios';
 import { LoginMessage } from 'Plugins/ChefAPI/LoginMessage';
 import { useHistory } from 'react-router'
-import { Container, TextField, Button, Typography, Alert, Box, IconButton, InputAdornment, Grid } from '@mui/material';
+import { TextField, Button, Typography, Alert, Box, IconButton, InputAdornment, Grid } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import '../index.css'
-import backgroundImage from '../../Images/tiramisu.jpg';
+import backgroundImage from '../../Images/background.png';
+import frontImage from '../../Images/many_dishes.png';
 import { useChef } from '../ChefContext';
 
 
@@ -80,8 +81,13 @@ export function ChefLogin() {
     return (
         <div className='root' style={{backgroundImage: `url(${backgroundImage})`}}>
             <Box className='cover' />
-            <Box className='login-box'>
-                <Grid item xs={12} sm={8}>
+            <Box className='main-box' sx={{ display: 'flex', alignItems: 'stretch', padding: 0, width:'60%'}}>
+                <Grid item width='40%'
+                      sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}>
+                    <img src={frontImage} alt="Login illustration"
+                         style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '10px 0 0 10px' }} />
+                </Grid>
+                <Grid item width='60%' sx={{ padding: '2rem'}}>
                     <Typography variant="h4" component="h1" align="center" gutterBottom sx={{
                         fontSize: '2rem',
                         fontWeight: 'bold',
@@ -123,14 +129,7 @@ export function ChefLogin() {
                         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', marginTop: '1rem' }}>
                             {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
                             {successMessage && <Alert severity="success">{successMessage}</Alert>}
-                            <Button variant="contained" color="primary" onClick={HandleLogin} fullWidth sx={{
-                                backgroundColor: '#1976d2',
-                                color: '#fff',
-                                padding: '0.75rem',
-                                borderRadius: '5px',
-                                fontWeight: 'bold',
-                                fontSize: '1rem'
-                            }}>
+                            <Button variant="contained" color="primary" onClick={HandleLogin} fullWidth className='button'>
                                 登录
                             </Button>
                         </Box>

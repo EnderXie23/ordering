@@ -23,24 +23,28 @@ export function AdminPage(){
 
     return (
         <Container>
-            <Typography variant="h4" align="center" gutterBottom marginBottom={5}>
+            <Typography variant="h4" align="center" gutterBottom marginBottom={5} sx={{
+                fontSize: '3rem',
+                fontWeight: 'bold',
+                marginBottom: '2rem'
+            }}>
                 管理员页面
             </Typography>
             <Box display="flex" flexDirection="column" alignItems="stretch" mt={2} className="button-container" gap={2}>
-                <Button variant="outlined" className="custom-button" startIcon={<RestaurantMenuIcon />} onClick={() => history.push("/admin-dish")}>
+                <Button variant="outlined" className="button" startIcon={<RestaurantMenuIcon />} onClick={() => history.push("/admin-dish")}>
                     查看菜品
                 </Button>
-                <Button variant="outlined" className="custom-button" startIcon={<ReceiptIcon />} onClick={() => history.push("/admin-order")}>
+                <Button variant="outlined" className="button" startIcon={<ReceiptIcon />} onClick={() => history.push("/admin-order")}>
                     查看订单
                 </Button>
-                <Button variant="outlined" className="custom-button" startIcon={<RateReviewIcon />} >
-                    菜品评价
+                <Button variant="outlined" className="button" startIcon={<RateReviewIcon />} onClick={() => {history.push('/admin-rating')}}>
+                    顾客评价
                 </Button>
-                <Button variant="outlined" className="custom-button" startIcon={<StarIcon />} onClick={() => {history.push('/admin-chef')}}>
-                    厨师评价
+                <Button variant="outlined" className="button" startIcon={<StarIcon />} onClick={() => {history.push('/admin-chef')}}>
+                    厨师概况
                 </Button>
                 <ChatPanel />
-                <Button color="secondary" onClick={() => {history.push('/')}}>
+                <Button color="secondary" onClick={() => {history.push('/')}} sx={{ textTransform: 'none', fontWeight: 'bold' }}>
                     主页
                 </Button>
             </Box>

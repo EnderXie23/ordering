@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 import { Box, TextField, IconButton, List, ListItem, Paper, ListItemText, Fab, Drawer, Typography, AppBar, Toolbar, CircularProgress }
     from '@mui/material';
@@ -20,6 +20,7 @@ const ChatPanel = () => {
     const [input, setInput] = useState('');
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
+    const listRef = useRef(null);
 
     let APIKEY = api.api_key;
 
@@ -60,6 +61,7 @@ const ChatPanel = () => {
     };
 
     const getReply = () => {
+        setLoading(true);
         try{
             axios(config)
                 .then((response) => {
@@ -121,6 +123,9 @@ const ChatPanel = () => {
         if(messages.length > 0 && messages[messages.length - 1].role == 'loading'){
             getReply();
         }
+        if (listRef.current) {
+            listRef.current.scrollTop = listRef.current.scrollHeight;
+        }
     }, [messages]);
 
     const handleOpen = () => {
@@ -131,6 +136,9 @@ const ChatPanel = () => {
         }
         if (messages.length === 0 && userName != "admin") {
             welcomeCustomer();
+        }
+        if (listRef.current) {
+            listRef.current.scrollTop = listRef.current.scrollHeight;
         }
     };
 
@@ -155,7 +163,7 @@ const ChatPanel = () => {
                 sx={{
                     '& .MuiDrawer-paper': {
                         width: 400,
-                        height: '70%',
+                        height: '80%',
                         bottom: 0,
                         top: 'auto',
                         position: 'fixed',
@@ -171,8 +179,22 @@ const ChatPanel = () => {
                         </Typography>
                     </Toolbar>
                 </AppBar>
-                <Box sx={{ padding: 2, height: '85.5%', display: 'flex', flexDirection: 'column' }}>
-                    <List sx={{ flexGrow: 1, overflow: 'auto' }}>
+                <Box sx={{ padding: 2, height: '85%', display: 'flex', flexDirection: 'column' }}>
+                    <List ref={listRef} sx={{ flexGrow: 1, overflow: 'auto',
+                        '&::-webkit-scrollbar': {
+                            width: '12px',
+                        },
+                        '&::-webkit-scrollbar-track': {
+                            background: '#f1f1f1',
+                        },
+                        '&::-webkit-scrollbar-thumb': {
+                            backgroundColor: '#888',
+                            borderRadius: '10px',
+                            border: '3px solid #f1f1f1',
+                        },
+                        '&::-webkit-scrollbar-thumb:hover': {
+                            backgroundColor: '#555',
+                        } }}>
                         {messages
                             .filter((message) => message.role !== "system")
                             .map((message, index) => (
@@ -192,6 +214,7 @@ const ChatPanel = () => {
                     </List>
                     <Box sx={{ display: 'flex', mt: 2 }}>
                         <TextField
+                            disabled={loading}
                             fullWidth
                             variant="outlined"
                             placeholder="输入您的问题…"

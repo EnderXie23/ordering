@@ -19,8 +19,8 @@ case class CustomerCommentMessagePlanner(customerName:String, chefName: String, 
         SqlParameter("String", pack),
         SqlParameter("String", serv),
         SqlParameter("String", env)
-      ))
-
-    IO.pure("Comment added successfully")
+      )).flatMap { _ =>
+      IO.pure("Comment added successfully")
+    }
   }
 

@@ -5,7 +5,7 @@ import { TextField, Button, Typography, Alert, Box, IconButton, InputAdornment, 
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import '../index.css'
 import backgroundImage from '../../Images/background.png';
-import tiramisuImage from '../../Images/tiramisu.jpg';
+import frontImage from '../../Images/tiramisu.jpg';
 import { useUser } from 'Pages/UserContext'
 import { CustomerLoginMessage } from 'Plugins/CustomerAPI/CustomerLoginMessage'
 import { CustomerQueryProfileMessage } from 'Plugins/CustomerAPI/CustomerProfileMessage'
@@ -47,7 +47,7 @@ export function CustomerLogin() {
                 setErrorMessage('');
                 setName(userName + '\n' + response.data[1]);
                 setTimeout(() => {
-                    history.push('/place-order');
+                    history.push('/service-type');
                 }, 1000);
             } else if (response.data[0] == 'Invalid user') {
                 setSuccessMessage('');
@@ -90,10 +90,15 @@ export function CustomerLogin() {
     };
 
     return (
-        <div className='root' style={{backgroundImage: `url(${backgroundImage})`}}>
+        <div className='root' style={{ backgroundImage: `url(${backgroundImage})` }}>
             <Box className='cover' />
-            <Box className='login-box'>
-                <Grid item xs={12} sm={8}>
+            <Box className='main-box' sx={{ display: 'flex', alignItems: 'stretch', padding: 0, width:'60%'}}>
+                <Grid item width='40%'
+                      sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}>
+                    <img src={frontImage} alt="Login illustration"
+                         style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '10px 0 0 10px' }} />
+                </Grid>
+                <Grid item width='60%' sx={{ padding: '2rem'}}>
                     <Typography variant="h4" component="h1" align="center" gutterBottom sx={{
                         fontSize: '2rem',
                         fontWeight: 'bold',
@@ -135,14 +140,8 @@ export function CustomerLogin() {
                         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', marginTop: '1rem' }}>
                             {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
                             {successMessage && <Alert severity="success">{successMessage}</Alert>}
-                            <Button variant="contained" color="primary" onClick={CustomerLogin} fullWidth sx={{
-                                backgroundColor: '#1976d2',
-                                color: '#fff',
-                                padding: '0.75rem',
-                                borderRadius: '5px',
-                                fontWeight: 'bold',
-                                fontSize: '1rem'
-                            }}>
+                            <Button variant="contained" color="primary" onClick={CustomerLogin} fullWidth
+                                    className='button'>
                                 登录
                             </Button>
                         </Box>

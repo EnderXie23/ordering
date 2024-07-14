@@ -1,20 +1,10 @@
 import { useHistory } from 'react-router-dom';
-import { useUser } from 'Pages/UserContext';
-import React, { useState } from 'react';
+import React from 'react';
 import CustomerSidebar from './CustomerSidebar/CustomerSidebar'
-import { Container, Typography, Box, Button, TextField } from '@mui/material';
+import { Container, Typography, Box, Button } from '@mui/material';
 
 const CustomerFinishPage: React.FC = () => {
     const history = useHistory();
-    const [comment, setComment] = useState('');
-
-    const handleSubmit = () => {
-        // Handle the submit logic here (e.g., send to server)
-        console.log('Comment:', comment);
-        alert('感谢您的评论!');
-        // Clear the input after submitting
-        setComment('');
-    };
 
     return (
         <Container>

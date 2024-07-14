@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import axios, { isAxiosError } from 'axios';
 import { RegisterMessage } from 'Plugins/ChefAPI/RegisterMessage';
 import { useHistory } from 'react-router'
-import { Container, TextField, Button, Typography, Alert, Box, IconButton, InputAdornment, Grid } from '@mui/material';
+import { TextField, Button, Typography, Alert, Box, IconButton, InputAdornment, Grid } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import '../index.css'
-import backgroundImage from '../../Images/tiramisu.jpg';
+import backgroundImage from '../../Images/background.png';
+import frontImage from '../../Images/many_dishes.png';
 
 export function ChefRegister() {
     const [userName, setUserName] = useState('');
@@ -90,8 +91,13 @@ export function ChefRegister() {
     return (
         <div className='root' style={{backgroundImage: `url(${backgroundImage})`}}>
             <Box className='cover' />
-            <Box className='login-box'>
-                <Grid item xs={12} sm={8}>
+            <Box className='main-box' sx={{ display: 'flex', alignItems: 'stretch', padding: 0, width:'60%'}}>
+                <Grid item width='40%'
+                      sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}>
+                    <img src={frontImage} alt="Login illustration"
+                         style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '10px 0 0 10px' }} />
+                </Grid>
+                <Grid item width='60%' sx={{ padding: '2rem'}}>
                     <Typography variant="h4" component="h1" align="center" gutterBottom sx={{
                         fontSize: '2rem',
                         fontWeight: 'bold',
@@ -152,19 +158,14 @@ export function ChefRegister() {
                                 ),
                             }}
                         />
-                        {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
-                        {successMessage && <Alert severity="success">{successMessage}</Alert>}
-                        <Button variant="contained" color="primary" onClick={ChefRegister} fullWidth sx={{
-                            backgroundColor: '#1976d2',
-                            color: '#fff',
-                            padding: '0.75rem',
-                            borderRadius: '5px',
-                            fontWeight: 'bold',
-                            fontSize: '1rem'
-                        }}>
+                        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', marginTop: '1rem' }}>
+                            {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+                            {successMessage && <Alert severity="success">{successMessage}</Alert>}
+                            <Button variant="contained" color="primary" onClick={ChefRegister} fullWidth className='button'>
                             注册
-                        </Button>
-                        <Box display="flex" mt={2} className="button-container">
+                            </Button>
+                        </Box>
+                        <Box display="flex" mt={2} justifyContent='space-between' className="button-container">
                             <Button color="secondary" onClick={() => {
                                 history.push('/chef-login')
                             }}

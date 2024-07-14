@@ -159,8 +159,13 @@ export function AdminDishPage(){
 
     return (
         <Container style={{ maxHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-            <h1>菜单管理:</h1>
-            <Grid container spacing={4}>
+            <h1 style={{
+                marginBottom: '50px'
+            }}>菜单管理:</h1>
+            <Grid container spacing={4} style={{
+                height: '80vh',
+                overflowY: 'auto',
+            }}>
                 {dishes.map((dish) => (
                     <Grid item xs={12} sm={6} md={4} key={dish.name}>
                         <Card style={{maxWidth: '250px', height: '300px', justifyContent:'center'}}>

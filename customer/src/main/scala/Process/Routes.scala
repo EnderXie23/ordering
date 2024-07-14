@@ -14,6 +14,11 @@ import org.http4s.dsl.io.*
 object Routes:
   private def executePlan(messageType:String, str: String): IO[String]=
     messageType match {
+      case "ReadCommentsMessage" =>
+        IO(decode[ReadCommentsMessagePlanner](str).getOrElse(throw new Exception("Invalid JSON for ReadCommentsMessage")))
+          .flatMap{m=>
+            m.fullPlan.map(_.asJson.toString)
+          }
       case "CustomerQueryStateMessage" =>
         IO(decode[CustomerQueryStateMessagePlanner](str).getOrElse(throw new Exception("Invalid JSON for CustomerQueryStateMessage")))
           .flatMap{m=>

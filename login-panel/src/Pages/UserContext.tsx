@@ -13,6 +13,10 @@ interface UserContextType {
 
     orderedDishes: { name: string, path: string, count: number, orderPart:string }[];
     setOrderedDishes: (dishes: { name: string, path: string, count: number, orderPart:string }[]) => void;
+    service: number;
+    setService: (newServiceType: number) => void;
+    serviceTypeInfo: string;
+    setServiceTypeInfo: (newServiceTypeInfo: string) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -24,7 +28,9 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [OrderPart, SetOrderPart] = useState<string>('0');
     const [balance, setBalance] = useState<number>(0.0);
     const [orderedDishes, setOrderedDishes] =
-        useState<{ name: string, path: string, count: number, orderPart:string }[]>([]);
+    useState<{ name: string, path: string, count: number, orderPart:string }[]>([]);
+    const [service, setService] = useState<number>(0);
+    const [serviceTypeInfo, setServiceTypeInfo] = useState<string>('');
 
     const updateOrderID = (newOrderID: string) => {
         SetOrderID(newOrderID);
@@ -65,7 +71,9 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
 
     return (
-        <UserContext.Provider value={{ name, setName,balance, setBalance, OrderID,updateOrderID, OrderPart, incrementOrderPart, orderedDishes, setOrderedDishes:mergeOrderedDishes }}>
+        <UserContext.Provider value={{ name, setName,balance, setBalance,
+        OrderID,updateOrderID, OrderPart, incrementOrderPart, orderedDishes, setOrderedDishes:mergeOrderedDishes,
+        service, setService, serviceTypeInfo ,setServiceTypeInfo}}>
             {children}
         </UserContext.Provider>
     );

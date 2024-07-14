@@ -38,16 +38,16 @@ export function OrderHistory(){
                 订单历史
             </Typography>
             <Box display="flex" flexDirection="column" alignItems="stretch" mt={2} className="button-container" gap={2}>
-                <Button variant="outlined" className="custom-button" startIcon={<RestaurantMenuIcon />} >
+                <Button variant="outlined" className="button" startIcon={<RestaurantMenuIcon />} >
                     查看菜品
                 </Button>
-                <Button variant="outlined" className="custom-button" startIcon={<ReceiptIcon />} onClick={() => history.push("/admin-order")}>
+                <Button variant="outlined" className="button" startIcon={<ReceiptIcon />} onClick={() => history.push("/admin-order")}>
                     查看订单
                 </Button>
-                <Button variant="outlined" className="custom-button" startIcon={<RateReviewIcon />} >
+                <Button variant="outlined" className="button" startIcon={<RateReviewIcon />} >
                     菜品评价
                 </Button>
-                <Button variant="outlined" className="custom-button" startIcon={<StarIcon />} >
+                <Button variant="outlined" className="button" startIcon={<StarIcon />} >
                     厨师评价
                 </Button>
                 <Button color="secondary" onClick={() => {history.push('/')}}>
