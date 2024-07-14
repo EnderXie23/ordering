@@ -11,6 +11,7 @@ interface finishedOrder {
     customerName: string,
     dishName: string,
     quantity: number,
+    price:number,
     state: string
 }
 
@@ -34,13 +35,15 @@ export function ChefRatingPage() {
             const customerName = orderParts[1].split(':')[1].trim()
             const dishName = orderParts[2].split(':')[1].trim()
             const quantity = parseInt(orderParts[3].split(':')[1].trim(), 10)
-            const state = orderParts[4].split(':')[1].trim()
+            const price = parseFloat(orderParts[4].split(':')[1].trim())
+            const state = orderParts[5].split(':')[1].trim()
 
             return {
                 chefName,
                 customerName,
                 dishName,
                 quantity,
+                price,
                 state,
             }
         })
@@ -133,7 +136,8 @@ export function ChefRatingPage() {
                 }
                 style={{ width: "70vw", maxWidth: "1000px" }}
             >
-                {Object.keys(chefCounts).map((chef) => (
+                {Object.keys(chefCounts).filter(chef => chef != "")
+                    .map((chef) => (
                     <React.Fragment key={chef}>
                         <ListItem button onClick={() => handleClick(chef)}>
                             <ListItemText

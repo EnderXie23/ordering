@@ -18,6 +18,7 @@ import { ChefRatingPage } from 'Pages/AdminPages/ChefRatingPage'
 import OrderSummaryPage from 'Pages/CustomerPages/OrderSummaryPage'
 import CustomerFinishPage from 'Pages/CustomerPages/CustomerFinishPage'
 import CommentPage from 'Pages/CustomerPages/CommentPage'
+import AdminRatingPage from 'Pages/AdminPages/AdminRatingPage'
 
 const Layout = () => {
     return (
@@ -42,6 +43,11 @@ const Layout = () => {
                 <Route path="/admin-chef" exact>
                     <UserProvider>
                         <ChefRatingPage />
+                    </UserProvider>
+                </Route>
+                <Route path="/admin-rating" exact>
+                    <UserProvider>
+                        <AdminRatingPage />
                     </UserProvider>
                 </Route>
                 <Route path="/chef-login" exact>

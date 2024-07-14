@@ -16,6 +16,7 @@ import {
 import { List } from 'antd'
 import { useUser } from 'Pages/UserContext'
 import { CustomerCommentMessage } from 'Plugins/CustomerAPI/CustomerCommentMessage'
+import { ReadCommentsMessage } from 'Plugins/CustomerAPI/ReadCommentsMessage'
 import { useHistory } from 'react-router'
 
 interface Comment {
@@ -34,24 +35,66 @@ const CommentPage: React.FC = () => {
     const [comments, setComments] = useState<Comment[]>([]);
     const [loading, setLoading] = useState(true);
     const history = useHistory();
-    const {name} = useUser()
+    const {name, orderedDishes } = useUser()
     const username = name.split('\n')[1]
     const [errorMessage, setErrorMessage] = useState(''); // State for error message
     const [successMessage, setSuccessMessage] = useState('');
 
     const [author, setAuthor] = useState(username);
     const [text, setText] = useState('');
+
+    const [dishRatings, setDishRatings] = useState(
+        orderedDishes.map(dish => ({ name: dish.name, rating: 0 }))
+    );
     const [overallRating, setOverallRating] = useState(0);
     const [tasteRating, setTasteRating] = useState(0);
     const [packagingRating, setPackagingRating] = useState(0);
     const [serviceRating, setServiceRating] = useState(0);
     const [envRating, setEnvRating] = useState(0);
 
+    const parseComments = (rawComments: string): Comment[] => {
+        const commentStrings = rawComments.split('\n');
+
+        return commentStrings.map((commentString, index) => {
+            const [author, text, overall, taste, pack, serv, env] = commentString.split('\\');
+
+            const createdAt = new Date().toISOString();
+
+            return {
+                id: index + 1, // or use a more suitable method to generate unique IDs
+                author,
+                text,
+                createdAt,
+                overallRating: parseFloat(overall),
+                tasteRating: parseFloat(taste),
+                packagingRating: parseFloat(pack),
+                serviceRating: parseFloat(serv),
+                envRating: parseFloat(env),
+            };
+        });
+    };
+
+
+    useEffect(() => {
+        const totalRating = dishRatings.reduce((sum, dish) => sum + dish.rating, 0);
+        const averageRating = dishRatings.length > 0 ? totalRating / dishRatings.length : 0;
+        setOverallRating(averageRating);
+    }, [dishRatings]);
+
+    const handleRatingChange = (index: number, newRating: number) => {
+        const updatedRatings = [...dishRatings];
+        updatedRatings[index].rating = newRating;
+        setDishRatings(updatedRatings);
+    };
+
     useEffect(() => {
         const fetchComments = async () => {
+            const message = new ReadCommentsMessage();
             try {
-                const response = await axios.get(`/api/posts/comments`);
-                setComments(response.data);
+                const response = await axios.post(message.getURL(), JSON.stringify(message), {
+                    headers: { 'Content-Type': 'application/json' },
+                })
+                setComments(parseComments(response.data));
             } catch (error) {
                 console.error('Error fetching comments.');
                 const testComment = {
@@ -142,33 +185,48 @@ const CommentPage: React.FC = () => {
                         required
                         style={{ marginBottom: '10px' }}
                     />
-                    <Box mt={2} alignItems="center" justifyContent="center" display="flex">
-                        <Typography>综合评分：</Typography>
-                        <Rating value={overallRating} onChange={(e, newValue) => setOverallRating(newValue)} precision={0.5}/>
+                    <Box>
+                        {orderedDishes.map((dish, index) => (
+                            <Box key={dish.name} mt={2} alignItems="center" justifyContent="center" display="flex">
+                                <Typography>{dish.name}:</Typography>
+                                <Rating
+                                    value={dishRatings[index].rating}
+                                    onChange={(e, newValue) => handleRatingChange(index, newValue)}
+                                    precision={0.5}
+                                />
+                            </Box>
+                        ))}
+                        <Box mt={2} alignItems="center" justifyContent="center" display="flex">
+                            <Typography>综合评分：{overallRating}</Typography>
+                        </Box>
                     </Box>
-                    <Grid container columns={2}>
+                    <Grid container columns={2} mt={2} >
                         <Grid item xs={1} sm={1} md={1}>
-                            <Box mt={2}>
-                                <Typography>口味：</Typography>
+                            <Typography>口味：</Typography>
+                            <Box display="flex">
                                 <Rating value={tasteRating} onChange={(e, newValue) => setTasteRating(newValue)} precision={0.5}/>
+                                <Typography>{tasteRating}</Typography>
                             </Box>
                         </Grid>
                         <Grid item xs={1} sm={1} md={1}>
-                            <Box mt={2}>
-                                <Typography>包装：</Typography>
+                            <Typography>包装：</Typography>
+                            <Box display="flex">
                                 <Rating value={packagingRating} onChange={(e, newValue) => setPackagingRating(newValue)} precision={0.5}/>
+                                <Typography>{packagingRating}</Typography>
                             </Box>
                         </Grid>
-                        <Grid item xs={1} sm={1} md={1}>
-                            <Box mt={2}>
-                                <Typography>服务：</Typography>
+                        <Grid mt={1} item xs={1} sm={1} md={1}>
+                            <Typography>服务：</Typography>
+                            <Box display="flex">
                                 <Rating value={serviceRating} onChange={(e, newValue) => setServiceRating(newValue)} precision={0.5}/>
+                                <Typography>{serviceRating}</Typography>
                             </Box>
                         </Grid>
-                        <Grid item xs={1} sm={1} md={1}>
-                            <Box mt={2}>
-                                <Typography>环境：</Typography>
+                        <Grid mt={1} item xs={1} sm={1} md={1}>
+                            <Typography>环境：</Typography>
+                            <Box display="flex">
                                 <Rating value={envRating} onChange={(e, newValue) => setEnvRating(newValue)} precision={0.5}/>
+                                <Typography>{envRating}</Typography>
                             </Box>
                         </Grid>
                     </Grid>

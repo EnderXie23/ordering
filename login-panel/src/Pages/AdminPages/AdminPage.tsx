@@ -37,11 +37,11 @@ export function AdminPage(){
                 <Button variant="outlined" className="button" startIcon={<ReceiptIcon />} onClick={() => history.push("/admin-order")}>
                     查看订单
                 </Button>
-                <Button variant="outlined" className="button" startIcon={<RateReviewIcon />} >
-                    菜品评价
+                <Button variant="outlined" className="button" startIcon={<RateReviewIcon />} onClick={() => {history.push('/admin-rating')}}>
+                    顾客评价
                 </Button>
                 <Button variant="outlined" className="button" startIcon={<StarIcon />} onClick={() => {history.push('/admin-chef')}}>
-                    厨师评价
+                    厨师概况
                 </Button>
                 <ChatPanel />
                 <Button color="secondary" onClick={() => {history.push('/')}} sx={{ textTransform: 'none', fontWeight: 'bold' }}>
