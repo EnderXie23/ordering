@@ -42,7 +42,7 @@ object Init {
       _ <- initSchema(schemaName)
       _ <- writeDB(s"CREATE TABLE IF NOT EXISTS ${schemaName}.dishes (name TEXT, img_path TEXT, price TEXT)", List())
       _ <- writeDB(s"CREATE TABLE IF NOT EXISTS ${schemaName}.admin_log (orderID TEXT, orderPart TEXT, user_name TEXT, chef_name TEXT, dish_name TEXT, quantity TEXT, price TEXT, takeaway TEXT, state TEXT)", List())
-//      _ <- writeDB(s"DELETE FROM ${schemaName}.admin_log", List.empty)
+      _ <- writeDB(s"DELETE FROM ${schemaName}.admin_log", List.empty)
       rows <- readDBRows(checkQuery, checkParams)
       count = (rows.headOption.flatMap(_.hcursor.get[Int]("count").toOption)).getOrElse(0)
       result <- if (count == 0) {
