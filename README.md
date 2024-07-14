@@ -6,6 +6,8 @@
 
 - [ ] 在orderingpage页面上充值，显示余额不会刷新，需要手动重启
 
+- [ ] Admin订单未统计总金额
+
 - [ ] OrderingPage美化
 
 - [ ] OrderSummary美化
