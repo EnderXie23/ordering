@@ -11,8 +11,8 @@ interface UserContextType {
     balance: number;
     setBalance: (newBalance: number) => void;
 
-    orderedDishes: { name: string, path: string, count: number }[];
-    setOrderedDishes: (dishes: { name: string, path: string, count: number }[]) => void;
+    orderedDishes: { name: string, path: string, count: number, orderPart:string }[];
+    setOrderedDishes: (dishes: { name: string, path: string, count: number, orderPart:string }[]) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -24,7 +24,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [OrderPart, SetOrderPart] = useState<string>('0');
     const [balance, setBalance] = useState<number>(0.0);
     const [orderedDishes, setOrderedDishes] =
-        useState<{ name: string, path: string, count: number }[]>([]);
+        useState<{ name: string, path: string, count: number, orderPart:string }[]>([]);
 
     const updateOrderID = (newOrderID: string) => {
         SetOrderID(newOrderID);
@@ -34,20 +34,32 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         SetOrderPart(prevOrderPart => (parseInt(prevOrderPart) + 1).toString());
     };
 
-    const mergeOrderedDishes = (newDishes: { name: string, path: string, count: number }[]) => {
+    const mergeOrderedDishes = (newDishes: { name: string, path: string, count: number, orderPart: string }[]) => {
         setOrderedDishes(prevDishes => {
-            const dishMap = new Map(prevDishes.map(dish => [dish.name, { ...dish }]));
+            // Create a map to track dishes using both name and orderPart as a key
+            const dishMap = new Map<string, { name: string, path: string, count: number, orderPart: string }>();
+
+            // Add previous dishes to the map
+            prevDishes.forEach(dish => {
+                const key = `${dish.name}-${dish.orderPart}`;
+                dishMap.set(key, { ...dish });
+            });
+
+            // Process new dishes
             newDishes.forEach(dish => {
-                if (dishMap.has(dish.name)) {
-                    const existingDish = dishMap.get(dish.name)!;
-                    dishMap.set(dish.name, {
+                const key = `${dish.name}-${dish.orderPart}`;
+                if (dishMap.has(key)) {
+                    const existingDish = dishMap.get(key)!;
+                    dishMap.set(key, {
                         ...existingDish,
                         count: existingDish.count + dish.count,
                     });
                 } else {
-                    dishMap.set(dish.name, { ...dish });
+                    dishMap.set(key, { ...dish });
                 }
             });
+
+            // Convert map values back to an array
             return Array.from(dishMap.values());
         });
     };

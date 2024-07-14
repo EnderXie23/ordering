@@ -2,11 +2,13 @@ import { CustomerMessage } from 'Plugins/CustomerAPI/CustomerMessage'
 
 export class CustomerQueryStateMessage extends CustomerMessage {
     orderID: string;
-    dishName: string;
+    orderPart:string
+    dish_name:string
 
-    constructor(orderID: string, dishName: string) {
+    constructor(orderID: string,orderPart:string,dish_name:string) {
         super();
         this.orderID = orderID;
-        this.dishName = dishName;
+        this.orderPart = orderPart;
+        this.dish_name = dish_name;
     }
 }

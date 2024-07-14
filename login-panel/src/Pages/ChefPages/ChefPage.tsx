@@ -234,18 +234,14 @@ const ChefPage: React.FC = () => {
         <Container className={classes.container}>
             <Box className={classes.box}>
             <Typography variant="h4">厨师{ chefName }，您好！</Typography>
-                <FormControl variant="outlined" style={{
-                    width: '150px',
-                }}>
+                <FormControl variant="outlined" style={{ width: '150px' }}>
                     <Select
                         value={groupBy}
-                        onChange={(e) => {
-                            setGroupBy(e)
-                        }}
+                        onChange={(value) => setGroupBy(value as 'dish' | 'customer' | 'orderID')}
                     >
-                        <MenuItem value="dish">按菜品分类</MenuItem>
-                        <MenuItem value="customer">按顾客分类</MenuItem>
-                        <MenuItem value="orderID">按订单ID分类</MenuItem>
+                        <Select.Option value="dish">按菜品分类</Select.Option>
+                        <Select.Option value="customer">按顾客分类</Select.Option>
+                        <Select.Option value="orderID">按订单ID分类</Select.Option>
                     </Select>
                 </FormControl>
             </Box>
@@ -263,10 +259,10 @@ const ChefPage: React.FC = () => {
                                     {groupedOrders[key]
                                         .filter((order) => order.state === 'processing')
                                         .map((order) => (
-                                            <Box my={1} display="flex" justifyContent="stretch" alignItems="center">
+                                            <Box my={1} display="flex" justifyContent="stretch" alignItems="center" key={order.orderID + '-' + order.orderPart}>
                                                 <ListItemText
                                                     primary={groupBy === 'dish' ? `from: ${order.customer} x${order.quantity}` : `· ${order.dish} x${order.quantity}`}
-                                                    secondary={(groupBy === 'orderID' ? `Customer: ${order.customer}`: `OrderID: ${order.orderID}`) + `, OrderPart: ${order.orderPart}`}
+                                                    secondary={(groupBy === 'orderID' ? `Customer: ${order.customer}` : `OrderID: ${order.orderID}`) + `, OrderPart: ${order.orderPart}`}
                                                 />
                                                 <Box className={classes.actionBox}>
                                                     <IconButton onClick={() => handleComplete(order, '1')}>

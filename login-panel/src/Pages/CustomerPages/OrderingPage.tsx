@@ -110,7 +110,7 @@ const OrderingPage: React.FC = () => {
             .map(([dishName, count]) => [dishName, count.toString(), dishes.find(dish => dish.name === dishName)?.price, takeout])
         // Send each order separately
         orders.forEach(order => {
-            const log = `${OrderID}\n${OrderPart}\n${customerName}\n` + order.join('\n') + `\n3`
+            const log = `${OrderID}\n${OrderPart}\n${customerName}\nadmin\n` + order.join('\n') + `\n3`
             const singleOrderLogMessage = new OrderLogMessage(log)
             try {
                 sendOrderLogRequest(singleOrderLogMessage)
@@ -148,15 +148,13 @@ const OrderingPage: React.FC = () => {
     }
 
     const handleOrderID = async () => {
-        if (!OrderID) {
+        if (OrderID=='') {
             const queryMessage = new OrderIDMessage('0')
             try {
                 await sendOrderIDRequest(queryMessage)
             } catch (error) {
                 console.error('Error in handleQuery:', error)
             }
-        } else {
-            updateOrderID(OrderID)
         }
     }
 
@@ -199,6 +197,7 @@ const OrderingPage: React.FC = () => {
                 name: order[0],
                 path: dishes.find(d => d.name === order[0]).path,
                 count: parseInt(order[1], 10),
+                orderPart: OrderPart
             }))
             setOrderedDishes(formattedOrders)
             incrementOrderPart()

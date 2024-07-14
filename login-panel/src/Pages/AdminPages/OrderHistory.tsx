@@ -19,7 +19,6 @@ export function OrderHistory(){
             console.log(response.status);
             console.log(response.data);
             const { orderId } = response.data; // Assuming orderId is part of the response data
-            console.log("OrderID3:", response.data);
         } catch (error) {
             console.error('Error querying order:', error);
         }

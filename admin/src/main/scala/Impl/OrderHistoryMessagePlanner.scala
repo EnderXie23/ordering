@@ -1,16 +1,15 @@
 package Impl
 
+import APIs.AdminAPI.OrderLogMessage
 import Common.API.{PlanContext, Planner}
-import cats.effect.IO
-import io.circe.Json
-import cats.effect.IO
-import io.circe.generic.auto.*
 import Common.DBAPI.*
 import Common.Object.{ParameterList, SqlParameter}
-import APIs.AdminAPI.OrderLogMessage
+import cats.effect.IO
+import io.circe.Json
+import io.circe.generic.auto.*
 
 
-case class OrderLogMessagePlanner(log: String, override val planContext: PlanContext) extends Planner[String] {
+case class OrderHistoryMessagePlanner(log: String, override val planContext: PlanContext) extends Planner[String] {
   override def plan(using planContext: PlanContext): IO[String] = {
     // Function to split the log message and assign to variables
     def parseLog(log: String): Option[(String, String, String, String, String, String, String, String, String)] = {

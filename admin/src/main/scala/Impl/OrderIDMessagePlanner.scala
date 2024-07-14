@@ -15,7 +15,7 @@ case class OrderIDMessagePlanner(override val planContext: PlanContext) extends 
       s"""
         SELECT orderID, user_name, chef_name, dish_name, quantity, state
         FROM admin.admin_log
-        WHERE user_name = '0' AND chef_name = '0' AND dish_name = '0' AND quantity = '0' AND state = '2'
+        WHERE user_name = '0' AND chef_name = 'admin' AND dish_name = '0' AND quantity = '0' AND state = '2'
       """
 
     val jsonResultsIO: IO[List[Json]] = readDBRows(sqlQuery, List.empty)
