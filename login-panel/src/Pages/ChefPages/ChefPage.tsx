@@ -1,6 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router'
-import { Grid, Button, Card, CardHeader ,CardContent, Typography, ListItemText, Container, Box, IconButton } from '@mui/material'
+import {
+    Grid,
+    Button,
+    Card,
+    CardHeader,
+    CardContent,
+    Typography,
+    ListItemText,
+    Container,
+    Box,
+    IconButton,
+    FormControl, InputLabel, MenuItem,
+} from '@mui/material'
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios'
 import { QueryMessage } from 'Plugins/ChefAPI/QueryMessage'
@@ -9,28 +21,32 @@ import { LogMessage } from 'Plugins/ChefAPI/LogMessage'
 import { useChef } from '../ChefContext';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
+import { Select } from 'antd'
 
 
 interface Order {
-    id: number;
     customer: string;
     dish: string;
     quantity: number;
+    orderID: number;
+    orderPart: number;
     state: string;
 }
 
-function parseOrders(input: string): { waitingOrders: Order[], otherOrders: Order[] } {
+function parseOrders(input: string): Order[] {
     const strings = input.split('\n')
     let currentCustomer: string = ''
+    let orderID: number = 0
+    let orderPart: number = 0
 
-    const waitingOrders: Order[] = []
-    const otherOrders: Order[] = []
-    let idCounter = 1
+    const orders: Order[] = []
 
     strings.forEach((str, index) => {
         if (str.startsWith('Customer: ')) {
             currentCustomer = str.replace('Customer: ', '').trim()
             if (currentCustomer === '') currentCustomer = 'Anonymous'
+            orderID = Number(parseInt(strings[index + 1].replace('OrderID: ', '').trim()))
+            orderPart = Number(parseInt(strings[index + 2].replace('OrderPart: ', '').trim()))
         } else if (str.startsWith('Dish: ') && currentCustomer) {
             const dish = str.replace('Dish: ', '').trim()
             const quantityStr = strings[index + 1]
@@ -39,23 +55,21 @@ function parseOrders(input: string): { waitingOrders: Order[], otherOrders: Orde
                 const quantity = parseInt(quantityStr.replace('Order Count: ', '').trim())
                 const state = finishState.replace('State: ', '').trim()
                 const order = {
-                    id: idCounter++,
                     customer: currentCustomer,
+                    orderID: orderID,
+                    orderPart: orderPart,
                     dish: dish,
                     quantity: quantity,
                     state: state,
                 }
-                if (state === 'waiting') {
-                    waitingOrders.push(order)
-                } else {
-                    otherOrders.push(order)
+                if (state == 'processing') {
+                    orders.push(order)
                 }
             }
         }
     })
-
-    // console.log(orders); // for output
-    return {waitingOrders, otherOrders}
+    console.log(orders)
+    return orders;
 }
 
 // 按照 dish 分类
@@ -80,11 +94,21 @@ function groupByCustomer(orders: Order[]): Record<string, Order[]> {
     }, {} as Record<string, Order[]>)
 }
 
+function groupByOrderID(orders: Order[]): Record<number, Order[]> {
+    return orders.reduce((acc, order) => {
+        if (!acc[order.orderID]) {
+            acc[order.orderID] = []
+        }
+        acc[order.orderID].push(order)
+        return acc
+    }, {} as Record<number, Order[]>)
+}
+
 const ChefPage: React.FC = () => {
     const history = useHistory()
     const [orders, setOrders] = useState<Order[]>([])
     const { chefName } = useChef();
-    const [groupBy, setGroupBy] = useState<'dish' | 'customer'>('dish');
+    const [groupBy, setGroupBy] = useState<'dish' | 'customer' | 'orderID'>('dish');
 
     const sendCompleteRequest = async (message: CompleteMessage) => {
         try {
@@ -113,8 +137,8 @@ const ChefPage: React.FC = () => {
     }
 
     const handleComplete = async (order: Order, state: string) => {
-        const completeMessage = new CompleteMessage(`${order.customer}\n${order.dish}\n${order.quantity}\n` + state)
-        const logMessage = new LogMessage(chefName + `\n${order.customer}\n${order.dish}\n${order.quantity}\n` + state)
+        const completeMessage = new CompleteMessage(`${order.customer}\n${order.dish}\n${order.quantity}\n` + state + `\n${order.orderID}\n${order.orderPart}`)
+        const logMessage = new LogMessage(chefName + `\n${order.customer}\n${order.dish}\n${order.quantity}\n` + state + `\n${order.orderID}\n${order.orderPart}`)
         if (state === '0') {
             console.log('Reject order:', order)
         } else if (state === '1') {
@@ -140,11 +164,8 @@ const ChefPage: React.FC = () => {
             const response = await axios.post(message.getURL(), JSON.stringify(message), {
                 headers: { 'Content-Type': 'application/json' },
             })
-            console.log(response.status)
             console.log(response.data)
-            setOrders(parseOrders(response.data).waitingOrders)
-            //console.log(parseOrders(response.data).waitingOrders)
-            //console.log(orders)
+            setOrders(parseOrders(response.data))
         } catch (error) {
             console.error('Error querying order:', error)
         }
@@ -161,11 +182,8 @@ const ChefPage: React.FC = () => {
 
     useEffect(() => {
         handleQuery()
-            .then(() => {
-                // Handle any post-request actions here
-            })
             .catch(error => {
-                console.error('Error in handleComplete:', error) // Added error handling
+                console.error('Error in handleQuery:', error) // Added error handling
             })
     }, [])
 
@@ -211,14 +229,25 @@ const ChefPage: React.FC = () => {
     }));
     const classes = useStyles();
 
-    const groupedOrders = groupBy === 'dish' ? groupByDish(orders) : groupByCustomer(orders);
+    const groupedOrders = groupBy === 'dish' ? groupByDish(orders) : groupBy === 'customer' ? groupByCustomer(orders) : groupByOrderID(orders)
     return (
         <Container className={classes.container}>
             <Box className={classes.box}>
             <Typography variant="h4">厨师{ chefName }，您好！</Typography>
-                <Button variant="contained" onClick={() => setGroupBy(prev => prev === 'dish' ? 'customer' : 'dish')}>
-                    {groupBy === 'dish' ? '按顾客分类' : '按菜品分类'}
-                </Button>
+                <FormControl variant="outlined" style={{
+                    width: '150px',
+                }}>
+                    <Select
+                        value={groupBy}
+                        onChange={(e) => {
+                            setGroupBy(e)
+                        }}
+                    >
+                        <MenuItem value="dish">按菜品分类</MenuItem>
+                        <MenuItem value="customer">按顾客分类</MenuItem>
+                        <MenuItem value="orderID">按订单ID分类</MenuItem>
+                    </Select>
+                </FormControl>
             </Box>
             {Object.keys(groupedOrders).length === 0 ? (
                 <Box className={classes.grid} display="flex" alignItems="center" justifyContent="center" height="400px" width="1000px">
@@ -229,14 +258,15 @@ const ChefPage: React.FC = () => {
                     {Object.keys(groupedOrders).map((key) => (
                         <Grid item xs={12} sm={6} md={4} key={key}>
                             <Card className={classes.card}>
-                                <CardHeader title={groupBy === 'dish' ? `Dish: ${key}` : `Customer: ${key}`} />
+                                <CardHeader title={groupBy === 'dish' ? `Dish: ${key}` : groupBy === 'customer' ? `Customer: ${key}` : `OrderID: ${key}`} />
                                 <CardContent className={classes.cardContent}>
                                     {groupedOrders[key]
-                                        .filter((order) => order.state === 'waiting')
+                                        .filter((order) => order.state === 'processing')
                                         .map((order) => (
-                                            <Box key={order.id} my={1} display="flex" justifyContent="stretch" alignItems="center">
+                                            <Box my={1} display="flex" justifyContent="stretch" alignItems="center">
                                                 <ListItemText
                                                     primary={groupBy === 'dish' ? `from: ${order.customer} x${order.quantity}` : `· ${order.dish} x${order.quantity}`}
+                                                    secondary={(groupBy === 'orderID' ? `Customer: ${order.customer}`: `OrderID: ${order.orderID}`) + `, OrderPart: ${order.orderPart}`}
                                                 />
                                                 <Box className={classes.actionBox}>
                                                     <IconButton onClick={() => handleComplete(order, '1')}>

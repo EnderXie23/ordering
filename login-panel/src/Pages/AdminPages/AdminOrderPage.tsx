@@ -10,6 +10,7 @@ interface finishedOrder{
     customerName: string,
     dishName: string,
     quantity: number,
+    price: number,
     state: string
 }
 
@@ -25,13 +26,15 @@ export function AdminOrderPage(){
             const customerName = orderParts[1].split(':')[1].trim();
             const dishName = orderParts[2].split(':')[1].trim();
             const quantity = parseInt(orderParts[3].split(':')[1].trim(), 10);
-            const state = orderParts[4].split(':')[1].trim();
+            const price = parseInt(orderParts[4].split(':')[1].trim(), 10);
+            const state = orderParts[5].split(':')[1].trim();
 
             return {
                 chefName,
                 customerName,
                 dishName,
                 quantity,
+                price,
                 state
             };
         });
@@ -79,7 +82,9 @@ export function AdminOrderPage(){
     }, [])
 
     return (
-        <Container style={{ maxHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        <Container style={{
+            maxHeight: '100vh',
+        }}>
             <Box style = {{position: 'sticky',
                 top: 0,
                 backgroundColor: 'white', // 确保背景色与容器相同或根据需要设置
@@ -93,7 +98,10 @@ export function AdminOrderPage(){
                     订单管理页面
                 </Typography>
             </Box>
-            <Box>
+            <Box style={{
+                maxHeight: '70vh',
+                overflowY: 'auto'
+            }}>
                 {Object.entries(groupedOrders).map(([customerName, orders]) => (
                     <Paper key={customerName} style={{ margin: '20px', padding: '10px'}}>
                         <Typography variant="h6">{customerName}</Typography>
@@ -102,7 +110,7 @@ export function AdminOrderPage(){
                                 <ListItem key={index} divider>
                                     <ListItemText
                                         primary={`Dish: ${order.dishName} x ${order.quantity}`}
-                                        secondary={`State: ${order.state} Chef: ${order.chefName}`}
+                                        secondary={`Price: ${order.price} State: ${order.state} Chef: ${order.chefName}`}
                                     />
                                 </ListItem>
                             ))}

@@ -14,20 +14,17 @@ import io.circe.generic.auto.*
 case class CompleteMessagePlanner(orderdesp: String, override val planContext: PlanContext) extends Planner[String] {
   override def plan(using PlanContext): IO[String] = {
     // Split orderdesp into individual components
-    val Array(customerName, dishName, orderCount, state) = orderdesp.split("\n")
+    val Array(customerName, dishName, orderCount, state, orderID, orderPart) = orderdesp.split("\n")
 
     // Define the SQL query to fetch orders
     val sqlUpdateQuery = s"""
       UPDATE customer.order_rec
       SET finish_state = ?
-      WHERE ctid = (
-        SELECT ctid
-        FROM customer.order_rec
-        WHERE customer_name = ?
-        AND dish_name = ?
-        AND order_count = ?
-        LIMIT 1
-      )
+      WHERE customer_name = ?
+      AND dish_name = ?
+      AND order_count = ?
+      AND orderid = ?
+      AND orderpart = ?
     """
 
     // Execute the SQL query
@@ -35,7 +32,9 @@ case class CompleteMessagePlanner(orderdesp: String, override val planContext: P
       SqlParameter("String", if (state == "1") "done" else "rejected"),
       SqlParameter("String", customerName),
       SqlParameter("String", dishName),
-      SqlParameter("String", orderCount)
+      SqlParameter("String", orderCount),
+      SqlParameter("String", orderID),
+      SqlParameter("String", orderPart)
     )).map(_ => "Complete dish successfully.")
   }
 }

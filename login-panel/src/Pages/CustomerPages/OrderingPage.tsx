@@ -107,7 +107,7 @@ const OrderingPage: React.FC = () => {
     const handleOrderLog = async () => {
         const orders = Object.entries(orderCounts)
             .filter(([, count]) => count > 0)
-            .map(([dishName, count]) => [dishName, count.toString(), takeout])
+            .map(([dishName, count]) => [dishName, count.toString(), dishes.find(dish => dish.name === dishName)?.price, takeout])
         // Send each order separately
         orders.forEach(order => {
             const log = `${OrderID}\n${OrderPart}\n${customerName}\n` + order.join('\n') + `\n3`
@@ -187,20 +187,22 @@ const OrderingPage: React.FC = () => {
         const orders = Object.entries(orderCounts)
             .filter(([, count]) => count > 0)
             .map(([dishName, count]) => [dishName, count.toString(), dishes.find(dish => dish.name === dishName)?.price, takeout])
-        console.log('Customer:', customerName)
-        console.log('Orders:', orders)
-        console.log('OrderParts:', OrderPart)
-        const orderMessage = new CustomerOrderMessage(customerName, OrderID, OrderPart, orders.map(order => order.join(',')).join(';'))
-        sendChargeRequest(calculateTotalCost())
-        handleOrderLog().then()
-        sendOrderRequest(orderMessage)
-        const formattedOrders = orders.map(order => ({
-            name: order[0],
-            path: dishes.find(d => d.name === order[0]).path,
-            count: parseInt(order[1], 10),
-        }))
-        setOrderedDishes(formattedOrders)
-        incrementOrderPart()
+        if (orders.length >0){
+            console.log('Customer:', customerName)
+            console.log('Orders:', orders)
+            console.log('OrderParts:', OrderPart)
+            const orderMessage = new CustomerOrderMessage(customerName, OrderID, OrderPart, orders.map(order => order.join(',')).join(';'))
+            sendChargeRequest(calculateTotalCost())
+            handleOrderLog().then()
+            sendOrderRequest(orderMessage)
+            const formattedOrders = orders.map(order => ({
+                name: order[0],
+                path: dishes.find(d => d.name === order[0]).path,
+                count: parseInt(order[1], 10),
+            }))
+            setOrderedDishes(formattedOrders)
+            incrementOrderPart()
+        }
         history.push('/order-summary')
     }
 

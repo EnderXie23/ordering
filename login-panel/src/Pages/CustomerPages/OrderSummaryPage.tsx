@@ -34,12 +34,13 @@ const OrderSummaryPage: React.FC = () => {
         return results;
     }
 
+    const fetchStates = async () => {
+        const result = await recordStates(orderedDishes);
+        setDishesWithStates(result);
+    };
+
     useEffect(() => {
-        const fetchData = async () => {
-            const result = await recordStates(orderedDishes);
-            setDishesWithStates(result);
-        };
-        fetchData();
+        fetchStates();
     }, [orderedDishes]);
 
     return (
@@ -68,7 +69,10 @@ const OrderSummaryPage: React.FC = () => {
                 ))}
             </List>
             <Box display="flex" justifyContent="center" alignItems="center" mt={4}>
-                <Button variant="contained" color="primary" onClick={() => { history.push('/place-order') }}>
+                <Button variant="contained" color="primary" onClick={fetchStates}>
+                    刷新
+                </Button>
+                <Button variant="contained" color="primary" onClick={() => { history.push('/place-order') }} style={{ marginLeft: '16px' }}>
                     继续点菜
                 </Button>
                 <Button variant="contained" color="secondary" onClick={() => { history.push('/finish') }} style={{ marginLeft: '16px' }}>
