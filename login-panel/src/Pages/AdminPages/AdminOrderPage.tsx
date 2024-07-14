@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
-import { Button, Typography, Container, Box, ListItem, ListItemText, Paper } from '@mui/material'
+import {
+    Button,
+    Typography,
+    Container,
+    Box,
+    ListItem,
+    ListItemText,
+    Paper,
+    List,
+    FormControlLabel,
+    Switch } from '@mui/material'
 import axios from 'axios'
 import { AdminQueryMessage } from 'Plugins/AdminAPI/AdminQueryMessage'
-import { List } from 'antd'
 
 interface finishedOrder{
     chefName: string,
@@ -12,22 +21,29 @@ interface finishedOrder{
     quantity: number,
     price: number,
     state: string
+    orderID: string
+    orderPart: string
 }
 
 export function AdminOrderPage(){
     const history=useHistory()
     const [finishedOrders, setFinishedOrders] = useState<finishedOrder[]>([])
     const [groupedOrders, setGroupedOrders] = useState<{ [customerName: string]: finishedOrder[] }>({});
-
+    const [groupedOrdersByCustomer, setGroupedOrdersByCustomer] = useState<{ [customerName: string]: finishedOrder[] }>({});
+    const [groupedOrdersByOrderID, setGroupedOrdersByOrderID] = useState<{ [orderID: string]: finishedOrder[] }>({});
+    const [groupByCustomer, setGroupByCustomer] = useState(false); // State for grouping method
     const parseOrders = (data: string): finishedOrder[] => {
         return data.trim().split('\n').map(order => {
             const orderParts = order.split(',');
-            const chefName = orderParts[0].split(':')[1].trim();
-            const customerName = orderParts[1].split(':')[1].trim();
-            const dishName = orderParts[2].split(':')[1].trim();
-            const quantity = parseInt(orderParts[3].split(':')[1].trim(), 10);
-            const price = parseInt(orderParts[4].split(':')[1].trim(), 10);
-            const state = orderParts[5].split(':')[1].trim();
+            const getValue = (part: string) => part.split(':')[1].trim().replace(/^Some\(|\)$/g, ''); // Clean the value
+            const chefName = getValue(orderParts[0]);
+            const customerName = getValue(orderParts[1]);
+            const dishName = getValue(orderParts[2]);
+            const quantity = parseInt(getValue(orderParts[3]), 10);
+            const price = parseInt(getValue(orderParts[4]), 10);
+            const state = getValue(orderParts[5]);
+            const orderID = getValue(orderParts[6]);
+            const orderPart = getValue(orderParts[7]);
 
             return {
                 chefName,
@@ -35,7 +51,9 @@ export function AdminOrderPage(){
                 dishName,
                 quantity,
                 price,
-                state
+                state,
+                orderID,
+                orderPart
             };
         });
     };
@@ -49,6 +67,15 @@ export function AdminOrderPage(){
         }, {} as { [customerName: string]: finishedOrder[] });
     };
 
+    const groupOrdersByOrderID = (orders: finishedOrder[]) => {
+        return orders.reduce((acc, order) => {
+            const orderIDOrders = acc[order.orderID] || [];
+            orderIDOrders.push(order);
+            acc[order.orderID] = orderIDOrders;
+            return acc;
+        }, {} as { [orderID: string]: finishedOrder[] });
+    };
+
     const sendAdminQuery = async (message: AdminQueryMessage) => {
         try{
             const response = await axios.post(message.getURL(), JSON.stringify(message), {
@@ -57,9 +84,11 @@ export function AdminOrderPage(){
             console.log(response.status)
             console.log(response.data)
             const ordersArray = parseOrders(response.data)
-            const groupedOrders = groupOrdersByCustomer(ordersArray)
-            setFinishedOrders(ordersArray)
-            setGroupedOrders(groupedOrders)
+            const groupedOrdersByCustomer = groupOrdersByCustomer(ordersArray);
+            const groupedOrdersByOrderID = groupOrdersByOrderID(ordersArray);
+            setFinishedOrders(ordersArray);
+            setGroupedOrdersByCustomer(groupedOrdersByCustomer);
+            setGroupedOrdersByOrderID(groupedOrdersByOrderID);
         } catch (error){
             console.error('Error admin-querying:', error)
         }
@@ -81,6 +110,10 @@ export function AdminOrderPage(){
         })
     }, [])
 
+    const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setGroupByCustomer(event.target.checked);
+    };
+
     return (
         <Container style={{
             maxHeight: '100vh',
@@ -99,24 +132,60 @@ export function AdminOrderPage(){
                 </Typography>
             </Box>
             <Box style={{
-                maxHeight: '70vh',
-                overflowY: 'auto'
+                position: 'sticky',
+                top: 60, // Adjust based on your header height
+                zIndex: 1000,
+                backgroundColor: 'white',
+                display: 'flex',
+                justifyContent: 'center',
+                padding: '10px'
             }}>
-                {Object.entries(groupedOrders).map(([customerName, orders]) => (
-                    <Paper key={customerName} style={{ margin: '20px', padding: '10px'}}>
-                        <Typography variant="h6">{customerName}</Typography>
-                        <List>
-                            {orders.map((order, index) => (
-                                <ListItem key={index} divider>
-                                    <ListItemText
-                                        primary={`Dish: ${order.dishName} x ${order.quantity}`}
-                                        secondary={`Price: ${order.price} State: ${order.state} Chef: ${order.chefName}`}
-                                    />
-                                </ListItem>
-                            ))}
-                        </List>
-                    </Paper>
-                ))}
+                <FormControlLabel
+                    control={
+                        <Switch
+                            checked={groupByCustomer}
+                            onChange={handleSwitchChange}
+                            name="groupByCustomer"
+                            color="primary"
+                        />
+                    }
+                    label="Group by Customer"
+                />
+            </Box>
+            <Box style={{ maxHeight: '70vh', overflowY: 'auto' }}>
+                {groupByCustomer ? (
+                    Object.entries(groupedOrdersByCustomer).map(([customerName, orders]) => (
+                        <Paper key={customerName} style={{ margin: '20px', padding: '10px' }}>
+                            <Typography variant="h6">{customerName}</Typography>
+                            <List>
+                                {orders.map((order, index) => (
+                                    <ListItem key={index} divider>
+                                        <ListItemText
+                                            primary={`Dish: ${order.dishName} x ${order.quantity}`}
+                                            secondary={`Price: ${order.price} State: ${order.state} Chef: ${order.chefName}`}
+                                        />
+                                    </ListItem>
+                                ))}
+                            </List>
+                        </Paper>
+                    ))
+                ) : (
+                    Object.entries(groupedOrdersByOrderID).sort(([a], [b]) => b.localeCompare(a)).map(([orderID, orders]) => (
+                        <Paper key={orderID} style={{ margin: '20px', padding: '10px' }}>
+                            <Typography variant="h6">Order ID: {orderID}</Typography>
+                            <List>
+                                {orders.map((order, index) => (
+                                    <ListItem key={index} divider>
+                                        <ListItemText
+                                            primary={`Dish: ${order.dishName} x ${order.quantity}`}
+                                            secondary={`Price: ${order.price} State: ${order.state} Chef: ${order.chefName} Customer: ${order.customerName}`}
+                                        />
+                                    </ListItem>
+                                ))}
+                            </List>
+                        </Paper>
+                    ))
+                )}
             </Box>
             <Box display="flex" flexDirection="column" alignItems="stretch" mt={2} className="button-container">
                 <Button color="primary" onClick={handleAdminQuery}>
