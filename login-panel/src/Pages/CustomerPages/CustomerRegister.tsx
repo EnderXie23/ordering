@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios, { isAxiosError } from 'axios';
 import { useHistory } from 'react-router'
-import { Container, TextField, Button, Typography, Alert, Box, IconButton, InputAdornment, Grid } from '@mui/material';
+import { TextField, Button, Typography, Alert, Box, IconButton, InputAdornment, Grid } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import '../index.css'
 import backgroundImage from '../../Images/background.png';
@@ -175,19 +175,14 @@ export function CustomerRegister() {
                                 ),
                             }}
                         />
-                        {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
-                        {successMessage && <Alert severity="success">{successMessage}</Alert>}
-                        <Button variant="contained" color="primary" onClick={CustomerRegister} fullWidth sx={{
-                            backgroundColor: '#1976d2',
-                            color: '#fff',
-                            padding: '0.75rem',
-                            borderRadius: '5px',
-                            fontWeight: 'bold',
-                            fontSize: '1rem'
-                        }}>
-                            注册
-                        </Button>
-                        <Box display="flex" mt={2} className="button-container">
+                        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', marginTop: '1rem' }}>
+                            {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+                            {successMessage && <Alert severity="success">{successMessage}</Alert>}
+                            <Button variant="contained" color="primary" onClick={CustomerRegister} fullWidth className='button'>
+                                注册
+                            </Button>
+                        </Box>
+                        <Box display="flex" mt={2} justifyContent='space-between' className="button-container">
                             <Button color="secondary" onClick={() => {
                                 history.push('/customer-login')
                             }}

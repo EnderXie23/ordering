@@ -135,14 +135,7 @@ export function CustomerLogin() {
                         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', marginTop: '1rem' }}>
                             {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
                             {successMessage && <Alert severity="success">{successMessage}</Alert>}
-                            <Button variant="contained" color="primary" onClick={CustomerLogin} fullWidth sx={{
-                                backgroundColor: '#1976d2',
-                                color: '#fff',
-                                padding: '0.75rem',
-                                borderRadius: '5px',
-                                fontWeight: 'bold',
-                                fontSize: '1rem'
-                            }}>
+                            <Button variant="contained" color="primary" onClick={CustomerLogin} fullWidth className='button'>
                                 登录
                             </Button>
                         </Box>
