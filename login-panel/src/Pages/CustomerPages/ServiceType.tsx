@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useUser } from 'Pages/UserContext'
 import { useHistory } from 'react-router'
 
-const OrderingPage: React.FC = () => {
+const ServiceType: React.FC = () => {
     const [serviceType, setServiceType] = useState<'dine-in' | 'takeaway'>('dine-in');
     const [inputValue, setInputValue] = useState('');
     const {setService, setServiceTypeInfo} = useUser();
@@ -64,4 +64,4 @@ const OrderingPage: React.FC = () => {
     );
 };
 
-export default OrderingPage;
+export default ServiceType;
