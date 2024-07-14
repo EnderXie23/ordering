@@ -13,7 +13,7 @@ import io.circe.Json
 import java.util.UUID
 
 object Init {
-  def init(config:ServerConfig):IO[Unit]=
+  def init(config: ServerConfig): IO[Unit] =
     val checkQuery = s"SELECT COUNT(*) FROM ${schemaName}.admin_log WHERE user_name = ? AND chef_name = ? AND dish_name = ? AND quantity = ? AND state = ?"
     val insertQuery = s"INSERT INTO ${schemaName}.admin_log (orderID, orderPart, user_name, chef_name, dish_name, quantity, takeaway, state) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
     val checkParams = List(
@@ -33,7 +33,9 @@ object Init {
       SqlParameter("String", "0"),
       SqlParameter("String", "2")
     )
-    given PlanContext=PlanContext(traceID = TraceID(UUID.randomUUID().toString),0)
+
+    given PlanContext = PlanContext(traceID = TraceID(UUID.randomUUID().toString), 0)
+
     for {
       _ <- API.init(config.maximumClientConnection)
       _ <- initSchema(schemaName)

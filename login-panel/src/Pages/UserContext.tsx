@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 interface UserContextType {
     name: string;
     setName: (newName: string) => void;
-    OrderID:string
+    OrderID: string;
     updateOrderID: (newOrderID: string) => void;
     OrderPart:string
     incrementOrderPart: () => void;
