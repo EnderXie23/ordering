@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
 import {
     Container,
     TextField,
@@ -14,7 +13,6 @@ import {
     Rating,
     CircularProgress, Grid, Alert,
 } from '@mui/material'
-import { makeStyles } from '@material-ui/core/styles';
 import { List } from 'antd'
 import { useUser } from 'Pages/UserContext'
 import { CustomerCommentMessage } from 'Plugins/CustomerAPI/CustomerCommentMessage'
@@ -32,25 +30,7 @@ interface Comment {
     envRating: number;
 }
 
-interface Params {
-    postId: string;
-}
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        padding: theme.spacing(3),
-    },
-    commentBox: {
-        padding: theme.spacing(2),
-        marginTop: theme.spacing(2),
-    },
-    submitButton: {
-        marginTop: theme.spacing(2),
-    },
-}));
-
 const CommentPage: React.FC = () => {
-    const { postId } = useParams<Params>();
     const [comments, setComments] = useState<Comment[]>([]);
     const [loading, setLoading] = useState(true);
     const history = useHistory();
@@ -67,14 +47,13 @@ const CommentPage: React.FC = () => {
     const [serviceRating, setServiceRating] = useState(0);
     const [envRating, setEnvRating] = useState(0);
 
-    const classes = useStyles();
     useEffect(() => {
         const fetchComments = async () => {
             try {
-                const response = await axios.get(`/api/posts/${postId}/comments`);
+                const response = await axios.get(`/api/posts/comments`);
                 setComments(response.data);
             } catch (error) {
-                console.error('Error fetching comments', error);
+                console.error('Error fetching comments.');
                 const testComment = {
                     id: 1,
                     author: "None",
@@ -91,9 +70,8 @@ const CommentPage: React.FC = () => {
                 setLoading(false);
             }
         };
-
         fetchComments();
-    }, [postId]);
+    }, []);
 
     const customerCommentRequest = async (message: CustomerCommentMessage) => {
         try {
@@ -135,39 +113,10 @@ const CommentPage: React.FC = () => {
     }
 
     return (
-        <Container maxWidth="md">
-            {loading ? (
-                <Box display="flex" justifyContent="center" alignItems="center" height="200px">
-                    <CircularProgress />
-                </Box>
-            ) : (
-                <Card>
-                    {comments.length === 0 ? (
-                        <Typography>还没有评价。</Typography>
-                    ) : (
-                        <List>
-                            {comments.map((comment) => (
-                                <ListItem key={comment.id} alignItems="flex-start">
-                                    <ListItemText
-                                        primary={comment.author}
-                                        secondary={
-                                            <>
-                                                <Typography mt={1}>{comment.text}</Typography>
-                                                <Box mt={1}>
-                                                    <Typography>综合评价：{comment.overallRating}</Typography>
-                                                </Box>
-                                                <Box>
-                                                    <Typography>口味：{comment.tasteRating}, 包装：{comment.packagingRating}, 服务：{comment.serviceRating}, 环境：{comment.envRating}</Typography>
-                                                </Box>
-                                            </>
-                                        }
-                                    />
-                                </ListItem>
-                            ))}
-                        </List>
-                    )}
-                </Card>
-            )}
+        <Container maxWidth="md" style={{
+            height: '90vh',
+            overflowY: 'auto'
+        }}>
             <Paper elevation={3} style={{ padding: '20px', marginTop: '20px' }}>
                 <Typography variant="h4" gutterBottom>
                     评价
@@ -233,6 +182,32 @@ const CommentPage: React.FC = () => {
                 {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
                 {successMessage && <Alert severity="success">{successMessage}</Alert>}
             </Paper>
+            {loading ? (
+                <Box display="flex" justifyContent="center" alignItems="center" height="200px">
+                    <CircularProgress />
+                </Box>
+            ) : (
+                <Card style={{ marginTop: '20px' }}>
+                    {comments.length === 0 ? (
+                        <Typography>还没有评价。</Typography>
+                    ) : (
+                        <List>
+                            {comments.map((comment) => (
+                                <ListItem key={comment.id} alignItems="flex-start">
+                                    <ListItemText
+                                        primary={comment.author}
+                                        secondary={
+                                            <Typography component="span" style={{ whiteSpace: 'pre-line' }}>
+                                                {`${comment.text}\n综合评价：${comment.overallRating}\n口味：${comment.tasteRating}, 包装：${comment.packagingRating}, 服务：${comment.serviceRating}, 环境：${comment.envRating}`}
+                                            </Typography>
+                                        }
+                                    />
+                                </ListItem>
+                            ))}
+                        </List>
+                    )}
+                </Card>
+            )}
         </Container>
     );
 };
