@@ -47,7 +47,7 @@ export function CustomerLogin() {
                 setErrorMessage('');
                 setName(userName + '\n' + response.data[1]);
                 setTimeout(() => {
-                    history.push('/place-order');
+                    history.push('/service-type');
                 }, 1000);
             } else if (response.data[0] == 'Invalid user') {
                 setSuccessMessage('');

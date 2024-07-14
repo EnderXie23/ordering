@@ -38,7 +38,8 @@ let dishes: Dish[] = [
 ]
 
 const OrderingPage: React.FC = () => {
-    const { name, OrderID, updateOrderID, OrderPart, incrementOrderPart, balance, setOrderedDishes } = useUser()
+    const { name, OrderID, updateOrderID, OrderPart,
+        incrementOrderPart, balance, setOrderedDishes, service } = useUser()
     const customerName = name.split('\n')[0]
     const nickName = name.split('\n')[1]
     const history = useHistory()
@@ -176,7 +177,7 @@ const OrderingPage: React.FC = () => {
             })
     }, [])
     // TODO: Implement takeout
-    const takeout: string = '0'
+    const takeout = service.toString();
 
     const handleSubmit = () => {
         if (Number(parseFloat(calculateTotalCost())) > balance) {

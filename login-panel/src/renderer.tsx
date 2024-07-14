@@ -4,6 +4,7 @@ import { HashRouter, Route, Switch } from 'react-router-dom'
 import { Main } from 'Pages/Main'
 import { ChefLogin } from 'Pages/ChefPages/ChefLogin'
 import { ChefRegister } from 'Pages/ChefPages/ChefRegister'
+import  ServiceType  from 'Pages/CustomerPages/ServiceType'
 import { CustomerLogin } from 'Pages/CustomerPages/CustomerLogin'
 import { CustomerRegister } from 'Pages/CustomerPages/CustomerRegister'
 import OrderingPage from 'Pages/CustomerPages/OrderingPage'
@@ -59,6 +60,11 @@ const Layout = () => {
                     <ChefProvider> {/* Wrap ChefRegister with ChefProvider if needed */}
                         <ChefRegister />
                     </ChefProvider>
+                </Route>
+                <Route path="/service-type" exact>
+                    <UserProvider> {/* Wrap CustomerLogin with ServiceType */}
+                        <ServiceType />
+                    </UserProvider>
                 </Route>
                 <Route path="/customer-login" exact>
                     <UserProvider> {/* Wrap CustomerLogin with CustomerProvider */}
