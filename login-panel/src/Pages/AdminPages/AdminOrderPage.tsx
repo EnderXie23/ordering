@@ -127,14 +127,14 @@ export function AdminOrderPage(){
                 padding: '20px', // 根据需要添加内边距
                 margin: '10px', // 与下方内容保持一定距离
             }}>
-                <Typography variant="h4" component="h1" align="center" gutterBottom>
+                <Typography variant="h4" component="h1" align="center">
                     订单管理页面
                 </Typography>
             </Box>
             <Box style={{
                 position: 'sticky',
-                top: 60, // Adjust based on your header height
-                zIndex: 1000,
+                top: 40, // Adjust based on your header height
+                zIndex: 500,
                 backgroundColor: 'white',
                 display: 'flex',
                 justifyContent: 'center',
@@ -187,13 +187,13 @@ export function AdminOrderPage(){
                     ))
                 )}
             </Box>
-            <Box display="flex" flexDirection="column" alignItems="stretch" mt={2} className="button-container">
+            <Box display="flex" flexDirection="column" alignItems="stretch" mt={1} className="button-container">
                 <Button color="primary" onClick={handleAdminQuery}>
                     刷新
                 </Button>
-                <Box display="flex" mt={2} className="button-container">
+                <Box display="flex" mt={1} className="button-container">
                     <Button color="secondary" onClick={() => {history.push('/admin')}}>
-                        返回
+                        返回上一级
                     </Button>
                     <Button color="secondary" onClick={() => {history.push('/')}}>
                         主页

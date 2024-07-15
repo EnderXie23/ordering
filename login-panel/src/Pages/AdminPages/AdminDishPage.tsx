@@ -11,156 +11,225 @@ import {
     Card, Grid, CardContent, DialogTitle, DialogContent, DialogContentText, DialogActions,
 } from '@mui/material'
 import axios from 'axios'
-import { DishChangeMessage, DishQueryMessage, DishPriceMessage, DishDeleteMessage } from 'Plugins/AdminAPI/AdminDishMessage'
+import {
+    DishChangeMessage,
+    DishQueryMessage,
+    DishPriceMessage,
+    DishDeleteMessage,
+} from 'Plugins/AdminAPI/AdminDishMessage'
 import { styled } from '@mui/styles'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import ChatPanel from 'Plugins/CommonUtils/ChatPanel'
+import { AdminQueryMessage } from 'Plugins/AdminAPI/AdminQueryMessage'
 
 interface Dish {
     name: string;
     path: string;
     price: string;
+    orders: number; // Total number of orders on this dish
+    rating: number;
 }
 
-export function AdminDishPage(){
-    const history=useHistory()
-    const [newDish, setNewDish] = useState<Dish>({ name: '', path: '', price: '' });
-    const [dishes, setDishes] = useState<Dish[]>([]);
-    const [dishToChange, setDishToChange] = useState<string>('');
-    const [previewImage, setPreviewImage] = useState<string>('');
+interface LogInfo {
+    orderid: string,
+    orderPart: string,
+    userName: string,
+    chefName: string,
+    dishName: string,
+    quantity: string,
+    price: string,
+    takeaway: string,
+    state: string,
+    rating: string
+}
+
+export function AdminDishPage() {
+    const history = useHistory()
+    const [newDish, setNewDish] = useState<Dish>({ name: '', path: '', price: '', orders: 0, rating: 0 })
+    const [dishes, setDishes] = useState<Dish[]>([])
+
+    const [dishToChange, setDishToChange] = useState<string>('')
+    const [previewImage, setPreviewImage] = useState<string>('')
     const [newPrice, setNewPrice] = useState<string>('')
-    const [changeOpen, setChangeOpen] = useState(false);
-    const [deleteOpen, setDeleteOpen] = useState(false);
-    const [addOpen, setAddOpen] = useState(false);
+    const [changeOpen, setChangeOpen] = useState(false)
+    const [deleteOpen, setDeleteOpen] = useState(false)
+    const [addOpen, setAddOpen] = useState(false)
 
     const parseDishes = (data: string): Dish[] => {
         return data.split('\n').map(line => {
-            const [name, path, price] = line.split(',');
-            return { name, path, price };
-        });
-    };
+            const [name, path, price] = line.split(',')
+            return { name, path, price, orders: 0, rating: 0 }
+        })
+    }
+
+    const calculateDishInfo = (logInfos: LogInfo[], _dishes: Dish[]) => {
+        const dishData: { [key: string]: { orders: number; ratings: number[] } } = {}
+        logInfos.forEach(log => {
+            const dish = log.dishName
+            const rating = parseFloat(log.rating)
+            const quantity = parseInt(log.quantity, 10)
+            if (!dishData[dish]) {
+                dishData[dish] = { orders: 0, ratings: [] }
+            }
+            dishData[dish].orders += quantity
+            if (rating != 0) {
+                dishData[dish].ratings.push(rating)
+            }
+        })
+        const updatedDishInfo = _dishes.map(dish => {
+            const data = dishData[dish.name]
+            if (data) {
+                const sumRatings = data.ratings.reduce((acc, rating) => acc + rating, 0)
+                const averageRating = data.ratings.length > 0 ? sumRatings / data.ratings.length : 0
+                return {
+                    ...dish,
+                    orders: data.orders,
+                    rating: averageRating,
+                }
+            } else {
+                return {
+                    ...dish,
+                    orders: 0,
+                    rating: 0,
+                }
+            }
+        })
+        setDishes(updatedDishInfo)
+    }
 
     const readDishesInfo = async () => {
-        const qmessage = new DishQueryMessage();
+        const qmessage = new DishQueryMessage()
+        let _dishes : Dish[] = []
         try {
             const response = await axios.post(qmessage.getURL(), JSON.stringify(qmessage), {
                 headers: { 'Content-Type': 'application/json' },
-            });
-            setDishes(parseDishes(response.data));
+            })
+            _dishes = parseDishes(response.data)
         } catch (error) {
-            console.error('Error querying dishes:', error);
+            console.error('Error querying dishes:', error)
+        }
+
+        const message = new AdminQueryMessage()
+        try {
+            const response = await axios.post(message.getURL(), JSON.stringify(message), {
+                headers: { 'Content-Type': 'application/json' },
+            })
+            calculateDishInfo(response.data, _dishes)
+        } catch (error) {
+            console.error('Error admin-querying:', error)
         }
     }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setNewDish(prev => ({ ...prev, [name]: value }));
+        const { name, value } = e.target
+        setNewDish(prev => ({ ...prev, [name]: value }))
 
         if (name === 'path') {
             try {
-                const previewPath = require(`../../Images/${value}`).default;
-                setPreviewImage(previewPath);
+                const previewPath = require(`../../Images/${value}`).default
+                setPreviewImage(previewPath)
             } catch (error) {
-                setPreviewImage('');
+                setPreviewImage('')
             }
         }
-    };
+    }
 
     const handleAddDish = async () => {
-        const message = new DishChangeMessage(newDish.name, newDish.path, newDish.price);
-        try{
+        const message = new DishChangeMessage(newDish.name, newDish.path, newDish.price)
+        try {
             const response = await axios.post(message.getURL(), JSON.stringify(message), {
                 headers: { 'Content-Type': 'application/json' },
             })
             console.log(response.status)
             console.log(response.data)
-            setNewDish({ name: '', path: '', price: '' });
-            setPreviewImage('');
-            readDishesInfo();
-        } catch (error){
+            setNewDish({ name: '', path: '', price: '', orders: 0, rating: 0 })
+            setPreviewImage('')
+            readDishesInfo()
+        } catch (error) {
             console.error('Error admin dish adding:', error)
         }
     }
 
     const handleDeleteDish = async (dishName: string) => {
-        const message = new DishDeleteMessage(dishName);
-        try{
+        const message = new DishDeleteMessage(dishName)
+        try {
             const response = await axios.post(message.getURL(), JSON.stringify(message), {
                 headers: { 'Content-Type': 'application/json' },
             })
             console.log(response.status)
             console.log(response.data)
-            readDishesInfo();
-        } catch (error){
+            readDishesInfo()
+        } catch (error) {
             console.error('Error admin dish deleting:', error)
         }
     }
 
     const handleChangePrice = async (dishName: string) => {
-        const message = new DishPriceMessage(dishName, newPrice);
-        try{
+        const message = new DishPriceMessage(dishName, newPrice)
+        try {
             const response = await axios.post(message.getURL(), JSON.stringify(message), {
                 headers: { 'Content-Type': 'application/json' },
             })
             console.log(response.status)
             console.log(response.data)
-            setNewPrice('');
-            readDishesInfo();
-        } catch (error){
+            setNewPrice('')
+            readDishesInfo()
+        } catch (error) {
             console.error('Error admin dish price changing:', error)
         }
     }
 
     const getImagePath = (path: string): string => {
         try {
-            return require(`../../Images/${path}`).default;
+            return require(`../../Images/${path}`).default
         } catch (error) {
-            return require(`../../Images/default.jpg`).default;
+            return require(`../../Images/default.jpg`).default
         }
-    };
-
-    const handleChangeClose = () =>{
-        setNewPrice('');
-        setDishToChange('');
-        setChangeOpen(false);
     }
 
-    const handleDeleteClose = () =>{
-        setDishToChange('');
-        setDeleteOpen(false);
+    const handleChangeClose = () => {
+        setNewPrice('')
+        setDishToChange('')
+        setChangeOpen(false)
     }
 
-    const handleAddClose = () =>{
-        setNewDish({ name: '', path: '', price: '' });
-        setPreviewImage('');
-        setAddOpen(false);
+    const handleDeleteClose = () => {
+        setDishToChange('')
+        setDeleteOpen(false)
+    }
+
+    const handleAddClose = () => {
+        setNewDish({ name: '', path: '', price: '', orders: 0, rating: 0 })
+        setPreviewImage('')
+        setAddOpen(false)
     }
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
+        const file = e.target.files?.[0]
         if (file) {
-            setNewDish((prev) => ({ ...prev, path: file.name }));
-            const reader = new FileReader();
+            setNewDish((prev) => ({ ...prev, path: file.name }))
+            const reader = new FileReader()
             reader.onloadend = () => {
-                setPreviewImage(reader.result as string); // Cast to string for the image preview
-            };
-            reader.readAsDataURL(file); // Ensure the file is read as a data URL
+                setPreviewImage(reader.result as string) // Cast to string for the image preview
+            }
+            reader.readAsDataURL(file) // Ensure the file is read as a data URL
         }
-    };
+    }
 
     const HiddenInput = styled('input')({
         display: 'none',
-    });
+    })
 
     useEffect(() => {
         readDishesInfo()
     }, [])
 
     return (
-        <Container style={{ maxHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        <Container
+            style={{ maxHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
             <h1 style={{
-                marginBottom: '50px'
+                marginBottom: '50px',
             }}>菜单管理:</h1>
             <Grid container spacing={4} style={{
                 height: '80vh',
@@ -168,23 +237,24 @@ export function AdminDishPage(){
             }}>
                 {dishes.map((dish) => (
                     <Grid item xs={12} sm={6} md={4} key={dish.name}>
-                        <Card style={{maxWidth: '250px', height: '300px', justifyContent:'center'}}>
-                            <CardMedia component="img" height="140" src= {getImagePath(dish.path)} alt={dish.name} />
+                        <Card style={{ maxWidth: '250px', height: '350px', justifyContent: 'center' }}>
+                            <CardMedia component="img" height="140" src={getImagePath(dish.path)} alt={dish.name} />
                             <CardContent>
                                 <Typography variant="h5">{dish.name}</Typography>
-                                <Box display="flex" alignItems="center">
+                                <Box>
                                     <Typography variant="subtitle1">价格：{dish.price}元</Typography>
+                                    <Typography variant="subtitle1">订单量：{dish.orders}, 评分：{dish.rating === 0? 'N/A' : dish.rating.toFixed(2)}</Typography>
                                 </Box>
                                 <Box display="flex" alignItems="center">
-                                    <Button variant="contained" color="primary" onClick={() =>{
-                                        setDishToChange(dish.name);
-                                        setChangeOpen(true);
+                                    <Button variant="contained" color="primary" onClick={() => {
+                                        setDishToChange(dish.name)
+                                        setChangeOpen(true)
                                     }}>
                                         <Typography>更改价格</Typography>
                                     </Button>
                                     <Button variant="contained" color="error" onClick={() => {
-                                        setDishToChange(dish.name);
-                                        setDeleteOpen(true);
+                                        setDishToChange(dish.name)
+                                        setDeleteOpen(true)
                                     }}>
                                         <Typography>移除</Typography>
                                     </Button>
@@ -196,14 +266,18 @@ export function AdminDishPage(){
                 ))}
             </Grid>
             <div>
-                <Button variant="contained" color="primary" onClick={() => {setAddOpen(true)}} style={{ marginTop: '10px' }}>
+                <Button variant="contained" color="primary" onClick={() => {
+                    setAddOpen(true)
+                }} style={{ marginTop: '10px' }}>
                     添加菜品
                 </Button>
-                <Button variant="contained" color="secondary" onClick={() => {history.push('/admin')}} style={{ marginTop: '10px' }}>
+                <Button variant="contained" color="secondary" onClick={() => {
+                    history.push('/admin')
+                }} style={{ marginTop: '10px' }}>
                     返回
                 </Button>
             </div>
-            <Dialog open={changeOpen} fullWidth >
+            <Dialog open={changeOpen} fullWidth>
                 <DialogTitle>更改{dishToChange}的价格</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
@@ -216,7 +290,7 @@ export function AdminDishPage(){
                         value={newPrice}
                         onChange={
                             (e) => {
-                                setNewPrice(e.target.value);
+                                setNewPrice(e.target.value)
                             }
                         }
                         type="text"
@@ -228,14 +302,14 @@ export function AdminDishPage(){
                         取消
                     </Button>
                     <Button onClick={() => {
-                        handleChangePrice(dishToChange);
-                        handleChangeClose();
+                        handleChangePrice(dishToChange)
+                        handleChangeClose()
                     }} color="primary">
                         提交
                     </Button>
                 </DialogActions>
             </Dialog>
-            <Dialog open={deleteOpen} fullWidth >
+            <Dialog open={deleteOpen} fullWidth>
                 <DialogTitle>删除{dishToChange}？</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
@@ -247,8 +321,8 @@ export function AdminDishPage(){
                         取消
                     </Button>
                     <Button onClick={() => {
-                        handleDeleteDish(dishToChange);
-                        handleDeleteClose();
+                        handleDeleteDish(dishToChange)
+                        handleDeleteClose()
                     }} color="primary">
                         提交
                     </Button>
@@ -292,7 +366,8 @@ export function AdminDishPage(){
                         </Box>
                         {previewImage && (
                             <Box sx={{ mt: 2 }}>
-                                <img src={previewImage} alt="Image Preview" style={{ maxWidth: '100%', marginTop: '10px' }} />
+                                <img src={previewImage} alt="Image Preview"
+                                     style={{ maxWidth: '100%', marginTop: '10px' }} />
                             </Box>
                         )}
                     </Box>
@@ -310,10 +385,10 @@ export function AdminDishPage(){
                         取消
                     </Button>
                     <Button onClick={() => {
-                        if(newDish.name != '') {
-                            handleAddDish();
+                        if (newDish.name != '') {
+                            handleAddDish()
                         }
-                        handleAddClose();
+                        handleAddClose()
                     }} color="primary">
                         提交
                     </Button>

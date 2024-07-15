@@ -63,7 +63,7 @@ const AdminRatingPage: React.FC = () => {
             })
             setComments(parseComments(response.data));
         } catch (error) {
-            console.error('Error fetching comments.');
+            console.error('Error fetching comments: ',error);
             const testComment = {
                 id: 1,
                 author: "None",
@@ -127,15 +127,15 @@ const AdminRatingPage: React.FC = () => {
                             <Typography variant="body1">{comment.text}</Typography>
 
                             <Box mt={1}>
-                                <Typography>综合评分：</Typography>
+                                <Typography>综合评分：{comment.overallRating}</Typography>
                                 <Rating value={comment.overallRating} readOnly/>
-                                <Typography>口味评分：</Typography>
+                                <Typography>口味评分：{comment.tasteRating}</Typography>
                                 <Rating value={comment.tasteRating} readOnly precision={0.5} />
-                                <Typography>包装评分：</Typography>
+                                <Typography>包装评分：{comment.packagingRating}</Typography>
                                 <Rating value={comment.packagingRating} readOnly precision={0.5} />
-                                <Typography>服务评分：</Typography>
+                                <Typography>服务评分：{comment.serviceRating}</Typography>
                                 <Rating value={comment.serviceRating} readOnly precision={0.5} />
-                                <Typography>环境评分：</Typography>
+                                <Typography>环境评分：{comment.envRating}</Typography>
                                 <Rating value={comment.envRating} readOnly precision={0.5} />
                             </Box>
                         </Box>
@@ -145,15 +145,15 @@ const AdminRatingPage: React.FC = () => {
                     <Box mt={4}>
                         <Typography variant="h5">平均分数：</Typography>
                         <Box mt={1}>
-                            <Typography>综合评分：{averageRatings.overall}</Typography>
+                            <Typography>综合评分：{averageRatings.overall.toFixed(2)}</Typography>
                             <Rating value={averageRatings.overall} readOnly precision={0.5} />
-                            <Typography>口味评分：{averageRatings.taste}</Typography>
+                            <Typography>口味评分：{averageRatings.taste.toFixed(2)}</Typography>
                             <Rating value={averageRatings.taste} readOnly precision={0.5} />
-                            <Typography>包装评分：{averageRatings.packaging}</Typography>
+                            <Typography>包装评分：{averageRatings.packaging.toFixed(2)}</Typography>
                             <Rating value={averageRatings.packaging} readOnly precision={0.5} />
-                            <Typography>服务评分：{averageRatings.service}</Typography>
+                            <Typography>服务评分：{averageRatings.service.toFixed(2)}</Typography>
                             <Rating value={averageRatings.service} readOnly precision={0.5} />
-                            <Typography>环境评分：{averageRatings.env}</Typography>
+                            <Typography>环境评分：{averageRatings.env.toFixed(2)}</Typography>
                             <Rating value={averageRatings.env} readOnly precision={0.5} />
                         </Box>
                         <Button variant="contained" color="secondary" style={{ marginTop: '20px' }} fullWidth onClick={() => {
