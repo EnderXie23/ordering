@@ -257,6 +257,7 @@ const OrderingPage: React.FC = () => {
                 }}>
                     <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                         <Typography variant="h4" gutterBottom sx={{
+                            fontFamily: 'Noto Sans',
                             fontSize: '2.5rem',
                             fontWeight: 'bold',
                             marginBottom: '2rem'
@@ -277,7 +278,7 @@ const OrderingPage: React.FC = () => {
                                     <CardMedia component="img" height="45%" src={getImagePath(dish.path)} alt={dish.name} />
                                     <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                                         <div>
-                                            <Typography variant="h5" textAlign="center" fontWeight='bold' gutterBottom>{dish.name}</Typography>
+                                            <Typography variant="h5" textAlign="center" fontFamily='Merriweather' fontWeight='bold' gutterBottom>{dish.name}</Typography>
                                             <Typography variant="body1" textAlign="center">价格：{dish.price}元</Typography>
                                         </div>
                                         <Box display="flex" justifyContent="flex-end" alignItems="center" mb={1} sx={{margin: 0}}>
