@@ -15,6 +15,7 @@ const WalletCharge: React.FC<WalletChargeProps> = ({ open, onClose, onCharge }) 
         if (!isNaN(amount)) {
             onCharge(amount);
             setChargeAmount('');
+
         }
         onClose();
     };
