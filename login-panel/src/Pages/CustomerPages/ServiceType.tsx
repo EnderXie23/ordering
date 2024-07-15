@@ -33,6 +33,7 @@ const ServiceType: React.FC = () => {
                     <Grid item style={{ display: 'flex' }}>
                         <Button
                             variant="contained"
+                            className='button'
                             onClick={() => handleServiceTypeSelection('dine-in')}
                             style={{ padding: '20px', margin:'20px', width: '200px', height: '200px', display: 'flex',
                                 flexDirection: 'column', alignItems: 'center' }}
@@ -48,6 +49,7 @@ const ServiceType: React.FC = () => {
                         </Button>
                         <Button
                             variant="contained"
+                            className='button'
                             onClick={() => handleServiceTypeSelection('takeaway')}
                             style={{ padding: '20px', margin:'20px', width: '200px', height: '200px', display: 'flex',
                                 flexDirection: 'column', alignItems: 'center' }}

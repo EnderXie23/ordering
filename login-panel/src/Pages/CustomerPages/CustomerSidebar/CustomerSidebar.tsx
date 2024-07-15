@@ -22,7 +22,6 @@ const CustomerSidebar: React.FC = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const { name } = useUser();
     const username = name.split('\n')[1];
-    const history = useHistory();
     const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
         if (event.type === 'keydown' && ((event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift')) {
             return;
