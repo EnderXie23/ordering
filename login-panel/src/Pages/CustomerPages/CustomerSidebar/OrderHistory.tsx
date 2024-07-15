@@ -53,22 +53,27 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'space-between',
     },
 }));
+interface UserHistory{
+    orderID: string
+    orderPart: string
+    dishName: string,
+    quantity: number,
+    price: number,
+    state: string
+}
 
 const CustomerHistory:React.FC<HistoryProps>=({open,onClose})=>{
     const [finishedOrders, setFinishedOrders] = useState<OrderHistory[]>([])
     const [groupedOrdersByOrderID, setGroupedOrdersByOrderID] = useState<{ [orderID: string]: OrderHistory[] }>({});
     const { name } = useUser();
-    const parseOrders = (data: string): OrderHistory[] => {
-        return data.trim().split('\n').map(order => {
-            console.log(order)
-            const orderParts = order.split(',');
-            const getValue = (part: string) => part.split(':')[1].trim().replace(/^Some\(|\)$/g, ''); // Clean the value
-            const orderID = getValue(orderParts[4]);
-            const orderPart = getValue(orderParts[5]);
-            const dishName = getValue(orderParts[0]);
-            const quantity = parseInt(getValue(orderParts[1]), 10);
-            const price = parseInt(getValue(orderParts[2]), 10);
-            const state = getValue(orderParts[3]);
+    const parseOrders = (data: UserHistory[]): OrderHistory[] => {
+        return data.map(order => {
+            const orderID = order.orderID
+            const orderPart = order.orderPart
+            const dishName = order.dishName
+            const quantity = order.quantity
+            const price = order.price
+            const state = order.state
             console.log('Parsed order:', { orderID, orderPart, dishName, quantity, price, state });
             return {
                 orderID,

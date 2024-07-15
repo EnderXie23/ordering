@@ -18,7 +18,6 @@ import Wallet from './Wallet';
 import CustomerHistory from './OrderHistory'
 
 const CustomerSidebar: React.FC = () => {
-    const history=useHistory()
     const [drawerOpen, setDrawerOpen] = useState(false);
     const { name } = useUser();
     const username = name.split('\n')[1];
