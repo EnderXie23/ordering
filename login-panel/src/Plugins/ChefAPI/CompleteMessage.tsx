@@ -1,10 +1,20 @@
 import { ChefMessage } from 'Plugins/ChefAPI/ChefMessage'
 
-export class CompleteMessage extends ChefMessage {
-    orderdesp: string;
+interface OrderDesp {
+    customerName: string;
+    chefName: string;
+    dishName: string;
+    orderCount: string;
+    state: string;
+    orderID: string;
+    orderPart: string;
+}
 
-    constructor(orderdesp: string) {
+export class CompleteMessage extends ChefMessage {
+    orderDesp: OrderDesp
+
+    constructor(orderDesp: OrderDesp) {
         super();
-        this.orderdesp = orderdesp;
+        this.orderDesp = orderDesp;
     }
 }

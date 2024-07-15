@@ -1,65 +1,68 @@
 import React, { useState } from 'react';
 import { useUser } from 'Pages/UserContext'
 import { useHistory } from 'react-router'
+import { Grid, Button, Box, Typography } from '@mui/material';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
+import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
+import backgroundImage from 'Images/background.png'
 
 const ServiceType: React.FC = () => {
-    const [serviceType, setServiceType] = useState<'dine-in' | 'takeaway'>('dine-in');
     const [inputValue, setInputValue] = useState('');
     const {setService, setServiceTypeInfo} = useUser();
 
     const history=useHistory()
 
-    const handleServiceTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setServiceType(event.target.value as 'dine-in' | 'takeaway');
-        setInputValue('');
-    };
-
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setInputValue(event.target.value);
-    };
-
-    const handleSubmit = () => {
+    const handleServiceTypeSelection = (serviceType: string) => {
         setService(serviceType === 'takeaway' ? 0 : 1);
         setServiceTypeInfo(inputValue);
         history.push('/place-order');
+        console.log(serviceType);
     };
 
     return (
-        <div>
-            <h1>请选择服务方式</h1>
-            <div>
-                <label>
-                    堂食
-                    <input
-                        type="radio"
-                        name="serviceType"
-                        value="dine-in"
-                        checked={serviceType === 'dine-in'}
-                        onChange={handleServiceTypeChange}
-                    />
-                </label>
-                <label>
-                    外卖
-                    <input
-                        type="radio"
-                        name="serviceType"
-                        value="takeaway"
-                        checked={serviceType === 'takeaway'}
-                        onChange={handleServiceTypeChange}
-                    />
-                </label>
-            </div>
-            <div>
-                <label>
-                    {serviceType === 'dine-in' ? '桌号:' : '地址:'}
-                    <input
-                        type="text"
-                        value={inputValue}
-                        onChange={handleInputChange}
-                    />
-                </label>
-            </div>
-            <button onClick={handleSubmit}>确定</button>
+        <div className='root' style={{ backgroundImage: `url(${backgroundImage})` }}>
+            <Box className='cover' />
+                <Box className='main-box' sx={{ maxWidth: 400, mx: 'auto', mt: 4, p: 3, border: '1px solid #ccc', borderRadius: 2 }}>
+                    <Typography variant="h4" component="h1" align="center" gutterBottom sx={{
+                        fontSize: '2rem',
+                        fontWeight: 'bold',
+                        marginBottom: '1rem'
+                    }}>
+                        请选择服务方式
+                    </Typography>
+                    <Grid item style={{ display: 'flex' }}>
+                        <Button
+                            variant="contained"
+                            onClick={() => handleServiceTypeSelection('dine-in')}
+                            style={{ padding: '20px', margin:'20px', width: '200px', height: '200px', display: 'flex',
+                                flexDirection: 'column', alignItems: 'center' }}
+                            sx = {{
+                                backgroundColor: '#52b3f7',
+                                '&:hover': {
+                                    backgroundColor: '#4aa1de',
+                                }
+                            }}
+                        >
+                            <RestaurantIcon style={{ fontSize: '80px' }} />
+                            <Typography variant="h5" style={{ marginTop: '20px', fontWeight: 'bold', }}>堂食</Typography>
+                        </Button>
+                        <Button
+                            variant="contained"
+                            onClick={() => handleServiceTypeSelection('takeaway')}
+                            style={{ padding: '20px', margin:'20px', width: '200px', height: '200px', display: 'flex',
+                                flexDirection: 'column', alignItems: 'center' }}
+                            sx = {{
+                                backgroundColor: '#f6c543',
+                                '&:hover': {
+                                    backgroundColor: '#ddb13c',
+                                }
+                            }}
+                        >
+                            <DeliveryDiningIcon style={{ fontSize: '80px' }} />
+                            <Typography variant="h5" style={{ marginTop: '20px', fontWeight: 'bold', }}>外卖</Typography>
+                        </Button>
+                    </Grid>
+                </Box>
         </div>
     );
 };

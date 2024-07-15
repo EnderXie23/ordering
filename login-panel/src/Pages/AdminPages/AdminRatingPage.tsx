@@ -9,11 +9,10 @@ import { ReadCommentsMessage } from 'Plugins/CustomerAPI/ReadCommentsMessage'
 import { useHistory } from 'react-router'
 import CustomerSidebar from 'Pages/CustomerPages/CustomerSidebar/CustomerSidebar'
 
-interface Comment {
+interface displayComment {
     id: number;
     author: string;
     text: string;
-    createdAt: string;
     overallRating: number;
     tasteRating: number;
     packagingRating: number;
@@ -21,9 +20,33 @@ interface Comment {
     envRating: number;
 }
 
+interface Comment {
+    customerName: string,
+    chefName: string,
+    comment: string,
+    overall: string,
+    taste: string,
+    pack: string,
+    serv: string,
+    env: string
+}
+
+function parseComments(rawComments: Comment[]): displayComment[] {
+    return rawComments.map((comment,index) => ({
+        id: index,
+        author: comment.customerName,
+        text: comment.comment,
+        overallRating: parseFloat(comment.overall),
+        tasteRating: parseFloat(comment.taste),
+        packagingRating: parseFloat(comment.pack),
+        serviceRating: parseFloat(comment.serv),
+        envRating: parseFloat(comment.env),
+    }));
+}
+
 const AdminRatingPage: React.FC = () => {
     const history = useHistory();
-    const [comments, setComments] = useState<Comment[]>([]);
+    const [comments, setComments] = useState<displayComment[]>([]);
     const [averageRatings, setAverageRatings] = useState({
         overall: 0,
         taste: 0,
@@ -31,28 +54,6 @@ const AdminRatingPage: React.FC = () => {
         service: 0,
         env: 0,
     });
-
-    const parseComments = (rawComments: string): Comment[] => {
-        const commentStrings = rawComments.split('\n');
-
-        return commentStrings.map((commentString, index) => {
-            const [author, text, overall, taste, pack, serv, env] = commentString.split('\\');
-
-            const createdAt = new Date().toISOString();
-
-            return {
-                id: index + 1, // or use a more suitable method to generate unique IDs
-                author,
-                text,
-                createdAt,
-                overallRating: parseFloat(overall),
-                tasteRating: parseFloat(taste),
-                packagingRating: parseFloat(pack),
-                serviceRating: parseFloat(serv),
-                envRating: parseFloat(env),
-            };
-        });
-    };
 
     const fetchComments = async () => {
         const message = new ReadCommentsMessage();
@@ -62,7 +63,7 @@ const AdminRatingPage: React.FC = () => {
             })
             setComments(parseComments(response.data));
         } catch (error) {
-            console.error('Error fetching comments.');
+            console.error('Error fetching comments: ',error);
             const testComment = {
                 id: 1,
                 author: "None",
@@ -126,15 +127,15 @@ const AdminRatingPage: React.FC = () => {
                             <Typography variant="body1">{comment.text}</Typography>
 
                             <Box mt={1}>
-                                <Typography>综合评分：</Typography>
+                                <Typography>综合评分：{comment.overallRating}</Typography>
                                 <Rating value={comment.overallRating} readOnly/>
-                                <Typography>口味评分：</Typography>
+                                <Typography>口味评分：{comment.tasteRating}</Typography>
                                 <Rating value={comment.tasteRating} readOnly precision={0.5} />
-                                <Typography>包装评分：</Typography>
+                                <Typography>包装评分：{comment.packagingRating}</Typography>
                                 <Rating value={comment.packagingRating} readOnly precision={0.5} />
-                                <Typography>服务评分：</Typography>
+                                <Typography>服务评分：{comment.serviceRating}</Typography>
                                 <Rating value={comment.serviceRating} readOnly precision={0.5} />
-                                <Typography>环境评分：</Typography>
+                                <Typography>环境评分：{comment.envRating}</Typography>
                                 <Rating value={comment.envRating} readOnly precision={0.5} />
                             </Box>
                         </Box>
@@ -144,15 +145,15 @@ const AdminRatingPage: React.FC = () => {
                     <Box mt={4}>
                         <Typography variant="h5">平均分数：</Typography>
                         <Box mt={1}>
-                            <Typography>综合评分：{averageRatings.overall}</Typography>
+                            <Typography>综合评分：{averageRatings.overall.toFixed(2)}</Typography>
                             <Rating value={averageRatings.overall} readOnly precision={0.5} />
-                            <Typography>口味评分：{averageRatings.taste}</Typography>
+                            <Typography>口味评分：{averageRatings.taste.toFixed(2)}</Typography>
                             <Rating value={averageRatings.taste} readOnly precision={0.5} />
-                            <Typography>包装评分：{averageRatings.packaging}</Typography>
+                            <Typography>包装评分：{averageRatings.packaging.toFixed(2)}</Typography>
                             <Rating value={averageRatings.packaging} readOnly precision={0.5} />
-                            <Typography>服务评分：{averageRatings.service}</Typography>
+                            <Typography>服务评分：{averageRatings.service.toFixed(2)}</Typography>
                             <Rating value={averageRatings.service} readOnly precision={0.5} />
-                            <Typography>环境评分：{averageRatings.env}</Typography>
+                            <Typography>环境评分：{averageRatings.env.toFixed(2)}</Typography>
                             <Rating value={averageRatings.env} readOnly precision={0.5} />
                         </Box>
                         <Button variant="contained" color="secondary" style={{ marginTop: '20px' }} fullWidth onClick={() => {

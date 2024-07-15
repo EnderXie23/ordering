@@ -11,18 +11,16 @@ import {
     Container,
     Box,
     IconButton,
-    FormControl, InputLabel, MenuItem,
+    FormControl
 } from '@mui/material'
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios'
 import { QueryMessage } from 'Plugins/ChefAPI/QueryMessage'
 import { CompleteMessage } from 'Plugins/ChefAPI/CompleteMessage'
-import { LogMessage } from 'Plugins/ChefAPI/LogMessage'
 import { useChef } from '../ChefContext';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import { Select } from 'antd'
-
 
 interface Order {
     customer: string;
@@ -33,43 +31,27 @@ interface Order {
     state: string;
 }
 
-function parseOrders(input: string): Order[] {
-    const strings = input.split('\n')
-    let currentCustomer: string = ''
-    let orderID: number = 0
-    let orderPart: number = 0
+interface OrderDesp {
+    customerName: string;
+    chefName: string;
+    dishName: string;
+    orderCount: string;
+    state: string;
+    orderID: string;
+    orderPart: string;
+}
 
-    const orders: Order[] = []
-
-    strings.forEach((str, index) => {
-        if (str.startsWith('Customer: ')) {
-            currentCustomer = str.replace('Customer: ', '').trim()
-            if (currentCustomer === '') currentCustomer = 'Anonymous'
-            orderID = Number(parseInt(strings[index + 1].replace('OrderID: ', '').trim()))
-            orderPart = Number(parseInt(strings[index + 2].replace('OrderPart: ', '').trim()))
-        } else if (str.startsWith('Dish: ') && currentCustomer) {
-            const dish = str.replace('Dish: ', '').trim()
-            const quantityStr = strings[index + 1]
-            const finishState = strings[index + 2]
-            if (quantityStr.startsWith('Order Count: ')) {
-                const quantity = parseInt(quantityStr.replace('Order Count: ', '').trim())
-                const state = finishState.replace('State: ', '').trim()
-                const order = {
-                    customer: currentCustomer,
-                    orderID: orderID,
-                    orderPart: orderPart,
-                    dish: dish,
-                    quantity: quantity,
-                    state: state,
-                }
-                if (state == 'processing') {
-                    orders.push(order)
-                }
-            }
-        }
-    })
-    console.log(orders)
-    return orders;
+function parseOrder(orderDesps: OrderDesp[]): Order[] {
+    return orderDesps
+        .filter(orderDesp => orderDesp.state === 'processing')
+        .map(orderDesp => ({
+        customer: orderDesp.customerName,
+        dish: orderDesp.dishName,
+        quantity: parseInt(orderDesp.orderCount, 10),
+        orderID: parseInt(orderDesp.orderID, 10),
+        orderPart: parseInt(orderDesp.orderPart, 10),
+        state: orderDesp.state
+    }));
 }
 
 // 按照 dish 分类
@@ -94,14 +76,14 @@ function groupByCustomer(orders: Order[]): Record<string, Order[]> {
     }, {} as Record<string, Order[]>)
 }
 
-function groupByOrderID(orders: Order[]): Record<number, Order[]> {
+function groupByOrderID(orders: Order[]): Record<string, Order[]> {
     return orders.reduce((acc, order) => {
-        if (!acc[order.orderID]) {
-            acc[order.orderID] = []
+        if (!acc[order.orderID.toString()]) {
+            acc[order.orderID.toString()] = []
         }
-        acc[order.orderID].push(order)
+        acc[order.orderID.toString()].push(order)
         return acc
-    }, {} as Record<number, Order[]>)
+    }, {} as Record<string, Order[]>)
 }
 
 const ChefPage: React.FC = () => {
@@ -123,22 +105,17 @@ const ChefPage: React.FC = () => {
         }
     }
 
-    const sendLogRequest = async (message: LogMessage) => {
-        try {
-            const response = await axios.post(message.getURL(), JSON.stringify(message), {
-                headers: { 'Content-Type': 'application/json' },
-            })
-            console.log(response.status)
-            console.log(response.data)
-            await handleQuery()
-        } catch (error) {
-            console.error('Error logging:', error)
-        }
-    }
-
     const handleComplete = async (order: Order, state: string) => {
-        const completeMessage = new CompleteMessage(`${order.customer}\n${order.dish}\n${order.quantity}\n` + state + `\n${order.orderID}\n${order.orderPart}`)
-        const logMessage = new LogMessage(chefName + `\n${order.customer}\n${order.dish}\n${order.quantity}\n` + state + `\n${order.orderID}\n${order.orderPart}`)
+        const orderDesp: OrderDesp = {
+            customerName: order.customer,
+            chefName: chefName,
+            dishName: order.dish,
+            orderCount: order.quantity.toString(),
+            state: state,
+            orderID: order.orderID.toString(),
+            orderPart: order.orderPart.toString(),
+        }
+        const completeMessage = new CompleteMessage(orderDesp);
         if (state === '0') {
             console.log('Reject order:', order)
         } else if (state === '1') {
@@ -152,11 +129,6 @@ const ChefPage: React.FC = () => {
         } catch (error) {
             console.error('Error in handleComplete:', error)
         }
-        try {
-            await sendLogRequest(logMessage)
-        } catch (error) {
-            console.error('Error in handleLog:', error)
-        }
     }
 
     const sendQueryRequest = async (message: QueryMessage) => {
@@ -165,7 +137,7 @@ const ChefPage: React.FC = () => {
                 headers: { 'Content-Type': 'application/json' },
             })
             console.log(response.data)
-            setOrders(parseOrders(response.data))
+            setOrders(parseOrder(response.data))
         } catch (error) {
             console.error('Error querying order:', error)
         }
@@ -229,7 +201,8 @@ const ChefPage: React.FC = () => {
     }));
     const classes = useStyles();
 
-    const groupedOrders = groupBy === 'dish' ? groupByDish(orders) : groupBy === 'customer' ? groupByCustomer(orders) : groupByOrderID(orders)
+    const groupedOrders : Record<string, Order[]> = groupBy === 'dish' ? groupByDish(orders) : groupBy === 'customer' ? groupByCustomer(orders) : groupByOrderID(orders)
+
     return (
         <Container className={classes.container}>
             <Box className={classes.box}>
@@ -257,7 +230,6 @@ const ChefPage: React.FC = () => {
                                 <CardHeader title={groupBy === 'dish' ? `Dish: ${key}` : groupBy === 'customer' ? `Customer: ${key}` : `OrderID: ${key}`} />
                                 <CardContent className={classes.cardContent}>
                                     {groupedOrders[key]
-                                        .filter((order) => order.state === 'processing')
                                         .map((order) => (
                                             <Box my={1} display="flex" justifyContent="stretch" alignItems="center" key={order.orderID + '-' + order.orderPart}>
                                                 <ListItemText

@@ -15,7 +15,7 @@ import java.util.UUID
 object Init {
   def init(config: ServerConfig): IO[Unit] =
     val checkQuery = s"SELECT COUNT(*) FROM ${schemaName}.admin_log WHERE dish_name = ? AND quantity = ? AND state = ?"
-    val insertQuery = s"INSERT INTO ${schemaName}.admin_log (orderID, orderPart, user_name, chef_name, dish_name, price, quantity, takeaway, state) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    val insertQuery = s"INSERT INTO ${schemaName}.admin_log (orderID, orderPart, user_name, chef_name, dish_name, price, quantity, takeaway, state, rating) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
     val checkParams = List(
       SqlParameter("String", "0"),
       SqlParameter("String", "0"),
@@ -30,7 +30,8 @@ object Init {
       SqlParameter("String", "0"),
       SqlParameter("String", "0"),
       SqlParameter("String", "0"),
-      SqlParameter("String", "2")
+      SqlParameter("String", "2"),
+      SqlParameter("String", "0")
     )
 
     given PlanContext = PlanContext(traceID = TraceID(UUID.randomUUID().toString), 0)
@@ -39,7 +40,7 @@ object Init {
       _ <- API.init(config.maximumClientConnection)
       _ <- initSchema(schemaName)
       _ <- writeDB(s"CREATE TABLE IF NOT EXISTS ${schemaName}.dishes (name TEXT, img_path TEXT, price TEXT)", List())
-      _ <- writeDB(s"CREATE TABLE IF NOT EXISTS ${schemaName}.admin_log (orderID TEXT, orderPart TEXT, user_name TEXT, chef_name TEXT, dish_name TEXT, quantity TEXT, price TEXT, takeaway TEXT, state TEXT)", List())
+      _ <- writeDB(s"CREATE TABLE IF NOT EXISTS ${schemaName}.admin_log (orderID TEXT, orderPart TEXT, user_name TEXT, chef_name TEXT, dish_name TEXT, quantity TEXT, price TEXT, takeaway TEXT, state TEXT, rating TEXT)", List())
       rows <- readDBRows(checkQuery, checkParams)
       count = (rows.headOption.flatMap(_.hcursor.get[Int]("count").toOption)).getOrElse(0)
       result <- if (count == 0) {

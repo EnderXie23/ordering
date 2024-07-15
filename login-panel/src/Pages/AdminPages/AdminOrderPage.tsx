@@ -25,38 +25,41 @@ interface finishedOrder{
     orderPart: string
 }
 
+interface LogInfo {
+    orderid: string,
+    orderPart: string,
+    userName: string,
+    chefName: string,
+    dishName: string,
+    quantity: string,
+    price: string,
+    takeaway: string,
+    state: string,
+    rating: string
+}
+
+function parseOrders(logInfos: LogInfo[]): finishedOrder[] {
+    return logInfos
+        .filter(logInfo => logInfo.chefName != 'admin')
+        .map(logInfo => ({
+            chefName: logInfo.chefName,
+            customerName: logInfo.userName,
+            dishName: logInfo.dishName,
+            quantity: parseInt(logInfo.quantity),
+            price: parseFloat(logInfo.price),
+            state: logInfo.state,
+            rating: parseFloat(logInfo.rating),
+            orderID: logInfo.orderid,
+            orderPart: logInfo.orderPart
+        }));
+}
+
 export function AdminOrderPage(){
     const history=useHistory()
-    const [finishedOrders, setFinishedOrders] = useState<finishedOrder[]>([])
-    const [groupedOrders, setGroupedOrders] = useState<{ [customerName: string]: finishedOrder[] }>({});
     const [groupedOrdersByCustomer, setGroupedOrdersByCustomer] = useState<{ [customerName: string]: finishedOrder[] }>({});
     const [groupedOrdersByOrderID, setGroupedOrdersByOrderID] = useState<{ [orderID: string]: finishedOrder[] }>({});
     const [groupByCustomer, setGroupByCustomer] = useState(false); // State for grouping method
-    const parseOrders = (data: string): finishedOrder[] => {
-        return data.trim().split('\n').map(order => {
-            const orderParts = order.split(',');
-            const getValue = (part: string) => part.split(':')[1].trim().replace(/^Some\(|\)$/g, ''); // Clean the value
-            const chefName = getValue(orderParts[0]);
-            const customerName = getValue(orderParts[1]);
-            const dishName = getValue(orderParts[2]);
-            const quantity = parseInt(getValue(orderParts[3]), 10);
-            const price = parseInt(getValue(orderParts[4]), 10);
-            const state = getValue(orderParts[5]);
-            const orderID = getValue(orderParts[6]);
-            const orderPart = getValue(orderParts[7]);
-
-            return {
-                chefName,
-                customerName,
-                dishName,
-                quantity,
-                price,
-                state,
-                orderID,
-                orderPart
-            };
-        });
-    };
+    const [income, setIncome] = useState(0); // State for total income
 
     const groupOrdersByCustomer = (orders: finishedOrder[]) => {
         return orders.reduce((acc, order) => {
@@ -81,14 +84,15 @@ export function AdminOrderPage(){
             const response = await axios.post(message.getURL(), JSON.stringify(message), {
                 headers: { 'Content-Type': 'application/json' },
             })
-            console.log(response.status)
-            console.log(response.data)
             const ordersArray = parseOrders(response.data)
             const groupedOrdersByCustomer = groupOrdersByCustomer(ordersArray);
             const groupedOrdersByOrderID = groupOrdersByOrderID(ordersArray);
-            setFinishedOrders(ordersArray);
+            console.log(ordersArray)
             setGroupedOrdersByCustomer(groupedOrdersByCustomer);
             setGroupedOrdersByOrderID(groupedOrdersByOrderID);
+            setIncome(ordersArray.reduce((acc, order) => {
+                return acc + (order.price * order.quantity);
+            }, 0));
         } catch (error){
             console.error('Error admin-querying:', error)
         }
@@ -127,14 +131,14 @@ export function AdminOrderPage(){
                 padding: '20px', // 根据需要添加内边距
                 margin: '10px', // 与下方内容保持一定距离
             }}>
-                <Typography variant="h4" component="h1" align="center" gutterBottom>
-                    订单管理页面
+                <Typography variant="h4" component="h1" align="center">
+                    订单管理页面：总收入{income.toFixed(2)}元！
                 </Typography>
             </Box>
             <Box style={{
                 position: 'sticky',
-                top: 60, // Adjust based on your header height
-                zIndex: 1000,
+                top: 40, // Adjust based on your header height
+                zIndex: 500,
                 backgroundColor: 'white',
                 display: 'flex',
                 justifyContent: 'center',
@@ -187,13 +191,13 @@ export function AdminOrderPage(){
                     ))
                 )}
             </Box>
-            <Box display="flex" flexDirection="column" alignItems="stretch" mt={2} className="button-container">
+            <Box display="flex" flexDirection="column" alignItems="stretch" mt={1} className="button-container">
                 <Button color="primary" onClick={handleAdminQuery}>
                     刷新
                 </Button>
-                <Box display="flex" mt={2} className="button-container">
+                <Box display="flex" mt={1} className="button-container">
                     <Button color="secondary" onClick={() => {history.push('/admin')}}>
-                        返回
+                        返回上一级
                     </Button>
                     <Button color="secondary" onClick={() => {history.push('/')}}>
                         主页

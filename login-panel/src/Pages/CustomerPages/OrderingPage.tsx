@@ -37,6 +37,26 @@ let dishes: Dish[] = [
     { name: 'Tiramisu', path: 'tiramisu.jpg', price: '50' },
 ]
 
+interface LogInfo {
+    orderid: string,
+    orderPart: string,
+    userName: string,
+    chefName: string,
+    dishName: string,
+    quantity: string,
+    price: string,
+    takeaway: string,
+    state: string,
+    rating: string
+}
+
+interface OrderInfo {
+    dishName: string;
+    orderCount: string;
+    price: string;
+    takeout: string;
+}
+
 const OrderingPage: React.FC = () => {
     const { name, OrderID, updateOrderID, OrderPart,
         incrementOrderPart, balance, setOrderedDishes, service } = useUser()
@@ -111,10 +131,21 @@ const OrderingPage: React.FC = () => {
             .map(([dishName, count]) => [dishName, count.toString(), dishes.find(dish => dish.name === dishName)?.price, takeout])
         // Send each order separately
         orders.forEach(order => {
-            const log = `${OrderID}\n${OrderPart}\n${customerName}\nadmin\n` + order.join('\n') + `\n3`
-            const singleOrderLogMessage = new OrderLogMessage(log)
+            const log: LogInfo = {
+                orderid: OrderID,
+                orderPart: OrderPart,
+                userName: customerName,
+                chefName: '',
+                dishName: order[0],
+                quantity: order[1],
+                price: order[2],
+                takeaway: order[3],
+                state: '3',
+                rating: '0'
+            }
+            const logMessage = new OrderLogMessage(log)
             try {
-                sendOrderLogRequest(singleOrderLogMessage)
+                sendOrderLogRequest(logMessage)
             } catch (error) {
                 console.error('Error in handleLog:', error)
             }
@@ -174,7 +205,6 @@ const OrderingPage: React.FC = () => {
                 console.error('Error in handleComplete:', error)
             })
     }, [])
-    // TODO: Implement takeout
     const takeout = service.toString();
 
     const handleSubmit = () => {
@@ -183,21 +213,28 @@ const OrderingPage: React.FC = () => {
             return
         }
 
-        const orders = Object.entries(orderCounts)
+        const orders : OrderInfo[] = Object.entries(orderCounts)
             .filter(([, count]) => count > 0)
-            .map(([dishName, count]) => [dishName, count.toString(), dishes.find(dish => dish.name === dishName)?.price, takeout])
+            .map(([dishName, count]) => {
+                return {
+                    dishName: dishName,
+                    orderCount: count.toString(),
+                    price: dishes.find(dish => dish.name === dishName)?.price,
+                    takeout: takeout
+                }
+            })
         if (orders.length >0){
             console.log('Customer:', customerName)
             console.log('Orders:', orders)
             console.log('OrderParts:', OrderPart)
-            const orderMessage = new CustomerOrderMessage(customerName, OrderID, OrderPart, orders.map(order => order.join(',')).join(';'))
+            const orderMessage = new CustomerOrderMessage(customerName, OrderID, OrderPart, orders)
             sendChargeRequest(calculateTotalCost())
             handleOrderLog().then()
             sendOrderRequest(orderMessage)
             const formattedOrders = orders.map(order => ({
-                name: order[0],
-                path: dishes.find(d => d.name === order[0]).path,
-                count: parseInt(order[1], 10),
+                name: order.dishName,
+                path: dishes.find(d => d.name === order.dishName).path,
+                count: parseInt(order.orderCount, 10),
                 orderPart: OrderPart
             }))
             setOrderedDishes(formattedOrders)
