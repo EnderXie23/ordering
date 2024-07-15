@@ -25,38 +25,40 @@ interface finishedOrder{
     orderPart: string
 }
 
+interface LogInfo {
+    orderid: string,
+    orderPart: string,
+    userName: string,
+    chefName: string,
+    dishName: string,
+    quantity: string,
+    price: string,
+    takeaway: string,
+    state: string,
+    rating: string
+}
+
+function parseOrders(logInfos: LogInfo[]): finishedOrder[] {
+    return logInfos
+        .filter(logInfo => logInfo.chefName != 'admin')
+        .map(logInfo => ({
+            chefName: logInfo.chefName,
+            customerName: logInfo.userName,
+            dishName: logInfo.dishName,
+            quantity: parseInt(logInfo.quantity),
+            price: parseFloat(logInfo.price),
+            state: logInfo.state,
+            rating: parseFloat(logInfo.rating),
+            orderID: logInfo.orderid,
+            orderPart: logInfo.orderPart
+        }));
+}
+
 export function AdminOrderPage(){
     const history=useHistory()
-    const [finishedOrders, setFinishedOrders] = useState<finishedOrder[]>([])
-    const [groupedOrders, setGroupedOrders] = useState<{ [customerName: string]: finishedOrder[] }>({});
     const [groupedOrdersByCustomer, setGroupedOrdersByCustomer] = useState<{ [customerName: string]: finishedOrder[] }>({});
     const [groupedOrdersByOrderID, setGroupedOrdersByOrderID] = useState<{ [orderID: string]: finishedOrder[] }>({});
     const [groupByCustomer, setGroupByCustomer] = useState(false); // State for grouping method
-    const parseOrders = (data: string): finishedOrder[] => {
-        return data.trim().split('\n').map(order => {
-            const orderParts = order.split(',');
-            const getValue = (part: string) => part.split(':')[1].trim().replace(/^Some\(|\)$/g, ''); // Clean the value
-            const chefName = getValue(orderParts[0]);
-            const customerName = getValue(orderParts[1]);
-            const dishName = getValue(orderParts[2]);
-            const quantity = parseInt(getValue(orderParts[3]), 10);
-            const price = parseInt(getValue(orderParts[4]), 10);
-            const state = getValue(orderParts[5]);
-            const orderID = getValue(orderParts[6]);
-            const orderPart = getValue(orderParts[7]);
-
-            return {
-                chefName,
-                customerName,
-                dishName,
-                quantity,
-                price,
-                state,
-                orderID,
-                orderPart
-            };
-        });
-    };
 
     const groupOrdersByCustomer = (orders: finishedOrder[]) => {
         return orders.reduce((acc, order) => {
@@ -81,12 +83,10 @@ export function AdminOrderPage(){
             const response = await axios.post(message.getURL(), JSON.stringify(message), {
                 headers: { 'Content-Type': 'application/json' },
             })
-            console.log(response.status)
-            console.log(response.data)
             const ordersArray = parseOrders(response.data)
             const groupedOrdersByCustomer = groupOrdersByCustomer(ordersArray);
             const groupedOrdersByOrderID = groupOrdersByOrderID(ordersArray);
-            setFinishedOrders(ordersArray);
+            console.log(ordersArray)
             setGroupedOrdersByCustomer(groupedOrdersByCustomer);
             setGroupedOrdersByOrderID(groupedOrdersByOrderID);
         } catch (error){

@@ -22,35 +22,38 @@ interface ChefOrderCounts {
     rejected: number;
 }
 
+interface LogInfo {
+    orderid: string,
+    orderPart: string,
+    userName: string,
+    chefName: string,
+    dishName: string,
+    quantity: string,
+    price: string,
+    takeaway: string,
+    state: string,
+    rating: string
+}
+
+function parseOrders(logInfos: LogInfo[]): finishedOrder[] {
+    return logInfos
+        .filter(logInfo => logInfo.chefName != 'admin')
+        .map(logInfo => ({
+            chefName: logInfo.chefName,
+            customerName: logInfo.userName,
+            dishName: logInfo.dishName,
+            quantity: parseInt(logInfo.quantity),
+            price: parseFloat(logInfo.price),
+            state: logInfo.state,
+            rating: parseFloat(logInfo.rating),
+        }));
+}
+
 export function ChefRatingPage() {
     const history = useHistory()
-    const [finishedOrders, setFinishedOrders] = useState<finishedOrder[]>([])
     const [groupedOrders, setGroupedOrders] = useState<{ [chefName: string]: finishedOrder[] }>({})
     const [chefCounts, setChefCounts] = useState<{ [chefName: string]: ChefOrderCounts }>({});
     const [open, setOpen] = useState<{ [chefName: string]: boolean }>({});
-
-    const parseOrders = (data: string): finishedOrder[] => {
-        return data.trim().split('\n').map(order => {
-            const orderParts = order.split(',')
-            const chefName = orderParts[0].split(':')[1].trim()
-            const customerName = orderParts[1].split(':')[1].trim()
-            const dishName = orderParts[2].split(':')[1].trim()
-            const quantity = parseInt(orderParts[3].split(':')[1].trim(), 10)
-            const price = parseFloat(orderParts[4].split(':')[1].trim())
-            const state = orderParts[5].split(':')[1].trim()
-            const rating = parseFloat(orderParts[8].split(':')[1].trim())
-
-            return {
-                chefName,
-                customerName,
-                dishName,
-                quantity,
-                price,
-                state,
-                rating,
-            }
-        })
-    }
 
     const groupOrdersByChef = (orders: finishedOrder[]) => {
         return orders.reduce((acc, order) => {
@@ -66,11 +69,8 @@ export function ChefRatingPage() {
             const response = await axios.post(message.getURL(), JSON.stringify(message), {
                 headers: { 'Content-Type': 'application/json' },
             })
-            console.log(response.status)
-            console.log(response.data)
             const ordersArray = parseOrders(response.data)
             const groupedOrders = groupOrdersByChef(ordersArray)
-            setFinishedOrders(ordersArray)
             setGroupedOrders(groupedOrders)
             console.log(ordersArray)
         } catch (error) {

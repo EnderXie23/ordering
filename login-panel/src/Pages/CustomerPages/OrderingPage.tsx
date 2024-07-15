@@ -37,6 +37,19 @@ let dishes: Dish[] = [
     { name: 'Tiramisu', path: 'tiramisu.jpg', price: '50' },
 ]
 
+interface LogInfo {
+    orderid: string,
+    orderPart: string,
+    userName: string,
+    chefName: string,
+    dishName: string,
+    quantity: string,
+    price: string,
+    takeaway: string,
+    state: string,
+    rating: string
+}
+
 const OrderingPage: React.FC = () => {
     const { name, OrderID, updateOrderID, OrderPart,
         incrementOrderPart, balance, setOrderedDishes, service } = useUser()
@@ -111,10 +124,21 @@ const OrderingPage: React.FC = () => {
             .map(([dishName, count]) => [dishName, count.toString(), dishes.find(dish => dish.name === dishName)?.price, takeout])
         // Send each order separately
         orders.forEach(order => {
-            const log = `${OrderID}\n${OrderPart}\n${customerName}\nadmin\n` + order.join('\n') + `\n3`
-            const singleOrderLogMessage = new OrderLogMessage(log)
+            const log: LogInfo = {
+                orderid: OrderID,
+                orderPart: OrderPart,
+                userName: customerName,
+                chefName: '',
+                dishName: order[0],
+                quantity: order[1],
+                price: order[2],
+                takeaway: order[3],
+                state: '3',
+                rating: '0'
+            }
+            const logMessage = new OrderLogMessage(log)
             try {
-                sendOrderLogRequest(singleOrderLogMessage)
+                sendOrderLogRequest(logMessage)
             } catch (error) {
                 console.error('Error in handleLog:', error)
             }

@@ -1,9 +1,22 @@
 import { AdminMessage } from 'Plugins/AdminAPI/AdminMessage'
 
-export class OrderLogMessage extends AdminMessage {
-    log: string;
+interface LogInfo {
+    orderid: string,
+    orderPart: string,
+    userName: string,
+    chefName: string,
+    dishName: string,
+    quantity: string,
+    price: string,
+    takeaway: string,
+    state: string,
+    rating: string
+}
 
-    constructor(log: string) {
+export class OrderLogMessage extends AdminMessage {
+    log: LogInfo;
+
+    constructor(log: LogInfo) {
         super();
         this.log = log;
     }
