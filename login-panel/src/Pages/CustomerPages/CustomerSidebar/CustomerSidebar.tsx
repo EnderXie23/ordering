@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useUser } from 'Pages/UserContext';
+import { useHistory } from 'react-router'
 import {
     Box,
     Drawer,
@@ -16,6 +17,7 @@ import Profile from './Profile';
 import Wallet from './Wallet';
 
 const CustomerSidebar: React.FC = () => {
+    const history=useHistory()
     const [drawerOpen, setDrawerOpen] = useState(false);
     const { name } = useUser();
     const username = name.split('\n')[1];

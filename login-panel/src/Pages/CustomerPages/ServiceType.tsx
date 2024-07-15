@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { useUser } from 'Pages/UserContext'
 import { useHistory } from 'react-router'
-import { FormControl, FormLabel, RadioGroup, FormControlLabel, Radio, Grid, Button, Box, Typography } from '@mui/material';
+import { Grid, Button, Box, Typography } from '@mui/material';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import backgroundImage from 'Images/background.png'
 
 const ServiceType: React.FC = () => {
-    const [serviceType, setServiceType] = useState<'dine-in' | 'takeaway'>('dine-in');
     const [inputValue, setInputValue] = useState('');
     const {setService, setServiceTypeInfo} = useUser();
 
@@ -34,24 +33,28 @@ const ServiceType: React.FC = () => {
                     <Grid item style={{ display: 'flex' }}>
                         <Button
                             variant="contained"
-                            color="primary"
                             onClick={() => handleServiceTypeSelection('dine-in')}
                             style={{ padding: '20px', margin:'20px', width: '200px', height: '200px', display: 'flex',
                                 flexDirection: 'column', alignItems: 'center' }}
+                            sx = {{
+                                backgroundColor: '#52b3f7',
+                                '&:hover': {
+                                    backgroundColor: '#4aa1de',
+                                }
+                            }}
                         >
                             <RestaurantIcon style={{ fontSize: '80px' }} />
                             <Typography variant="h5" style={{ marginTop: '20px', fontWeight: 'bold', }}>堂食</Typography>
                         </Button>
                         <Button
                             variant="contained"
-                            color="secondary"
                             onClick={() => handleServiceTypeSelection('takeaway')}
                             style={{ padding: '20px', margin:'20px', width: '200px', height: '200px', display: 'flex',
                                 flexDirection: 'column', alignItems: 'center' }}
                             sx = {{
                                 backgroundColor: '#f6c543',
                                 '&:hover': {
-                                    backgroundColor: '#ddb13c', // Darker red on hover
+                                    backgroundColor: '#ddb13c',
                                 }
                             }}
                         >
