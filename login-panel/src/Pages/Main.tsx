@@ -24,7 +24,7 @@ export function Main() {
     return (
         <div className='root' style={{backgroundImage: `url(${backgroundImage})`}}>
             <Box className='cover' />
-            <Box className='main-box' style={{width: '30%'}}>
+            <Box className='main-box'>
                 <Typography variant="h1" component="h1" align="center" gutterBottom sx={{
                     fontSize: '3rem',
                     fontWeight: 'bold',
@@ -34,7 +34,7 @@ export function Main() {
                 </Typography>
                 <form onSubmit={(e) => e.preventDefault()}>
                     <Box className="button-container">
-                        <Button variant="contained" className='button' style={{width:'30%'}}
+                        <Button variant="contained" className='button' style={{width:'50%'}}
                                 onClick={() => {
                                     history.push('/customer-login')
                                 }} >
@@ -42,7 +42,7 @@ export function Main() {
                         </Button>
                     </Box>
                     <Box className="button-container">
-                        <Button variant="contained" className='button' style={{width:'30%'}}
+                        <Button variant="contained" className='button' style={{width:'50%'}}
                                 onClick={() => {
                                     history.push('/chef-login')
                                 }} fullWidth >

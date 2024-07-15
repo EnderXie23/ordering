@@ -92,7 +92,7 @@ export function CustomerLogin() {
     return (
         <div className='root' style={{ backgroundImage: `url(${backgroundImage})` }}>
             <Box className='cover' />
-            <Box className='main-box' sx={{ display: 'flex', alignItems: 'stretch', padding: 0, width:'60%'}}>
+            <Box className='main-box' sx={{ display: 'flex', alignItems: 'stretch', padding: 0}}>
                 <Grid item width='40%'
                       sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}>
                     <img src={frontImage} alt="Login illustration"

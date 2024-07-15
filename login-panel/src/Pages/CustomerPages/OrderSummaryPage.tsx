@@ -5,6 +5,7 @@ import { Container, Typography,List, ListItem, ListItemAvatar, ListItemText,Avat
 import CustomerSidebar from 'Pages/CustomerPages/CustomerSidebar/CustomerSidebar'
 import { CustomerQueryStateMessage } from 'Plugins/CustomerAPI/CustomerQueryStateMessage'
 import axios from 'axios'
+import backgroundImage from 'Images/background.png'
 
 const OrderSummaryPage: React.FC = () => {
     const { name, orderedDishes, OrderID,OrderPart } = useUser();
@@ -54,49 +55,69 @@ const OrderSummaryPage: React.FC = () => {
     }, {} as Record<string, { name: string, path: string, count: number, orderPart: string, state: string }[]>);
 
     return (
-        <Container style={{
-            width: '70vw',
-            height: '90vh',
-            overflowY: 'auto',
-        }}>
-            <Box display="flex" justifyContent="space-between" alignItems="center">
-                <Typography variant="h4" gutterBottom>
-                    {nickName}的订单总结:
-                </Typography>
-                <CustomerSidebar />
-            </Box>
-            <List>
-                {Object.keys(groupedDishes).map(orderPart => (
-                    <React.Fragment key={orderPart}>
-                        <Typography variant="h6" gutterBottom>
-                            订单部分: {orderPart}
+        <div className='root' style={{ backgroundImage: `url(${backgroundImage})` }}>
+            <Box className='cover' style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}/>
+            <div className="content-wrap" >
+                <Container sx={{
+                    width: '70vh',
+                    height: '100vh',
+                    overflowY: 'auto',
+                    padding: '24px',
+                    margin: 0
+                }}>
+                    <Box display="flex" justifyContent="space-between" alignItems="center">
+                        <Typography variant="h4" gutterBottom sx={{
+                            fontSize: '2.5rem',
+                            fontWeight: 'bold',
+                            marginTop: '1rem',
+                            marginBottom: 0
+                        }}>
+                            {nickName}的订单总结:
                         </Typography>
-                        {groupedDishes[orderPart].map(dish => (
-                            <ListItem key={`${dish.name}-${dish.orderPart}`}>
-                                <ListItemAvatar>
-                                    <Avatar src={require('../../Images/' + dish.path).default} alt={dish.name} />
-                                </ListItemAvatar>
-                                <ListItemText
-                                    primary={dish.name}
-                                    secondary={`数量: ${dish.count}，状态：${dish.state}`}
-                                />
-                            </ListItem>
+                        <CustomerSidebar />
+                    </Box>
+                    <List sx={{padding: '24px'}}>
+                        {Object.keys(groupedDishes).map(orderPart => (
+                            <React.Fragment key={orderPart}>
+                                <Typography variant="h6" sx={{
+                                    fontSize: '2rem',
+                                    fontWeight: 'bold',
+                                    marginTop: '2rem'
+                                }}>
+                                    订单部分: {orderPart}
+                                </Typography>
+                                {groupedDishes[orderPart].map(dish => (
+                                    <ListItem key={`${dish.name}-${dish.orderPart}`}>
+                                        <ListItemAvatar>
+                                            <Avatar src={require('../../Images/' + dish.path).default} alt={dish.name} />
+                                        </ListItemAvatar>
+                                        <ListItemText
+                                            primary={
+                                                <Typography variant="h6" component="span" style={{ fontFamily: 'Merriweather' }}>
+                                                    {dish.name}
+                                                </Typography>
+                                            }
+                                            secondary={`数量: ${dish.count}，状态：${dish.state}`}
+                                        />
+                                    </ListItem>
+                                ))}
+                            </React.Fragment>
                         ))}
-                    </React.Fragment>
-                ))}
-            </List>
-            <Box display="flex" justifyContent="center" alignItems="center" mt={4}>
-                <Button variant="contained" color="primary" onClick={fetchStates}>
-                    刷新
-                </Button>
-                <Button variant="contained" color="primary" onClick={() => { history.push('/place-order') }} style={{ marginLeft: '16px' }}>
-                    继续点菜
-                </Button>
-                <Button variant="contained" color="secondary" onClick={() => { history.push('/finish') }} style={{ marginLeft: '16px' }}>
-                    完成
-                </Button>
-            </Box>
-        </Container>
+                    </List>
+                    <Box display="flex" justifyContent="center" alignItems="center" mt={4}>
+                        <Button variant="contained" className='button' color="primary" onClick={fetchStates}>
+                            刷新
+                        </Button>
+                        <Button variant="contained" className='button' color="primary" onClick={() => { history.push('/place-order') }} style={{ marginLeft: '16px' }}>
+                            继续点菜
+                        </Button>
+                        <Button variant="contained" className='button' color="secondary" onClick={() => { history.push('/finish') }} style={{ marginLeft: '16px' }}>
+                            完成
+                        </Button>
+                    </Box>
+                </Container>
+            </div>
+        </div>
     );
 };
 
