@@ -1,20 +1,16 @@
 package Impl
 
-import cats.effect.IO
-import io.circe.Json
-import io.circe.generic.auto.*
 import Common.API.{PlanContext, Planner}
 import Common.DBAPI.*
-import Common.Object.{ParameterList, SqlParameter}
-import Common.ServiceUtils.schemaName
-import APIs.CustomerAPI.CustomerQueryMessage
+import Common.Object.SqlParameter
 import cats.effect.IO
 import io.circe.generic.auto.*
 
-case class CompleteMessagePlanner(orderdesp: String, override val planContext: PlanContext) extends Planner[String] {
+case class CompleteMessagePlanner(orderDesp: OrderDesp, override val planContext: PlanContext) extends Planner[String] {
   override def plan(using PlanContext): IO[String] = {
     // Split orderdesp into individual components
-    val Array(customerName, dishName, orderCount, state, orderID, orderPart) = orderdesp.split("\n")
+    val Array(customerName, dishName, orderCount, state, orderID, orderPart) : Array[String]
+    = Array(orderDesp.customerName, orderDesp.dishName, orderDesp.orderCount, orderDesp.state, orderDesp.orderID, orderDesp.orderPart)
 
     // Define the SQL query to fetch orders
     val sqlUpdateQuery = s"""
