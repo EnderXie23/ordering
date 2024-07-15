@@ -174,7 +174,6 @@ const OrderingPage: React.FC = () => {
                 console.error('Error in handleComplete:', error)
             })
     }, [])
-    // TODO: Implement takeout
     const takeout = service.toString();
 
     const handleSubmit = () => {

@@ -12,7 +12,8 @@ interface finishedOrder {
     dishName: string,
     quantity: number,
     price:number,
-    state: string
+    state: string,
+    rating: number,
 }
 
 interface ChefOrderCounts {
@@ -37,6 +38,7 @@ export function ChefRatingPage() {
             const quantity = parseInt(orderParts[3].split(':')[1].trim(), 10)
             const price = parseFloat(orderParts[4].split(':')[1].trim())
             const state = orderParts[5].split(':')[1].trim()
+            const rating = parseFloat(orderParts[8].split(':')[1].trim())
 
             return {
                 chefName,
@@ -45,6 +47,7 @@ export function ChefRatingPage() {
                 quantity,
                 price,
                 state,
+                rating,
             }
         })
     }
@@ -69,6 +72,7 @@ export function ChefRatingPage() {
             const groupedOrders = groupOrdersByChef(ordersArray)
             setFinishedOrders(ordersArray)
             setGroupedOrders(groupedOrders)
+            console.log(ordersArray)
         } catch (error) {
             console.error('Error admin-querying:', error)
         }

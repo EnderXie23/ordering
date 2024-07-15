@@ -41,7 +41,7 @@ case class OrderHistoryMessagePlanner(log: String, override val planContext: Pla
             _ <- validateInputs(orderID, orderPart, customerName, chefName, dishName, orderCount, price, takeaway, state) // <-- Ensure validation happens within transaction
             // Insert record into database
             _ <- {
-              val query = s"INSERT INTO admin.admin_log (orderID, orderPart, user_name, chef_name, dish_name, quantity, price, takeaway, state) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+              val query = s"INSERT INTO admin.admin_log (orderID, orderPart, user_name, chef_name, dish_name, quantity, price, takeaway, state, rating) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
               val params = List(
                 SqlParameter("String", orderID),
                 SqlParameter("String", orderPart),
@@ -51,7 +51,8 @@ case class OrderHistoryMessagePlanner(log: String, override val planContext: Pla
                 SqlParameter("String", orderCount),
                 SqlParameter("String", price),
                 SqlParameter("String", takeaway),
-                SqlParameter("String", if state == "1" then "done" else if state == "3" then "processing" else "rejected")
+                SqlParameter("String", if state == "1" then "done" else if state == "3" then "processing" else "rejected"),
+                SqlParameter("String", "0")
               )
               writeDB(query, params).handleErrorWith { error =>
                 IO.raiseError(new Exception(s"Failed to log dish record: ${error.getMessage}"))

@@ -18,6 +18,7 @@ import { useUser } from 'Pages/UserContext'
 import { CustomerCommentMessage } from 'Plugins/CustomerAPI/CustomerCommentMessage'
 import { ReadCommentsMessage } from 'Plugins/CustomerAPI/ReadCommentsMessage'
 import { useHistory } from 'react-router'
+import { DishRatingMessage } from 'Plugins/CustomerAPI/DishRatingMessage'
 
 interface Comment {
     id: number;
@@ -35,7 +36,7 @@ const CommentPage: React.FC = () => {
     const [comments, setComments] = useState<Comment[]>([]);
     const [loading, setLoading] = useState(true);
     const history = useHistory();
-    const {name, orderedDishes } = useUser()
+    const {name, orderedDishes,OrderID } = useUser()
     const username = name.split('\n')[1]
     const [errorMessage, setErrorMessage] = useState(''); // State for error message
     const [successMessage, setSuccessMessage] = useState('');
@@ -54,12 +55,9 @@ const CommentPage: React.FC = () => {
 
     const parseComments = (rawComments: string): Comment[] => {
         const commentStrings = rawComments.split('\n');
-
         return commentStrings.map((commentString, index) => {
             const [author, text, overall, taste, pack, serv, env] = commentString.split('\\');
-
             const createdAt = new Date().toISOString();
-
             return {
                 id: index + 1, // or use a more suitable method to generate unique IDs
                 author,
@@ -73,7 +71,6 @@ const CommentPage: React.FC = () => {
             };
         });
     };
-
 
     useEffect(() => {
         const totalRating = dishRatings.reduce((sum, dish) => sum + dish.rating, 0);
@@ -137,6 +134,19 @@ const CommentPage: React.FC = () => {
             setErrorMessage('请给出完整评分');
             return;
         }
+
+        dishRatings.forEach(dish => {
+            const message = new DishRatingMessage(OrderID, dish.name, dish.rating.toString());
+            axios.post(message.getURL(), JSON.stringify(message), {
+                headers: { 'Content-Type': 'application/json' },
+            }).then(response => {
+                console.log(response.status)
+                console.log(response.data)
+            }).catch(error => {
+                console.error('Error submitting dish rating:', error)
+            })
+        })
+
         const commentMessage = new CustomerCommentMessage(
             author,
             "user",
