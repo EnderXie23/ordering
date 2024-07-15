@@ -4,7 +4,7 @@ import { HashRouter, Route, Switch } from 'react-router-dom'
 import { Main } from 'Pages/Main'
 import { ChefLogin } from 'Pages/ChefPages/ChefLogin'
 import { ChefRegister } from 'Pages/ChefPages/ChefRegister'
-import  ServiceType  from 'Pages/CustomerPages/ServiceType'
+import ServiceType from 'Pages/CustomerPages/ServiceType'
 import { CustomerLogin } from 'Pages/CustomerPages/CustomerLogin'
 import { CustomerRegister } from 'Pages/CustomerPages/CustomerRegister'
 import OrderingPage from 'Pages/CustomerPages/OrderingPage'
@@ -20,12 +20,18 @@ import OrderSummaryPage from 'Pages/CustomerPages/OrderSummaryPage'
 import CustomerFinishPage from 'Pages/CustomerPages/CustomerFinishPage'
 import CommentPage from 'Pages/CustomerPages/CommentPage'
 import AdminRatingPage from 'Pages/AdminPages/AdminRatingPage'
+import { CustomerHistoryPage } from 'Pages/CustomerPages/CustomerHistoryPage'
 
 const Layout = () => {
     return (
         <HashRouter>
             <Switch>
                 <Route path="/" exact component={Main} />
+                <Route path="/customer_history" exact>
+                    <UserProvider>
+                        <CustomerHistoryPage />
+                    </UserProvider>
+                </Route>
                 <Route path="/admin" exact>
                     <UserProvider>
                         <AdminPage />
@@ -111,5 +117,5 @@ render(
     <Provider>
         <Layout />
     </Provider>
-    , document.getElementById('root')
+    , document.getElementById('root'),
 )

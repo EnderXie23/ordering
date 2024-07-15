@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useUser } from 'Pages/UserContext';
+import{useHistory} from 'react-router-dom';
 import {
     Box,
     Drawer,
@@ -14,12 +15,13 @@ import { AccountCircle, AccountBalanceWallet, History, Person } from '@mui/icons
 import  AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import Profile from './Profile';
 import Wallet from './Wallet';
+import CustomerHistory from './OrderHistory'
 
 const CustomerSidebar: React.FC = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const { name } = useUser();
     const username = name.split('\n')[1];
-
+    const history = useHistory();
     const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
         if (event.type === 'keydown' && ((event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift')) {
             return;
@@ -45,6 +47,15 @@ const CustomerSidebar: React.FC = () => {
     const handleWalletClose = () => {
         setDrawerOpen(true);
         setWalletOpen(false);
+    }
+
+    const [CustomerHistoryOpen, setCustomerHistoryOpen] = useState(false);
+    const handleCustomerHistoryOpen = () =>{
+        setCustomerHistoryOpen(true);
+    }
+    const handleCustomerHistoryClose = () => {
+        setDrawerOpen(true);
+        setCustomerHistoryOpen(false);
     }
 
     return (
@@ -84,7 +95,7 @@ const CustomerSidebar: React.FC = () => {
                             <ListItemIcon><AccountBalanceWallet /></ListItemIcon>
                             <ListItemText primary="我的钱包" />
                         </ListItem>
-                        <ListItem button >
+                        <ListItem button onClick={handleCustomerHistoryOpen}>
                             <ListItemIcon><History /></ListItemIcon>
                             <ListItemText primary="历史订单" />
                         </ListItem>
@@ -93,7 +104,7 @@ const CustomerSidebar: React.FC = () => {
             </Drawer>
 
             <Profile open={profileOpen} onClose={handleProfileClose} />
-
+            <CustomerHistory open={CustomerHistoryOpen} onClose={handleCustomerHistoryClose} />
             <Wallet
                 open={walletOpen}
                 onClose={handleWalletClose}
