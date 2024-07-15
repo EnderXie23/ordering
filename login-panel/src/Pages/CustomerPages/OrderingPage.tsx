@@ -50,6 +50,13 @@ interface LogInfo {
     rating: string
 }
 
+interface OrderInfo {
+    dishName: string;
+    orderCount: string;
+    price: string;
+    takeout: string;
+}
+
 const OrderingPage: React.FC = () => {
     const { name, OrderID, updateOrderID, OrderPart,
         incrementOrderPart, balance, setOrderedDishes, service } = useUser()
@@ -206,21 +213,28 @@ const OrderingPage: React.FC = () => {
             return
         }
 
-        const orders = Object.entries(orderCounts)
+        const orders : OrderInfo[] = Object.entries(orderCounts)
             .filter(([, count]) => count > 0)
-            .map(([dishName, count]) => [dishName, count.toString(), dishes.find(dish => dish.name === dishName)?.price, takeout])
+            .map(([dishName, count]) => {
+                return {
+                    dishName: dishName,
+                    orderCount: count.toString(),
+                    price: dishes.find(dish => dish.name === dishName)?.price,
+                    takeout: takeout
+                }
+            })
         if (orders.length >0){
             console.log('Customer:', customerName)
             console.log('Orders:', orders)
             console.log('OrderParts:', OrderPart)
-            const orderMessage = new CustomerOrderMessage(customerName, OrderID, OrderPart, orders.map(order => order.join(',')).join(';'))
+            const orderMessage = new CustomerOrderMessage(customerName, OrderID, OrderPart, orders)
             sendChargeRequest(calculateTotalCost())
             handleOrderLog().then()
             sendOrderRequest(orderMessage)
             const formattedOrders = orders.map(order => ({
-                name: order[0],
-                path: dishes.find(d => d.name === order[0]).path,
-                count: parseInt(order[1], 10),
+                name: order.dishName,
+                path: dishes.find(d => d.name === order.dishName).path,
+                count: parseInt(order.orderCount, 10),
                 orderPart: OrderPart
             }))
             setOrderedDishes(formattedOrders)

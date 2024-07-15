@@ -9,11 +9,10 @@ import { ReadCommentsMessage } from 'Plugins/CustomerAPI/ReadCommentsMessage'
 import { useHistory } from 'react-router'
 import CustomerSidebar from 'Pages/CustomerPages/CustomerSidebar/CustomerSidebar'
 
-interface Comment {
+interface displayComment {
     id: number;
     author: string;
     text: string;
-    createdAt: string;
     overallRating: number;
     tasteRating: number;
     packagingRating: number;
@@ -21,9 +20,33 @@ interface Comment {
     envRating: number;
 }
 
+interface Comment {
+    customerName: string,
+    chefName: string,
+    comment: string,
+    overall: string,
+    taste: string,
+    pack: string,
+    serv: string,
+    env: string
+}
+
+function parseComments(rawComments: Comment[]): displayComment[] {
+    return rawComments.map((comment,index) => ({
+        id: index,
+        author: comment.customerName,
+        text: comment.comment,
+        overallRating: parseFloat(comment.overall),
+        tasteRating: parseFloat(comment.taste),
+        packagingRating: parseFloat(comment.pack),
+        serviceRating: parseFloat(comment.serv),
+        envRating: parseFloat(comment.env),
+    }));
+}
+
 const AdminRatingPage: React.FC = () => {
     const history = useHistory();
-    const [comments, setComments] = useState<Comment[]>([]);
+    const [comments, setComments] = useState<displayComment[]>([]);
     const [averageRatings, setAverageRatings] = useState({
         overall: 0,
         taste: 0,
@@ -31,28 +54,6 @@ const AdminRatingPage: React.FC = () => {
         service: 0,
         env: 0,
     });
-
-    const parseComments = (rawComments: string): Comment[] => {
-        const commentStrings = rawComments.split('\n');
-
-        return commentStrings.map((commentString, index) => {
-            const [author, text, overall, taste, pack, serv, env] = commentString.split('\\');
-
-            const createdAt = new Date().toISOString();
-
-            return {
-                id: index + 1, // or use a more suitable method to generate unique IDs
-                author,
-                text,
-                createdAt,
-                overallRating: parseFloat(overall),
-                tasteRating: parseFloat(taste),
-                packagingRating: parseFloat(pack),
-                serviceRating: parseFloat(serv),
-                envRating: parseFloat(env),
-            };
-        });
-    };
 
     const fetchComments = async () => {
         const message = new ReadCommentsMessage();
