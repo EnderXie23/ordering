@@ -59,6 +59,7 @@ export function AdminOrderPage(){
     const [groupedOrdersByCustomer, setGroupedOrdersByCustomer] = useState<{ [customerName: string]: finishedOrder[] }>({});
     const [groupedOrdersByOrderID, setGroupedOrdersByOrderID] = useState<{ [orderID: string]: finishedOrder[] }>({});
     const [groupByCustomer, setGroupByCustomer] = useState(false); // State for grouping method
+    const [income, setIncome] = useState(0); // State for total income
 
     const groupOrdersByCustomer = (orders: finishedOrder[]) => {
         return orders.reduce((acc, order) => {
@@ -89,6 +90,9 @@ export function AdminOrderPage(){
             console.log(ordersArray)
             setGroupedOrdersByCustomer(groupedOrdersByCustomer);
             setGroupedOrdersByOrderID(groupedOrdersByOrderID);
+            setIncome(ordersArray.reduce((acc, order) => {
+                return acc + (order.price * order.quantity);
+            }, 0));
         } catch (error){
             console.error('Error admin-querying:', error)
         }
@@ -128,7 +132,7 @@ export function AdminOrderPage(){
                 margin: '10px', // 与下方内容保持一定距离
             }}>
                 <Typography variant="h4" component="h1" align="center">
-                    订单管理页面
+                    订单管理页面：总收入{income.toFixed(2)}元！
                 </Typography>
             </Box>
             <Box style={{
