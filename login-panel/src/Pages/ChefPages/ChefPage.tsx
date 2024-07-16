@@ -237,7 +237,7 @@ const ChefPage: React.FC = () => {
     return (
         <div className='root' style={{ backgroundImage: `url(${backgroundImage})` }}>
             <Box className='cover' />
-            <Box className='main-box' sx={{ display: 'flex', alignItems: 'stretch', margin:'16px', height:'90%', width:'80%'}}>
+            <Box className='main-box' sx={{ display: 'flex', alignItems: 'stretch', margin:'16px', maxHeight:'90%', width:'80%'}}>
                 <Container className={classes.container}>
                     <Box className={classes.box}>
                         <Typography variant="h4" sx={{
@@ -317,7 +317,7 @@ const ChefPage: React.FC = () => {
                                 ))}
                         </Grid>
                     )}
-                    <Box className={classes.box}>
+                    <Box className={classes.box} style={{padding:0, margin:0}}>
                         <Button variant="contained" className='button' onClick={handleQuery} style={{ margin: '20px' }}>
                             刷新
                         </Button>
