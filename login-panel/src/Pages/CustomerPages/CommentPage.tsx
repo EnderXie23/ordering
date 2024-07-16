@@ -178,140 +178,140 @@ const CommentPage: React.FC = () => {
         <div className='root' style={{ backgroundImage: `url(${backgroundImage})` }}>
             <Box className='cover' />
             <Box sx={{ display: 'flex', alignItems: 'stretch', padding: 0, width: '70%', backgroundColor: 'transparent', zIndex: 2}}>
-        <Container maxWidth="md" style={{
-            height: '90vh',
-            overflowY: 'auto'
-        }}>
-            <Paper elevation={3} style={{ padding: '20px', backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
-                <Typography variant="h4" align="center" gutterBottom sx={{
-                    fontSize: '2rem',
-                    fontWeight: 'bold',
+                <Container maxWidth="md" style={{
+                    height: '90vh',
+                    overflowY: 'auto'
                 }}>
-                    您的评价是我们最大的动力！
-                </Typography>
-                <form style={{ marginTop: '20px' }}>
-                    <TextField
-                        label="姓名"
-                        variant="outlined"
-                        fullWidth
-                        value={author}
-                        onChange={(e) => setAuthor(e.target.value)}
-                        required
-                        style={{ marginBottom: '10px' }}
-                    />
-                    <TextField
-                        label="评价"
-                        variant="outlined"
-                        fullWidth
-                        multiline
-                        rows={4}
-                        value={text}
-                        onChange={(e) => setText(e.target.value)}
-                        required
-                        style={{ marginBottom: '10px' }}
-                    />
-                    <Box>
-                        {orderedDishes.map((dish, index) => (
-                            <Box key={dish.name} mt={2} alignItems="center" justifyContent="center" display="flex">
-                                <Typography style={{ fontFamily: 'Merriweather', marginRight: '4px' }}>{dish.name}: </Typography>
-                                <Rating
-                                    value={dishRatings[index].rating}
-                                    onChange={(e, newValue) => handleRatingChange(index, newValue)}
-                                    precision={0.5}
-                                />
+                    <Paper elevation={3} style={{ padding: '20px', backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
+                        <Typography variant="h4" align="center" gutterBottom sx={{
+                            fontSize: '2rem',
+                            fontWeight: 'bold',
+                        }}>
+                            您的评价是我们最大的动力！
+                        </Typography>
+                        <form style={{ marginTop: '20px' }}>
+                            <TextField
+                                label="姓名"
+                                variant="outlined"
+                                fullWidth
+                                value={author}
+                                onChange={(e) => setAuthor(e.target.value)}
+                                required
+                                style={{ marginBottom: '10px' }}
+                            />
+                            <TextField
+                                label="评价"
+                                variant="outlined"
+                                fullWidth
+                                multiline
+                                rows={4}
+                                value={text}
+                                onChange={(e) => setText(e.target.value)}
+                                required
+                                style={{ marginBottom: '10px' }}
+                            />
+                            <Box>
+                                {orderedDishes.map((dish, index) => (
+                                    <Box key={dish.name} mt={2} alignItems="center" justifyContent="center" display="flex">
+                                        <Typography style={{ fontFamily: 'Merriweather', marginRight: '4px' }}>{dish.name}: </Typography>
+                                        <Rating
+                                            value={dishRatings[index].rating}
+                                            onChange={(e, newValue) => handleRatingChange(index, newValue)}
+                                            precision={0.5}
+                                        />
+                                    </Box>
+                                ))}
+                                <Box mt={2} alignItems="center" justifyContent="center" display="flex" style={{marginTop: '4px'}}>
+                                    <Typography style={{ fontFamily: 'Noto Sans'}}>综合评分：{overallRating}</Typography>
+                                </Box>
                             </Box>
-                        ))}
-                        <Box mt={2} alignItems="center" justifyContent="center" display="flex" style={{marginTop: '4px'}}>
-                            <Typography style={{ fontFamily: 'Noto Sans'}}>综合评分：{overallRating}</Typography>
+                            <Grid container columns={2} mt={2} >
+                                <Grid item xs={1} sm={1} md={1} style={{display:'flex', justifyContent: 'center'}}>
+                                    <Typography>口味：</Typography>
+                                    <Box display="flex" flexDirection='row'>
+                                        <Rating value={tasteRating} onChange={(e, newValue) => setTasteRating(newValue)} precision={0.5}/>
+                                        <Typography style={{marginLeft: '4px'}}>{tasteRating}</Typography>
+                                    </Box>
+                                </Grid>
+                                <Grid item xs={1} sm={1} md={1} style={{display:'flex', justifyContent: 'center'}}>
+                                    <Typography>包装：</Typography>
+                                    <Box display="flex" flexDirection='row'>
+                                        <Rating value={packagingRating} onChange={(e, newValue) => setPackagingRating(newValue)} precision={0.5}/>
+                                        <Typography style={{marginLeft: '4px'}}>{packagingRating}</Typography>
+                                    </Box>
+                                </Grid>
+                                <Grid mt={1} item xs={1} sm={1} md={1} style={{display:'flex', justifyContent: 'center'}}>
+                                    <Typography>服务：</Typography>
+                                    <Box display="flex" flexDirection='row'>
+                                        <Rating value={serviceRating} onChange={(e, newValue) => setServiceRating(newValue)} precision={0.5}/>
+                                        <Typography style={{marginLeft: '4px'}}>{serviceRating}</Typography>
+                                    </Box>
+                                </Grid>
+                                <Grid mt={1} item xs={1} sm={1} md={1} style={{display:'flex', justifyContent: 'center'}}>
+                                    <Typography>环境：</Typography>
+                                    <Box display="flex" flexDirection='row'>
+                                        <Rating value={envRating} onChange={(e, newValue) => setEnvRating(newValue)} precision={0.5}/>
+                                        <Typography style={{marginLeft: '4px'}}>{envRating}</Typography>
+                                    </Box>
+                                </Grid>
+                            </Grid>
+                            <Button variant="contained" className='button' fullWidth style={{ marginTop: '20px' }} onClick={handleSubmit}>
+                                提交
+                            </Button>
+                            <Box display="flex" mt={2} justifyContent="space-between" className="button-container" marginBottom='0'>
+                                <Button color="secondary" onClick={() => {
+                                    history.push('/finish')
+                                }}
+                                        sx={{ textTransform: 'none', fontWeight: 'bold' }}>
+                                    返回
+                                </Button>
+                                <Button color="secondary" onClick={() => {
+                                    history.push('/')
+                                }}
+                                        sx={{ textTransform: 'none', fontWeight: 'bold' }}>
+                                    跳过
+                                </Button>
+                            </Box>
+                        </form>
+                        {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+                        {successMessage && <Alert severity="success">{successMessage}</Alert>}
+                    </Paper>
+                    {loading ? (
+                        <Box display="flex" justifyContent="center" alignItems="center" height="200px" style={{backgroundColor: 'rgba(255, 255, 255, 0.9)'}}>
+                            <CircularProgress />
                         </Box>
-                    </Box>
-                    <Grid container columns={2} mt={2} >
-                        <Grid item xs={1} sm={1} md={1} style={{display:'flex', justifyContent: 'center'}}>
-                            <Typography>口味：</Typography>
-                            <Box display="flex" flexDirection='row'>
-                                <Rating value={tasteRating} onChange={(e, newValue) => setTasteRating(newValue)} precision={0.5}/>
-                                <Typography style={{marginLeft: '4px'}}>{tasteRating}</Typography>
-                            </Box>
-                        </Grid>
-                        <Grid item xs={1} sm={1} md={1} style={{display:'flex', justifyContent: 'center'}}>
-                            <Typography>包装：</Typography>
-                            <Box display="flex" flexDirection='row'>
-                                <Rating value={packagingRating} onChange={(e, newValue) => setPackagingRating(newValue)} precision={0.5}/>
-                                <Typography style={{marginLeft: '4px'}}>{packagingRating}</Typography>
-                            </Box>
-                        </Grid>
-                        <Grid mt={1} item xs={1} sm={1} md={1} style={{display:'flex', justifyContent: 'center'}}>
-                            <Typography>服务：</Typography>
-                            <Box display="flex" flexDirection='row'>
-                                <Rating value={serviceRating} onChange={(e, newValue) => setServiceRating(newValue)} precision={0.5}/>
-                                <Typography style={{marginLeft: '4px'}}>{serviceRating}</Typography>
-                            </Box>
-                        </Grid>
-                        <Grid mt={1} item xs={1} sm={1} md={1} style={{display:'flex', justifyContent: 'center'}}>
-                            <Typography>环境：</Typography>
-                            <Box display="flex" flexDirection='row'>
-                                <Rating value={envRating} onChange={(e, newValue) => setEnvRating(newValue)} precision={0.5}/>
-                                <Typography style={{marginLeft: '4px'}}>{envRating}</Typography>
-                            </Box>
-                        </Grid>
-                    </Grid>
-                    <Button variant="contained" className='button' fullWidth style={{ marginTop: '20px' }} onClick={handleSubmit}>
-                        提交
-                    </Button>
-                    <Box display="flex" mt={2} justifyContent="space-between" className="button-container" marginBottom='0'>
-                        <Button color="secondary" onClick={() => {
-                            history.push('/finish')
-                        }}
-                                sx={{ textTransform: 'none', fontWeight: 'bold' }}>
-                            返回
-                        </Button>
-                        <Button color="secondary" onClick={() => {
-                            history.push('/')
-                        }}
-                                sx={{ textTransform: 'none', fontWeight: 'bold' }}>
-                            跳过
-                        </Button>
-                    </Box>
-                </form>
-                {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
-                {successMessage && <Alert severity="success">{successMessage}</Alert>}
-            </Paper>
-            {loading ? (
-                <Box display="flex" justifyContent="center" alignItems="center" height="200px" style={{backgroundColor: 'rgba(255, 255, 255, 0.9)'}}>
-                    <CircularProgress />
-                </Box>
-            ) : (
-                <Card style={{ marginTop: '20px', backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
-                    {comments.length === 0 ? (
-                        <Typography align='center'>还没有评价。</Typography>
                     ) : (
-                        <List>
-                            {comments.map((comment) => (
-                                <ListItem key={comment.id} alignItems="flex-start"
-                                          style={{backgroundColor:'white', margin:'2%', borderRadius:'5px', width:'96%', justifyContent:'center'}}>
-                                    <ListItemText
-                                        primary={<Typography style={{fontFamily: 'Merriweather'}}> by: {comment.author}</Typography>}
-                                        secondary={
-                                            <Box display="flex" flexDirection='column'>
-                                                <Typography component="span" color='black' style={{ whiteSpace: 'pre-line', fontSize:'1.5rem', wordWrap: "break-word"}}>
-                                                    {`${comment.text}`}
-                                                </Typography>
-                                                <Typography component="span" align='center' style={{ whiteSpace: 'pre-line' }}>
-                                                    {`综合评价：${comment.overallRating}`}
-                                                </Typography>
-                                                <Typography component="span" align='center' style={{ whiteSpace: 'pre-line' }}>
-                                                    {`口味：${comment.tasteRating}, 包装：${comment.packagingRating}, 服务：${comment.serviceRating}, 环境：${comment.envRating}`}
-                                                </Typography>
-                                            </Box>
-                                        }
-                                    />
-                                </ListItem>
-                            ))}
-                        </List>
+                        <Card style={{ marginTop: '20px', backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
+                            {comments.length === 0 ? (
+                                <Typography align='center'>还没有评价。</Typography>
+                            ) : (
+                                <List>
+                                    {comments.map((comment) => (
+                                        <ListItem key={comment.id} alignItems="flex-start"
+                                                  style={{backgroundColor:'white', margin:'2%', borderRadius:'5px', width:'96%', justifyContent:'center'}}>
+                                            <ListItemText
+                                                primary={<Typography style={{fontFamily: 'Merriweather'}}> by: {comment.author}</Typography>}
+                                                secondary={
+                                                    <Box display="flex" flexDirection='column'>
+                                                        <Typography component="span" color='black' style={{ whiteSpace: 'pre-line', fontSize:'1.5rem', wordWrap: "break-word"}}>
+                                                            {`${comment.text}`}
+                                                        </Typography>
+                                                        <Typography component="span" align='center' style={{ whiteSpace: 'pre-line' }}>
+                                                            {`综合评价：${comment.overallRating}`}
+                                                        </Typography>
+                                                        <Typography component="span" align='center' style={{ whiteSpace: 'pre-line' }}>
+                                                            {`口味：${comment.tasteRating}, 包装：${comment.packagingRating}, 服务：${comment.serviceRating}, 环境：${comment.envRating}`}
+                                                        </Typography>
+                                                    </Box>
+                                                }
+                                            />
+                                        </ListItem>
+                                    ))}
+                                </List>
+                            )}
+                        </Card>
                     )}
-                </Card>
-            )}
-        </Container>
+                </Container>
             </Box>
         </div>
     );
