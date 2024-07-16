@@ -14,12 +14,12 @@ import {
     Card,
     CardContent,
     CardMedia,
-    Paper, DialogTitle, DialogContent, TextField, DialogActions, Dialog,
+    Paper, DialogTitle, DialogContent,  DialogActions, Dialog,
 } from '@mui/material'
 import { Add, Remove } from '@mui/icons-material'
 import { OrderIDMessage } from 'Plugins/AdminAPI/OrderIDMessage'
 import CustomerSidebar from './CustomerSidebar/CustomerSidebar'
-import { CustomerChargeMessage } from 'Plugins/CustomerAPI/CustomerProfileMessage'
+import { CustomerChargeMessage, CustomerQueryProfileMessage } from 'Plugins/CustomerAPI/CustomerProfileMessage'
 import ChatPanel from 'Plugins/CommonUtils/ChatPanel'
 import { DishQueryMessage } from 'Plugins/AdminAPI/AdminDishMessage'
 import 'Pages/index.css'
@@ -60,7 +60,7 @@ interface OrderInfo {
 
 const OrderingPage: React.FC = () => {
     const { name, OrderID, updateOrderID, OrderPart,
-        incrementOrderPart, balance, setOrderedDishes, service } = useUser()
+        incrementOrderPart, balance,setBalance, setOrderedDishes, service } = useUser()
     const customerName = name.split('\n')[0]
     const nickName = name.split('\n')[1]
     const history = useHistory()
@@ -103,6 +103,13 @@ const OrderingPage: React.FC = () => {
             [dishName]: count,
         })
     }
+
+    const fetchUpdatedBalance = async (amount: string) => {
+        // Simulate fetching the updated balance
+        const updatedBalance = balance-Number(parseFloat(amount))
+        console.log(updatedBalance);
+        setBalance(updatedBalance); // Assuming useUser provides a method to update the balance
+    };
 
     const sendOrderRequest = async (message: CustomerOrderMessage) => {
         try {
@@ -169,7 +176,7 @@ const OrderingPage: React.FC = () => {
     }
 
     const sendChargeRequest = async (amount: string) => {
-        const cmessage = new CustomerChargeMessage(name.split('\n')[0], (balance - Number(parseFloat(amount))).toString())
+        const cmessage = new CustomerChargeMessage(name.split('\n')[0], (Number(parseFloat(amount))).toString())
         try {
             const response = await axios.post(cmessage.getURL(), JSON.stringify(cmessage), {
                 headers: { 'Content-Type': 'application/json' },
@@ -205,7 +212,6 @@ const OrderingPage: React.FC = () => {
             alert('You have not enough money!')
             return
         }
-
         const orders : OrderInfo[] = Object.entries(orderCounts)
             .filter(([, count]) => count > 0)
             .map(([dishName, count]) => {
@@ -221,9 +227,11 @@ const OrderingPage: React.FC = () => {
             console.log('Orders:', orders)
             console.log('OrderParts:', OrderPart)
             const orderMessage = new CustomerOrderMessage(customerName, OrderID, OrderPart, orders)
-            sendChargeRequest(calculateTotalCost())
+            sendChargeRequest(calculateTotalCost()).then()
+            console.log(balance)
             handleOrderLog().then()
-            sendOrderRequest(orderMessage)
+            sendOrderRequest(orderMessage).then()
+            fetchUpdatedBalance(calculateTotalCost()).then()
             const formattedOrders = orders.map(order => ({
                 name: order.dishName,
                 path: dishes.find(d => d.name === order.dishName).path,
@@ -243,8 +251,15 @@ const OrderingPage: React.FC = () => {
     }, [])
 
     useEffect(() => {
-        readDishesInfo()
+        readDishesInfo().then()
         handleOrderID()
+            .catch(error => {
+                console.error('Error in handleComplete:', error)
+            })
+    }, [])
+
+    useEffect(() => {
+        fetchUpdatedBalance(calculateTotalCost())
             .catch(error => {
                 console.error('Error in handleComplete:', error)
             })
