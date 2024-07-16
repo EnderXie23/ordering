@@ -40,7 +40,6 @@ const useStyles = makeStyles((theme) => ({
         top: 0,
         backgroundColor: 'white',
         zIndex: 1000,
-        padding: theme.spacing(2),
         margin: theme.spacing(1),
     },
     paper: {
@@ -141,20 +140,30 @@ const CustomerHistory:React.FC<HistoryProps>=({open,onClose})=>{
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
             <DialogContent>
                 <Box className={classes.stickyHeader}>
-                    <Typography variant="h4" component="h1" align="center" gutterBottom>
+                    <Typography variant="h4" component="h1" align="center" gutterBottom sx={{
+                        fontSize: '2rem',
+                        fontWeight: 'bold',
+                        marginBottom: '1rem'
+                    }}>
                         历史订单
                     </Typography>
                 </Box>
                 <Box style={{ maxHeight: '70vh', overflowY: 'auto' }}>
                     {Object.entries(groupedOrdersByOrderID).sort(([a], [b]) => b.localeCompare(a)).map(([orderID, orders]) => (
                         <Paper key={orderID} className={classes.paper}>
-                            <Typography variant="h6">Order ID: {orderID}</Typography>
+                            <Typography variant="h6" style={{fontFamily:'Merriweather', fontWeight:'bold'}}>
+                                Order ID: {orderID}
+                            </Typography>
                             <List>
                                 {orders.map((order, index) => (
                                     <ListItem key={index} divider>
-                                        <ListItemText
-                                            primary={`Dish: ${order.dishName} x ${order.quantity}`}
-                                            secondary={`Price: ${order.price} State: ${order.state}`}
+                                        <ListItemText style={{margin:0, whiteSpace: 'pre'}}
+                                            primary={
+                                                <Typography component="span"  style={{fontFamily:'Merriweather'}}>
+                                                    {`菜品名: ${order.dishName} x ${order.quantity}`}
+                                                </Typography>
+                                            }
+                                                secondary={`价格: ${order.price}     状态: ${order.state}`}
                                         />
                                     </ListItem>
                                 ))}
@@ -163,20 +172,14 @@ const CustomerHistory:React.FC<HistoryProps>=({open,onClose})=>{
                     ))}
                 </Box>
                 <Box className={classes.buttonContainer}>
-                    <Button color="primary" onClick={handleCustomerHistory}>
+                    <Button color="primary" onClick={handleCustomerHistory} sx={{ textTransform: 'none', fontWeight: 'bold' }}>
                         刷新
                     </Button>
-                    <Box>
-                        <Button color="secondary">返回</Button>
-                        <Button color="secondary">主页</Button>
-                    </Box>
+                    <Button onClick={onClose} color="secondary" sx={{ textTransform: 'none', fontWeight: 'bold' }}>
+                        关闭
+                    </Button>
                 </Box>
             </DialogContent>
-            <DialogActions>
-                <Button onClick={onClose} color="inherit">
-                    关闭
-                </Button>
-            </DialogActions>
         </Dialog>
     );
 }

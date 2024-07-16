@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Typography } from '@material-ui/core'
 import { useUser } from 'Pages/UserContext'
 import { CustomerEditProfileMessage } from 'Plugins/CustomerAPI/CustomerProfileMessage'
 import axios from 'axios'
@@ -52,7 +52,15 @@ const ProfileEdit: React.FC<ProfileEditProps> = ({ open, onClose }) => {
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-            <DialogTitle>编辑资料</DialogTitle>
+            <DialogTitle>
+                <Typography variant="h4" component="h1" align="center" style={{
+                    fontSize: '2rem',
+                    fontWeight: 'bold',
+                    marginBottom: '1rem'
+                }}>
+                    编辑资料
+                </Typography>
+            </DialogTitle>
             <DialogContent>
                 <TextField disabled value={username} margin="dense" label="用户名" fullWidth />
                 <TextField value={newNickname} margin="dense" label="昵称" fullWidth onChange={(e)=>setNewNickname(e.target.value)}/>
@@ -61,10 +69,10 @@ const ProfileEdit: React.FC<ProfileEditProps> = ({ open, onClose }) => {
             {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
             {successMessage && <Alert severity="success">{successMessage}</Alert>}
             <DialogActions>
-                <Button onClick={onClose} color="primary">
+                <Button onClick={onClose} color="secondary" style={{ textTransform: 'none', fontWeight: 'bold' }}>
                     取消
                 </Button>
-                <Button onClick={handleProfileEdit} color="primary">
+                <Button onClick={handleProfileEdit} color="primary" style={{ textTransform: 'none', fontWeight: 'bold' }}>
                     保存
                 </Button>
             </DialogActions>

@@ -116,7 +116,15 @@ const Profile: React.FC<UserProfileDialogProps> = ({ open, onClose }) => {
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-            <DialogTitle>用户信息</DialogTitle>
+            <DialogTitle style={{paddingBottom:0}}>
+                <Typography variant="h4" component="h1" align="center" style={{
+                    fontSize: '2rem',
+                    fontWeight: 'bold',
+                    marginBottom: '1rem'
+                }}>
+                    用户信息
+                </Typography>
+            </DialogTitle>
             <DialogContent>
                 <CardContent>
                     <Grid container justifyContent="center" alignItems="center" spacing={2}>
@@ -159,13 +167,13 @@ const Profile: React.FC<UserProfileDialogProps> = ({ open, onClose }) => {
                 </CardContent>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleEditOpen} color="primary">
+                <Button onClick={handleEditOpen} color="primary" style={{ textTransform: 'none', fontWeight: 'bold' }}>
                     编辑资料
                 </Button>
-                <Button onClick={handlePasswordOpen} color="secondary">
+                <Button onClick={handlePasswordOpen} color="secondary" style={{ textTransform: 'none', fontWeight: 'bold' }}>
                     修改密码
                 </Button>
-                <Button onClick={onClose} color="default">
+                <Button onClick={onClose} color="default" style={{ textTransform: 'none', fontWeight: 'bold' }}>
                     关闭
                 </Button>
             </DialogActions>

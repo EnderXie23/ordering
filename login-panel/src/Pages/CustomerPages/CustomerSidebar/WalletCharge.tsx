@@ -22,9 +22,17 @@ const WalletCharge: React.FC<WalletChargeProps> = ({ open, onClose, onCharge }) 
 
     return (
         <Dialog open={open} onClose={onClose} aria-labelledby="charge-amount-dialog">
-            <DialogTitle id="charge-amount-dialog">充值金额</DialogTitle>
+            <DialogTitle id="charge-amount-dialog">
+                <Typography variant="h4" component="h1" align="center" style={{
+                    fontFamily:'Noto Sans',
+                    fontSize: '2rem',
+                    fontWeight: 'bold',
+                }}>
+                    充值
+                </Typography>
+            </DialogTitle>
             <DialogContent>
-                <Typography>输入您想充值的金额:</Typography>
+                <Typography style={{fontSize:'1.25rem', fontFamily:'Noto Sans'}}>输入您想充值的金额:</Typography>
                 <Box
                     component="form"
                     sx={{
@@ -44,10 +52,10 @@ const WalletCharge: React.FC<WalletChargeProps> = ({ open, onClose, onCharge }) 
                 </Box>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose} color="secondary">
+                <Button onClick={onClose} color="secondary" style={{ textTransform: 'none', fontWeight: 'bold' }}>
                     取消
                 </Button>
-                <Button onClick={handleChargeClick} color="primary" variant="contained">
+                <Button onClick={handleChargeClick} variant="contained" className='button'>
                     确认充值
                 </Button>
             </DialogActions>

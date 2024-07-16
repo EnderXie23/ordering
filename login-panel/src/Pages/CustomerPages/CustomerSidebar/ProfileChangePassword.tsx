@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Typography } from '@material-ui/core'
 import { CustomerChangePwdMessage } from 'Plugins/CustomerAPI/CustomerProfileMessage'
 import { Alert } from '@mui/material'
 import { useUser } from 'Pages/UserContext'
@@ -71,7 +71,15 @@ const ProfileChangePassword: React.FC<ProfileChangePasswordProps> = ({open, onCl
 
     return (
         <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-            <DialogTitle>修改密码</DialogTitle>
+            <DialogTitle>
+                <Typography variant="h4" component="h1" align="center" style={{
+                    fontSize: '2rem',
+                    fontWeight: 'bold',
+                    marginBottom: '1rem'
+                }}>
+                    修改密码
+                </Typography>
+            </DialogTitle>
             <DialogContent>
                 <TextField value={oldPassword} margin="dense" label="当前密码" type="password" fullWidth onChange={(e) => setOldPassword(e.target.value)}/>
                 <TextField value={newPassword} margin="dense" label="新密码" type="password" fullWidth onChange={(e) => setNewPassword(e.target.value)}/>
@@ -80,10 +88,10 @@ const ProfileChangePassword: React.FC<ProfileChangePasswordProps> = ({open, onCl
             {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
             {successMessage && <Alert severity="success">{successMessage}</Alert>}
             <DialogActions>
-                <Button onClick={handleClose} color="primary">
+                <Button onClick={handleClose} color="secondary" style={{ textTransform: 'none', fontWeight: 'bold' }}>
                     取消
                 </Button>
-                <Button onClick={handlePwdChange} color="primary">
+                <Button onClick={handlePwdChange} color="primary" style={{ textTransform: 'none', fontWeight: 'bold' }}>
                     保存
                 </Button>
             </DialogActions>

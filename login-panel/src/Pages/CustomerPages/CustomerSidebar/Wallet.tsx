@@ -96,15 +96,18 @@ const Wallet: React.FC<WalletProps> = ({ open,  onClose }) => {
                             height: '35vh',
                         },
                     }}>
-                <DialogTitle id="user-balance-dialog" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <Typography variant="h3" align="center">
+                <DialogTitle>
+                    <Typography variant="h4" component="h1" align="center" style={{
+                        fontSize: '3rem',
+                        fontWeight: 'bold',
+                    }}>
                         用户余额
                     </Typography>
                 </DialogTitle>
                 <DialogContent dividers>
                     <Box display="flex" justifyContent="center" alignItems="center" flexDirection="column" padding={2}>
                         <Typography variant="h6" gutterBottom>
-                            您的当前余额是:
+                            您当前的余额是:
                         </Typography>
                         <Typography variant="h4" color="primary">
                             {balance.toFixed(2)} 元
@@ -114,10 +117,10 @@ const Wallet: React.FC<WalletProps> = ({ open,  onClose }) => {
                 {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
                 {successMessage && <Alert severity="success">{successMessage}</Alert>}
                 <DialogActions>
-                    <Button onClick={handleClose} color="secondary">
+                    <Button onClick={handleClose} color="secondary" style={{ textTransform: 'none', fontWeight: 'bold' }}>
                         关闭
                     </Button>
-                    <Button onClick={handleWalletChargeOpen} color="primary" variant="contained">
+                    <Button onClick={handleWalletChargeOpen} variant="contained" className='button'>
                         立即充值
                     </Button>
                 </DialogActions>

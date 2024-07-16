@@ -116,7 +116,7 @@ const CustomerSidebar: React.FC = () => {
                         }}
                     >
                         <AccountCircle fontSize="large" />
-                        <Typography variant="h6">{username}</Typography>
+                        <Typography variant="h6" style={{fontFamily: 'Merriweather', fontWeight:'bold'}}>{username}</Typography>
                     </Box>
                     <List>
                         <ListItem button onClick={handleProfileOpen}>
