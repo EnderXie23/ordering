@@ -20,6 +20,7 @@ import { ReadCommentsMessage } from 'Plugins/CustomerAPI/ReadCommentsMessage'
 import { useHistory } from 'react-router'
 import { DishRatingMessage } from 'Plugins/CustomerAPI/DishRatingMessage'
 import backgroundImage from 'Images/background.png'
+import CustomerSidebar from 'Pages/CustomerPages/CustomerSidebar/CustomerSidebar'
 
 interface displayComment {
     id: number;
@@ -313,6 +314,7 @@ const CommentPage: React.FC = () => {
                     )}
                 </Container>
             </Box>
+            <CustomerSidebar />
         </div>
     );
 };

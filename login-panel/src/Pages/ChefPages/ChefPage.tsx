@@ -22,6 +22,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import { Select } from 'antd'
 import { RejectMessage } from 'Plugins/ChefAPI/RejectMessage'
+import backgroundImage from 'Images/background.png'
 
 interface Order {
     customer: string;
@@ -188,16 +189,15 @@ const ChefPage: React.FC = () => {
 
     const useStyles = makeStyles((theme) => ({
         container: {
-            height: '80vh',
-            width: '1000px',
+            height: '100%',
+            overflowY:'auto'
         },
         grid: {
             overflowY: 'auto',
+            overflowX: 'hidden'
         },
         box: {
-            position: 'sticky',
-            top: 0,
-            backgroundColor: 'white', // 确保背景色与容器相同或根据需要设置
+            backgroundColor: 'transparent', // 确保背景色与容器相同或根据需要设置
             zIndex: 1000, // 确保标题部分在其他内容之上
             display: 'flex',
             justifyContent: 'space-between',
@@ -219,7 +219,6 @@ const ChefPage: React.FC = () => {
             marginBottom: theme.spacing(1),
         },
         cardContent: {
-            width: '90%',
             flex: '1 1 auto',
             display: 'flex',
             flexDirection: 'column',
@@ -236,133 +235,159 @@ const ChefPage: React.FC = () => {
     }, [])
 
     return (
-        <Container className={classes.container}>
-            <Box className={classes.box}>
-            <Typography variant="h4">厨师{ chefName }，您好！</Typography>
-                <FormControl variant="outlined" style={{ width: '150px' }}>
-                    <Select
-                        value={groupBy}
-                        onChange={(value) => setGroupBy(value as 'dish' | 'customer' | 'orderID')}
-                    >
-                        <Select.Option value="dish">按菜品分类</Select.Option>
-                        <Select.Option value="customer">按顾客分类</Select.Option>
-                        <Select.Option value="orderID">按订单ID分类</Select.Option>
-                    </Select>
-                </FormControl>
-            </Box>
-            {Object.keys(groupedOrders).length === 0 ? (
-                <Box className={classes.grid} display="flex" alignItems="center" justifyContent="center" height="400px" width="1000px">
-                    <Typography variant="h6" align="center">No orders available</Typography>
-                </Box>
-            ) : (
-                <Grid container rowSpacing={2} columnSpacing={2} className={classes.grid}>
-                    {Object.keys(groupedOrders).map((key) => (
-                        <Grid item xs={12} sm={6} md={4} key={key}>
-                            <Card className={classes.card}>
-                                <CardHeader title={groupBy === 'dish' ? `Dish: ${key}` : groupBy === 'customer' ? `Customer: ${key}` : `OrderID: ${key}`} />
-                                <CardContent className={classes.cardContent}>
-                                    {groupedOrders[key]
-                                        .map((order) => (
-                                            <Box my={1} display="flex" justifyContent="stretch" alignItems="center" key={order.orderID + '-' + order.orderPart}>
-                                                <ListItemText
-                                                    primary={groupBy === 'dish' ? `from: ${order.customer} x${order.quantity}` : `· ${order.dish} x${order.quantity}`}
-                                                    secondary={(groupBy === 'orderID' ? `Customer: ${order.customer}` : `OrderID: ${order.orderID}`) + `, OrderPart: ${order.orderPart}`}
-                                                />
-                                                <Box className={classes.actionBox}>
-                                                    <IconButton onClick={() => handleComplete(order, '1')}>
-                                                        <CheckIcon />
-                                                    </IconButton>
-                                                    <IconButton onClick={() => {
-                                                        setOrderToReject(order)
-                                                        setRejectLogOpen(true)
-                                                    }}>
-                                                        <CloseIcon />
-                                                    </IconButton>
-                                                </Box>
-                                            </Box>
-                                        ))}
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    ))}
-                    {Object.keys(groupedOrders).length < 3 &&
-                        [...Array(3 - Object.keys(groupedOrders).length)].map((_, index) => (
-                            <Grid item xs={12} sm={6} md={4} key={`empty-${index}`}>
-                                <Card
-                                    style={{
-                                        height: '300px',
-                                        width: '300px',
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        justifyContent: 'space-evenly',
-                                        alignItems: 'left',
-                                        marginBottom: 4,
-                                        visibility: 'hidden',
-                                    }}
-                                />
-                            </Grid>
-                        ))}
-                </Grid>
-            )}
-            <Box className={classes.box}>
-                <Button variant="contained" color="primary" onClick={handleQuery} style={{ margin: '20px' }}>
-                    刷新
-                </Button>
-                <Button color="secondary" onClick={() => history.push('/')} style={{ margin: '20px' }}>
-                    返回主页
-                </Button>
-            </Box>
-            {/*  Dialog for input reject reason  */}
-            <Dialog open={rejectLogOpen} aria-labelledby="charge-amount-dialog">
-                <DialogTitle id="charge-amount-dialog" color="error">拒绝订单</DialogTitle>
-                <DialogContent>
-                    <Typography>为客户服务，是我们的宗旨！如果你的确想要拒绝该订单，请填写原因。</Typography>
-                    <Typography mt={2}>
-                        订单信息：
-                        顾客名称：{orderToReject.customer}, 菜品：{orderToReject.dish}, 数量：{orderToReject.quantity}.
-                    </Typography>
-                    <Typography mt={2}>输入您拒绝订单的原因:</Typography>
-                    <Box
-                        component="form"
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: 2,
-                            mt: 2,
-                        }}
-                    >
-                        <TextField
-                            type="text"
-                            value={rejectReason}
-                            label="拒绝原因"
-                            onChange={(e) => setRejectReason(e.target.value)}
-                            variant="outlined"
-                            fullWidth
-                        />
+        <div className='root' style={{ backgroundImage: `url(${backgroundImage})` }}>
+            <Box className='cover' />
+            <Box className='main-box' sx={{ display: 'flex', alignItems: 'stretch', margin:'16px', height:'90%', width:'80%'}}>
+                <Container className={classes.container}>
+                    <Box className={classes.box}>
+                        <Typography variant="h4" sx={{
+                            fontSize: '2rem',
+                            fontWeight: 'bold',
+                            marginBottom: '1rem'
+                        }}>
+                            厨师{ chefName }，您好！
+                        </Typography>
+                        <FormControl variant="outlined" style={{ width: '150px' }}>
+                            <Select
+                                value={groupBy}
+                                onChange={(value) => setGroupBy(value as 'dish' | 'customer' | 'orderID')}
+                            >
+                                <Select.Option value="dish">按菜品分类</Select.Option>
+                                <Select.Option value="customer">按顾客分类</Select.Option>
+                                <Select.Option value="orderID">按订单ID分类</Select.Option>
+                            </Select>
+                        </FormControl>
                     </Box>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => {setRejectLogOpen(false)}} color="secondary">
-                        取消
-                    </Button>
-                    <Button onClick={() => {
-                        handleComplete(orderToReject, '0');
-                        handleRejectLog({
-                            customerName: orderToReject.customer,
-                            chefName: chefName,
-                            dishName: orderToReject.dish,
-                            orderCount: orderToReject.quantity.toString(),
-                            orderID: orderToReject.orderID.toString(),
-                            orderPart: orderToReject.orderPart.toString(),
-                            reason: rejectReason,
-                        });
-                        setRejectLogOpen(false);
-                    }} color="primary" variant="contained">
-                        确认拒绝订单
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </Container>
+                    {Object.keys(groupedOrders).length === 0 ? (
+                        <Box className={classes.grid} display="flex" alignItems="center" justifyContent="center" height="400px" width="100%">
+                            <Typography variant="h6" align="center">No orders available</Typography>
+                        </Box>
+                    ) : (
+                        <Grid container rowSpacing={2} columnSpacing={2} className={classes.grid}>
+                            {Object.keys(groupedOrders).map((key) => (
+                                <Grid item xs={12} sm={6} md={4} key={key}>
+                                    <Card className={classes.card}>
+                                        <CardHeader style={{paddingBottom:0}}
+                                            title={
+                                                <Typography style={{fontFamily: 'Merriweather', fontSize: '1.5rem'}}>
+                                                    {groupBy === 'dish' ? `Dish: ${key}` : groupBy === 'customer' ? `Customer: ${key}` : `OrderID: ${key}`}
+                                                </Typography>
+                                            } />
+                                        <CardContent className={classes.cardContent}>
+                                            {groupedOrders[key]
+                                                .map((order) => (
+                                                    <Box my={1} display="flex" justifyContent="stretch" alignItems="center" key={order.orderID + '-' + order.orderPart}>
+                                                        <ListItemText
+                                                            primary={groupBy === 'dish' ? `from: ${order.customer} x${order.quantity}` : `· ${order.dish} x${order.quantity}`}
+                                                            secondary={(groupBy === 'orderID' ? `Customer: ${order.customer}` : `OrderID: ${order.orderID}`) + `, OrderPart: ${order.orderPart}`}
+                                                        />
+                                                        <Box className={classes.actionBox}>
+                                                            <IconButton onClick={() => handleComplete(order, '1')}>
+                                                                <CheckIcon />
+                                                            </IconButton>
+                                                            <IconButton onClick={() => {
+                                                                setOrderToReject(order)
+                                                                setRejectLogOpen(true)
+                                                            }}>
+                                                                <CloseIcon />
+                                                            </IconButton>
+                                                        </Box>
+                                                    </Box>
+                                                ))}
+                                        </CardContent>
+                                    </Card>
+                                </Grid>
+                            ))}
+                            {Object.keys(groupedOrders).length < 3 &&
+                                [...Array(3 - Object.keys(groupedOrders).length)].map((_, index) => (
+                                    <Grid item xs={12} sm={6} md={4} key={`empty-${index}`}>
+                                        <Card
+                                            style={{
+                                                height: '300px',
+                                                width: '300px',
+                                                display: 'flex',
+                                                flexDirection: 'row',
+                                                justifyContent: 'space-evenly',
+                                                alignItems: 'left',
+                                                marginBottom: 4,
+                                                visibility: 'hidden',
+                                            }}
+                                        />
+                                    </Grid>
+                                ))}
+                        </Grid>
+                    )}
+                    <Box className={classes.box}>
+                        <Button variant="contained" className='button' onClick={handleQuery} style={{ margin: '20px' }}>
+                            刷新
+                        </Button>
+                        <Button color="secondary" onClick={() => history.push('/')}
+                                style={{ margin: '20px', textTransform: 'none', fontWeight: 'bold' }}>
+                            返回主页
+                        </Button>
+                    </Box>
+                    {/*  Dialog for input reject reason  */}
+                    <Dialog open={rejectLogOpen} aria-labelledby="charge-amount-dialog">
+                        <DialogTitle id="charge-amount-dialog" color="error">
+                            <Typography variant="h4" component="h1" align="center" style={{
+                                fontSize: '2rem',
+                                fontWeight: 'bold',
+                                marginBottom: '1rem'
+                            }}>
+                                拒绝订单
+                            </Typography>
+                        </DialogTitle>
+                        <DialogContent>
+                            <Typography>为客户服务，是我们的宗旨！如果你的确想要拒绝该订单，请填写原因。</Typography>
+                            <Typography mt={2}>
+                                订单信息：
+                                顾客名称：{orderToReject.customer}, 菜品：{orderToReject.dish}, 数量：{orderToReject.quantity}.
+                            </Typography>
+                            <Typography mt={2} style={{fontWeight:'bold'}}>输入您拒绝订单的原因:</Typography>
+                            <Box
+                                component="form"
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 2,
+                                    mt: 2,
+                                }}
+                            >
+                                <TextField
+                                    type="text"
+                                    value={rejectReason}
+                                    label="拒绝原因"
+                                    onChange={(e) => setRejectReason(e.target.value)}
+                                    variant="outlined"
+                                    fullWidth
+                                />
+                            </Box>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => {setRejectLogOpen(false)}} color="secondary"
+                                    sx={{ textTransform: 'none', fontWeight: 'bold' }}>
+                                取消
+                            </Button>
+                            <Button onClick={() => {
+                                handleComplete(orderToReject, '0');
+                                handleRejectLog({
+                                    customerName: orderToReject.customer,
+                                    chefName: chefName,
+                                    dishName: orderToReject.dish,
+                                    orderCount: orderToReject.quantity.toString(),
+                                    orderID: orderToReject.orderID.toString(),
+                                    orderPart: orderToReject.orderPart.toString(),
+                                    reason: rejectReason,
+                                });
+                                setRejectLogOpen(false);
+                            }} className='button' variant="contained">
+                                确认拒绝订单
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                </Container>
+            </Box>
+        </div>
     )
 }
 
