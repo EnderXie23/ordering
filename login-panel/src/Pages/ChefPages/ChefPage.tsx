@@ -1,25 +1,30 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
 import {
-    Grid,
+    Box,
     Button,
     Card,
-    CardHeader,
     CardContent,
-    Typography,
-    ListItemText,
+    CardHeader,
     Container,
-    Box,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    FormControl,
+    Grid,
     IconButton,
-    FormControl, DialogTitle, DialogContent, TextField, DialogActions, Dialog,
+    ListItemText,
+    TextField,
+    Typography,
 } from '@mui/material'
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles'
 import axios from 'axios'
 import { QueryMessage } from 'Plugins/ChefAPI/QueryMessage'
 import { CompleteMessage } from 'Plugins/ChefAPI/CompleteMessage'
-import { useChef } from '../ChefContext';
-import CheckIcon from '@mui/icons-material/Check';
-import CloseIcon from '@mui/icons-material/Close';
+import { useChef } from '../ChefContext'
+import CheckIcon from '@mui/icons-material/Check'
+import CloseIcon from '@mui/icons-material/Close'
 import { Select } from 'antd'
 import { RejectMessage } from 'Plugins/ChefAPI/RejectMessage'
 import backgroundImage from 'Images/background.png'
@@ -327,8 +332,8 @@ const ChefPage: React.FC = () => {
                         </Button>
                     </Box>
                     {/*  Dialog for input reject reason  */}
-                    <Dialog open={rejectLogOpen} aria-labelledby="charge-amount-dialog">
-                        <DialogTitle id="charge-amount-dialog" color="error">
+                    <Dialog open={rejectLogOpen}>
+                        <DialogTitle id="reject-reason-dialog" color="error">
                             <Typography variant="h4" component="h1" align="center" style={{
                                 fontSize: '2rem',
                                 fontWeight: 'bold',

@@ -306,7 +306,7 @@ const OrderingPage: React.FC = () => {
                     <Box display="flex" justifyContent="center" alignItems="center" mt={4} mb={2}>
                         <Paper elevation={3} sx={{ padding: '16px', borderRadius: '8px', backgroundColor: '#f5f5f5' }}>
                             <Typography variant="h6" color="primary" textAlign="center">
-                                您的余额: <span style={{ fontWeight: 'bold', color: '#227aff' }}>{balance} 元</span>
+                                您的余额: <span style={{ fontWeight: 'bold', color: '#227aff' }}>{balance.toFixed(2)} 元</span>
                             </Typography>
                             <Typography variant="h6" color="primary" textAlign="center">
                                 总价: <span style={{ fontWeight: 'bold', color: '#ff5722' }}>{calculateTotalCost()} 元</span>

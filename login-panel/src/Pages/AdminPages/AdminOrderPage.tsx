@@ -10,10 +10,12 @@ import {
     Paper,
     List,
     FormControlLabel,
-    Switch } from '@mui/material'
+    Switch, DialogTitle, DialogContent, TextField, DialogActions, Dialog,
+} from '@mui/material'
 import axios from 'axios'
 import { AdminQueryMessage } from 'Plugins/AdminAPI/AdminQueryMessage'
 import { QueryRejectLogMessage } from 'Plugins/AdminAPI/QueryRejectLogMessage'
+import { CustomerQueryProfileMessage, CustomerChargeMessage } from 'Plugins/CustomerAPI/CustomerProfileMessage'
 
 interface finishedOrder{
     chefName: string,
@@ -61,6 +63,8 @@ export function AdminOrderPage(){
     const [groupedOrdersByOrderID, setGroupedOrdersByOrderID] = useState<{ [orderID: string]: finishedOrder[] }>({});
     const [groupByCustomer, setGroupByCustomer] = useState(false); // State for grouping method
     const [income, setIncome] = useState(0); // State for total income
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [dialogContent, setDialogContent] = useState('');
 
     const groupOrdersByCustomer = (orders: finishedOrder[]) => {
         return orders.reduce((acc, order) => {
@@ -119,6 +123,26 @@ export function AdminOrderPage(){
         } catch (error){
             console.error('Error rejectLog-querying:', error);
             return "No reason found.";
+        }
+    }
+
+    const handleRefund = async (order: finishedOrder) => {
+        const pmessage = new CustomerQueryProfileMessage(order.customerName);
+        try{
+            const response = await axios.post(pmessage.getURL(), JSON.stringify(pmessage), {
+                headers: { 'Content-Type': 'application/json' },
+            })
+            const _balance = response.data.balance;
+            const cmessage = new CustomerChargeMessage(order.customerName, (_balance + order.price * order.quantity).toString());
+            await axios.post(cmessage.getURL(), JSON.stringify(cmessage), {
+                headers: { 'Content-Type': 'application/json' },
+            })
+            setDialogContent('已退款' + order.price * order.quantity + '元');
+            setDialogOpen(true);
+        } catch (error) {
+            console.error('Error refunding:', error);
+            setDialogContent('退款失败');
+            setDialogOpen(true);
         }
     }
 
@@ -182,7 +206,20 @@ export function AdminOrderPage(){
                                         <ListItemText
                                             primary={`Dish: ${order.dishName} x ${order.quantity}`}
                                             secondary={`Price: ${order.price} State: ${order.state} Chef: ${order.chefName}`}
+                                            sx={{ color: order.state === 'rejected' ? 'red' : 'inherit' }}
                                         />
+                                        {order.state == 'rejected' &&(
+                                            <Box>
+                                                <Button onClick={async () => {
+                                                    handleRefund(order);
+                                                }} color='error'>退款</Button>
+                                                <Button onClick={async () => {
+                                                    const reason = await handleRejectLogQuery(order.dishName, order.orderID, order.orderPart);
+                                                    setDialogContent(reason);
+                                                    setDialogOpen(true);
+                                                }}>查看拒绝原因</Button>
+                                            </Box>)
+                                        }
                                     </ListItem>
                                 ))}
                             </List>
@@ -205,11 +242,17 @@ export function AdminOrderPage(){
                                             secondary={`Price: ${order.price} State: ${order.state} Chef: ${order.chefName} Customer: ${order.customerName}`}
                                             sx={{ color: order.state === 'rejected' ? 'red' : 'inherit' }}
                                         />
-                                        {order.state == 'rejected' &&
-                                            <Button onClick={async () => {
-                                                const reason = await handleRejectLogQuery(order.dishName, order.orderID, order.orderPart);
-                                                alert(reason);
-                                            }}>查看退款原因</Button>
+                                        {order.state == 'rejected' &&(
+                                            <Box>
+                                                <Button onClick={async () => {
+                                                    handleRefund(order);
+                                                }} color='error'>退款</Button>
+                                                <Button onClick={async () => {
+                                                    const reason = await handleRejectLogQuery(order.dishName, order.orderID, order.orderPart);
+                                                    setDialogContent(reason);
+                                                    setDialogOpen(true);
+                                                }}>查看拒绝原因</Button>
+                                            </Box>)
                                         }
                                     </ListItem>
                                 ))}
@@ -231,6 +274,33 @@ export function AdminOrderPage(){
                     </Button>
                 </Box>
             </Box>
+        {/*  Dialog box  */}
+            <Dialog open={dialogOpen} sx={{
+                '& .MuiDialog-paper': {
+                    width: '80%',
+                    maxWidth: '500px',
+                    padding: '1rem',
+                }
+            }}>
+                <DialogTitle id="dialog" color="warning">
+                    <Typography align="center" style={{
+                        fontSize: '2rem',
+                        fontWeight: 'bold',
+                        marginBottom: '1rem'
+                    }}>
+                        提示：
+                    </Typography>
+                </DialogTitle>
+                <DialogContent>
+                    <Typography>{dialogContent}</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => {setDialogOpen(false)}} color="primary"
+                            sx={{ textTransform: 'none', fontWeight: 'bold' }}>
+                        确定
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Container>
     )
 }
