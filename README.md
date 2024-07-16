@@ -22,7 +22,7 @@
 
 - [ ] AdminOrderPage: 对于rejected的订单可以一直点退款
 
-- [ ] OrderingPage: 点击继续点菜后，显示的余额和第一次点菜时没有变化；如果两次点菜有重复，提交时console会报神秘的错
+- [x] OrderingPage: 点击继续点菜后，显示的余额和第一次点菜时没有变化；如果两次点菜有重复，提交时console会报神秘的错
 
 #### TO-DO:
 
