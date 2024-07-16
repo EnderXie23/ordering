@@ -23,6 +23,8 @@ case class RejectMessagePlanner(rejectDesp: RejectDesp, override val planContext
       SqlParameter("String", rejectDesp.orderID),
       SqlParameter("String", rejectDesp.orderPart),
       SqlParameter("String", rejectDesp.reason)
-    )).map(_ => "Reject dish successfully.")
+    )).flatMap { _ =>
+      IO.pure("Reject dish successfully.")
+    }
   }
 }

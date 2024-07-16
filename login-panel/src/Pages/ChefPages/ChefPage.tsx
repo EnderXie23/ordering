@@ -120,7 +120,6 @@ const ChefPage: React.FC = () => {
             const response = await axios.post(message.getURL(), JSON.stringify(message), {
                 headers: { 'Content-Type': 'application/json' },
             })
-            console.log(response.status)
             console.log(response.data)
             await handleQuery()
         } catch (error) {
@@ -182,7 +181,6 @@ const ChefPage: React.FC = () => {
                 headers: { 'Content-Type': 'application/json' },
             })
             console.log(response.data)
-            setOrders(parseOrder(response.data))
         } catch (error) {
             console.error('Error logging reject:', error)
         }
@@ -357,7 +355,7 @@ const ChefPage: React.FC = () => {
                             orderID: orderToReject.orderID.toString(),
                             orderPart: orderToReject.orderPart.toString(),
                             reason: rejectReason,
-                        })
+                        });
                         setRejectLogOpen(false);
                     }} color="primary" variant="contained">
                         确认拒绝订单

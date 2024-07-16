@@ -13,6 +13,7 @@ import {
     Switch } from '@mui/material'
 import axios from 'axios'
 import { AdminQueryMessage } from 'Plugins/AdminAPI/AdminQueryMessage'
+import { QueryRejectLogMessage } from 'Plugins/AdminAPI/QueryRejectLogMessage'
 
 interface finishedOrder{
     chefName: string,
@@ -108,6 +109,19 @@ export function AdminOrderPage(){
         }
     }
 
+    const handleRejectLogQuery = async (dishName: string, orderID: string, orderPart: string) => {
+        const rmessage = new QueryRejectLogMessage(dishName, orderID, orderPart);
+        try{
+            const response = await axios.post(rmessage.getURL(), JSON.stringify(rmessage), {
+                headers: { 'Content-Type': 'application/json' },
+            })
+            return response.data;
+        } catch (error){
+            console.error('Error rejectLog-querying:', error);
+            return "No reason found.";
+        }
+    }
+
     useEffect(() => {
         handleAdminQuery()
         .catch(error => {
@@ -191,6 +205,12 @@ export function AdminOrderPage(){
                                             secondary={`Price: ${order.price} State: ${order.state} Chef: ${order.chefName} Customer: ${order.customerName}`}
                                             sx={{ color: order.state === 'rejected' ? 'red' : 'inherit' }}
                                         />
+                                        {order.state == 'rejected' &&
+                                            <Button onClick={async () => {
+                                                const reason = await handleRejectLogQuery(order.dishName, order.orderID, order.orderPart);
+                                                alert(reason);
+                                            }}>查看退款原因</Button>
+                                        }
                                     </ListItem>
                                 ))}
                             </List>

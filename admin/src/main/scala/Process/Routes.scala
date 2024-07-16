@@ -14,6 +14,11 @@ import org.http4s.dsl.io.*
 object Routes:
   private def executePlan(messageType:String, str: String): IO[String]=
     messageType match {
+      case "QueryRejectLogMessage" =>
+        IO(decode[QueryRejectLogMessagePlanner](str).getOrElse(throw new Exception("Invalid JSON for QueryRejectLogMessage")))
+          .flatMap{m=>
+            m.fullPlan.map(_.asJson.toString)
+          }
       case "DishDeleteMessage" =>
         IO(decode[DishDeleteMessagePlanner](str).getOrElse(throw new Exception("Invalid JSON for DishDeleteMessage")))
           .flatMap{m=>
