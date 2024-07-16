@@ -179,9 +179,18 @@ const AdminRatingPage: React.FC = () => {
                         </Grid>
                     ))}
                 </Grid>
-                <Button variant="contained" className='button' fullWidth style={{ marginTop: '20px' }} onClick={() => {history.push("/admin")}}>
-                    返回
-                </Button>
+                <Box display="flex" mt={2} justifyContent="space-between" className="button-container" marginBottom='0'>
+                    <Button variant="contained" className='button' onClick={() => {
+                        fetchComments();
+                        updateInfo();
+                    }}>
+                        刷新
+                    </Button>
+                    <Button color="secondary" onClick={() => {history.push('/admin')}}
+                            sx={{ textTransform: 'none', fontWeight: 'bold' }}>
+                        返回
+                    </Button>
+                </Box>
             </Box>
         </div>
     );
