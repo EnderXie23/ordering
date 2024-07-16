@@ -19,6 +19,7 @@ import { CustomerCommentMessage } from 'Plugins/CustomerAPI/CustomerCommentMessa
 import { ReadCommentsMessage } from 'Plugins/CustomerAPI/ReadCommentsMessage'
 import { useHistory } from 'react-router'
 import { DishRatingMessage } from 'Plugins/CustomerAPI/DishRatingMessage'
+import backgroundImage from 'Images/background.png'
 
 interface displayComment {
     id: number;
@@ -165,19 +166,28 @@ const CommentPage: React.FC = () => {
             await customerCommentRequest(commentMessage);
             setSuccessMessage('评价成功');
             setErrorMessage('');
+            setTimeout(() => {
+                history.push('/');
+            }, 1000);
         } catch (error) {
             console.error('Error in handleQuery:', error);
         }
     }
 
     return (
+        <div className='root' style={{ backgroundImage: `url(${backgroundImage})` }}>
+            <Box className='cover' />
+            <Box sx={{ display: 'flex', alignItems: 'stretch', padding: 0, width: '70%', backgroundColor: 'transparent', zIndex: 2}}>
         <Container maxWidth="md" style={{
             height: '90vh',
             overflowY: 'auto'
         }}>
-            <Paper elevation={3} style={{ padding: '20px', marginTop: '20px' }}>
-                <Typography variant="h4" gutterBottom>
-                    评价
+            <Paper elevation={3} style={{ padding: '20px', backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
+                <Typography variant="h4" align="center" gutterBottom sx={{
+                    fontSize: '2rem',
+                    fontWeight: 'bold',
+                }}>
+                    您的评价是我们最大的动力！
                 </Typography>
                 <form style={{ marginTop: '20px' }}>
                     <TextField
@@ -203,7 +213,7 @@ const CommentPage: React.FC = () => {
                     <Box>
                         {orderedDishes.map((dish, index) => (
                             <Box key={dish.name} mt={2} alignItems="center" justifyContent="center" display="flex">
-                                <Typography>{dish.name}:</Typography>
+                                <Typography style={{ fontFamily: 'Merriweather', marginRight: '4px' }}>{dish.name}: </Typography>
                                 <Rating
                                     value={dishRatings[index].rating}
                                     onChange={(e, newValue) => handleRatingChange(index, newValue)}
@@ -211,68 +221,88 @@ const CommentPage: React.FC = () => {
                                 />
                             </Box>
                         ))}
-                        <Box mt={2} alignItems="center" justifyContent="center" display="flex">
-                            <Typography>综合评分：{overallRating}</Typography>
+                        <Box mt={2} alignItems="center" justifyContent="center" display="flex" style={{marginTop: '4px'}}>
+                            <Typography style={{ fontFamily: 'Noto Sans'}}>综合评分：{overallRating}</Typography>
                         </Box>
                     </Box>
                     <Grid container columns={2} mt={2} >
-                        <Grid item xs={1} sm={1} md={1}>
+                        <Grid item xs={1} sm={1} md={1} style={{display:'flex', justifyContent: 'center'}}>
                             <Typography>口味：</Typography>
-                            <Box display="flex">
+                            <Box display="flex" flexDirection='row'>
                                 <Rating value={tasteRating} onChange={(e, newValue) => setTasteRating(newValue)} precision={0.5}/>
-                                <Typography>{tasteRating}</Typography>
+                                <Typography style={{marginLeft: '4px'}}>{tasteRating}</Typography>
                             </Box>
                         </Grid>
-                        <Grid item xs={1} sm={1} md={1}>
+                        <Grid item xs={1} sm={1} md={1} style={{display:'flex', justifyContent: 'center'}}>
                             <Typography>包装：</Typography>
-                            <Box display="flex">
+                            <Box display="flex" flexDirection='row'>
                                 <Rating value={packagingRating} onChange={(e, newValue) => setPackagingRating(newValue)} precision={0.5}/>
-                                <Typography>{packagingRating}</Typography>
+                                <Typography style={{marginLeft: '4px'}}>{packagingRating}</Typography>
                             </Box>
                         </Grid>
-                        <Grid mt={1} item xs={1} sm={1} md={1}>
+                        <Grid mt={1} item xs={1} sm={1} md={1} style={{display:'flex', justifyContent: 'center'}}>
                             <Typography>服务：</Typography>
-                            <Box display="flex">
+                            <Box display="flex" flexDirection='row'>
                                 <Rating value={serviceRating} onChange={(e, newValue) => setServiceRating(newValue)} precision={0.5}/>
-                                <Typography>{serviceRating}</Typography>
+                                <Typography style={{marginLeft: '4px'}}>{serviceRating}</Typography>
                             </Box>
                         </Grid>
-                        <Grid mt={1} item xs={1} sm={1} md={1}>
+                        <Grid mt={1} item xs={1} sm={1} md={1} style={{display:'flex', justifyContent: 'center'}}>
                             <Typography>环境：</Typography>
-                            <Box display="flex">
+                            <Box display="flex" flexDirection='row'>
                                 <Rating value={envRating} onChange={(e, newValue) => setEnvRating(newValue)} precision={0.5}/>
-                                <Typography>{envRating}</Typography>
+                                <Typography style={{marginLeft: '4px'}}>{envRating}</Typography>
                             </Box>
                         </Grid>
                     </Grid>
-                    <Button variant="contained" color="primary" fullWidth style={{ marginTop: '20px' }} onClick={handleSubmit}>
-                        Submit
+                    <Button variant="contained" className='button' fullWidth style={{ marginTop: '20px' }} onClick={handleSubmit}>
+                        提交
                     </Button>
-                    <Button variant="contained" color="secondary" fullWidth style={{ marginTop: '10px' }} onClick={() => history.push("/finish")}>
-                        Back
-                    </Button>
+                    <Box display="flex" mt={2} justifyContent="space-between" className="button-container" marginBottom='0'>
+                        <Button color="secondary" onClick={() => {
+                            history.push('/finish')
+                        }}
+                                sx={{ textTransform: 'none', fontWeight: 'bold' }}>
+                            返回
+                        </Button>
+                        <Button color="secondary" onClick={() => {
+                            history.push('/')
+                        }}
+                                sx={{ textTransform: 'none', fontWeight: 'bold' }}>
+                            跳过
+                        </Button>
+                    </Box>
                 </form>
                 {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
                 {successMessage && <Alert severity="success">{successMessage}</Alert>}
             </Paper>
             {loading ? (
-                <Box display="flex" justifyContent="center" alignItems="center" height="200px">
+                <Box display="flex" justifyContent="center" alignItems="center" height="200px" style={{backgroundColor: 'rgba(255, 255, 255, 0.9)'}}>
                     <CircularProgress />
                 </Box>
             ) : (
-                <Card style={{ marginTop: '20px' }}>
+                <Card style={{ marginTop: '20px', backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
                     {comments.length === 0 ? (
-                        <Typography>还没有评价。</Typography>
+                        <Typography align='center'>还没有评价。</Typography>
                     ) : (
                         <List>
                             {comments.map((comment) => (
-                                <ListItem key={comment.id} alignItems="flex-start">
+                                <ListItem key={comment.id} alignItems="flex-start"
+                                          style={{backgroundColor:'white', margin:'2%', borderRadius:'5px', width:'96%', justifyContent:'center'}}>
                                     <ListItemText
-                                        primary={comment.author}
+                                        primary={<Typography style={{fontFamily: 'Merriweather'}}> by: {comment.author}</Typography>}
                                         secondary={
-                                            <Typography component="span" style={{ whiteSpace: 'pre-line' }}>
-                                                {`${comment.text}\n综合评价：${comment.overallRating}\n口味：${comment.tasteRating}, 包装：${comment.packagingRating}, 服务：${comment.serviceRating}, 环境：${comment.envRating}`}
-                                            </Typography>
+                                            <Box display="flex" flexDirection='column'>
+                                                <Typography component="span" color='black' style={{ whiteSpace: 'pre-line', fontSize:'1.5rem', wordWrap: "break-word"}}>
+                                                    {`${comment.text}`}
+                                                </Typography>
+                                                <Typography component="span" align='center' style={{ whiteSpace: 'pre-line' }}>
+                                                    {`综合评价：${comment.overallRating}`}
+                                                </Typography>
+                                                <Typography component="span" align='center' style={{ whiteSpace: 'pre-line' }}>
+                                                    {`口味：${comment.tasteRating}, 包装：${comment.packagingRating}, 服务：${comment.serviceRating}, 环境：${comment.envRating}`}
+                                                </Typography>
+                                            </Box>
                                         }
                                     />
                                 </ListItem>
@@ -282,6 +312,8 @@ const CommentPage: React.FC = () => {
                 </Card>
             )}
         </Container>
+            </Box>
+        </div>
     );
 };
 
