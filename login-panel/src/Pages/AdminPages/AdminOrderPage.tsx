@@ -3,19 +3,19 @@ import { useHistory } from 'react-router'
 import {
     Button,
     Typography,
-    Container,
     Box,
     ListItem,
     ListItemText,
     Paper,
     List,
-    FormControlLabel,
-    Switch, DialogTitle, DialogContent, TextField, DialogActions, Dialog,
+    Radio, RadioGroup,
+    Select, DialogTitle, DialogContent, DialogActions, Dialog, FormControl, FormControlLabel
 } from '@mui/material'
 import axios from 'axios'
 import { AdminQueryMessage } from 'Plugins/AdminAPI/AdminQueryMessage'
 import { QueryRejectLogMessage } from 'Plugins/AdminAPI/QueryRejectLogMessage'
 import { CustomerQueryProfileMessage, CustomerChargeMessage } from 'Plugins/CustomerAPI/CustomerProfileMessage'
+import backgroundImage from 'Images/background.png'
 
 interface finishedOrder{
     chefName: string,
@@ -63,7 +63,8 @@ export function AdminOrderPage(){
     const [groupedOrdersByOrderID, setGroupedOrdersByOrderID] = useState<{ [orderID: string]: finishedOrder[] }>({});
     const [groupByCustomer, setGroupByCustomer] = useState(false); // State for grouping method
     const [income, setIncome] = useState(0); // State for total income
-    const [dialogOpen, setDialogOpen] = useState(false);
+    // 0 for close, 1 for reason, 2 for refund
+    const [dialogOpen, setDialogOpen] = useState(0);
     const [dialogContent, setDialogContent] = useState('');
 
     const groupOrdersByCustomer = (orders: finishedOrder[]) => {
@@ -138,11 +139,11 @@ export function AdminOrderPage(){
                 headers: { 'Content-Type': 'application/json' },
             })
             setDialogContent('已退款' + order.price * order.quantity + '元');
-            setDialogOpen(true);
+            setDialogOpen(2);
         } catch (error) {
             console.error('Error refunding:', error);
             setDialogContent('退款失败');
-            setDialogOpen(true);
+            setDialogOpen(2);
         }
     }
 
@@ -153,156 +154,165 @@ export function AdminOrderPage(){
         })
     }, [])
 
-    const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setGroupByCustomer(event.target.checked);
+    const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setGroupByCustomer(event.target.value === 'true');
     };
 
     return (
-        <Container style={{
-            maxHeight: '100vh',
-        }}>
-            <Box style = {{position: 'sticky',
-                top: 0,
-                backgroundColor: 'white', // 确保背景色与容器相同或根据需要设置
-                zIndex: 1000, // 确保标题部分在其他内容之上
-                display: 'flex',
-                justifyContent: 'center',
-                padding: '20px', // 根据需要添加内边距
-                margin: '10px', // 与下方内容保持一定距离
-            }}>
-                <Typography variant="h4" component="h1" align="center">
-                    订单管理页面：总收入{income.toFixed(2)}元！
-                </Typography>
-            </Box>
-            <Box style={{
-                position: 'sticky',
-                top: 40, // Adjust based on your header height
-                zIndex: 500,
-                backgroundColor: 'white',
-                display: 'flex',
-                justifyContent: 'center',
-                padding: '10px'
-            }}>
-                <FormControlLabel
-                    control={
-                        <Switch
-                            checked={groupByCustomer}
-                            onChange={handleSwitchChange}
-                            name="groupByCustomer"
-                            color="primary"
-                        />
-                    }
-                    label="Group by Customer"
-                />
-            </Box>
-            <Box style={{ maxHeight: '70vh', overflowY: 'auto' }}>
-                {groupByCustomer ? (
-                    Object.entries(groupedOrdersByCustomer).map(([customerName, orders]) => (
-                        <Paper key={customerName} style={{ margin: '20px', padding: '10px' }}>
-                            <Typography variant="h6">{customerName}</Typography>
-                            <List>
-                                {orders.map((order, index) => (
-                                    <ListItem key={index} divider>
-                                        <ListItemText
-                                            primary={`Dish: ${order.dishName} x ${order.quantity}`}
-                                            secondary={`Price: ${order.price} State: ${order.state} Chef: ${order.chefName}`}
-                                            sx={{ color: order.state === 'rejected' ? 'red' : 'inherit' }}
-                                        />
-                                        {order.state == 'rejected' &&(
-                                            <Box>
-                                                <Button onClick={async () => {
-                                                    handleRefund(order);
-                                                }} color='error'>退款</Button>
-                                                <Button onClick={async () => {
-                                                    const reason = await handleRejectLogQuery(order.dishName, order.orderID, order.orderPart);
-                                                    setDialogContent(reason);
-                                                    setDialogOpen(true);
-                                                }}>查看拒绝原因</Button>
-                                            </Box>)
-                                        }
-                                    </ListItem>
-                                ))}
-                            </List>
-                        </Paper>
-                    ))
-                ) : (
-                    Object.entries(groupedOrdersByOrderID)
-                        .sort(([a], [b]) => parseInt(b, 10) - parseInt(a, 10))
-                        .map(([orderID, orders]) => (
-                            <Paper key={orderID} style={{ margin: '20px', padding: '10px' }}>
-                                <Typography variant="h6">Order ID: {orderID}, 总价: {orders
-                                    .filter(order => order.state !== "rejected")
-                                    .reduce((total, order) => total + (order.price * order.quantity), 0)}, 退款: {orders
-                                    .filter(order => order.state == 'rejected')
-                                    .reduce((tot, order) => tot + (order.price * order.quantity), 0)}
-                                </Typography>
+        <div className='root' style={{ backgroundImage: `url(${backgroundImage})` }}>
+            <Box className='cover' />
+            <Box className='main-box' height='90%' minWidth='40%'>
+                <Box marginBottom='16px'>
+                    <Typography variant="h4" component="h1" align="center" sx={{
+                        fontSize: '2rem',
+                        fontWeight: 'bold',
+                        marginBottom: '1rem'
+                    }}>
+                        订单管理页面
+                    </Typography>
+                    <Typography variant="h4" component="h1" align="center" fontSize='1.5rem'>
+                        总收入{income.toFixed(2)}元！
+                    </Typography>
+                </Box>
+                <Box style={{
+                    zIndex: 500,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    padding: '10px'
+                }}>
+                    <FormControl component="fieldset">
+                        <RadioGroup
+                            aria-label="group-by"
+                            name="group-by"
+                            value={groupByCustomer.toString()}
+                            onChange={handleRadioChange}
+                            row
+                        >
+                            <FormControlLabel value="false" control={<Radio />} label="按订单ID分类" />
+                            <FormControlLabel value="true" control={<Radio />} label="按顾客分类" />
+                        </RadioGroup>
+                    </FormControl>
+                </Box>
+                <Box style={{ maxHeight: '63vh', overflowY: 'auto' }}>
+                    {groupByCustomer ? (
+                        Object.entries(groupedOrdersByCustomer).map(([customerName, orders]) => (
+                            <Paper key={customerName} style={{ margin: '20px', padding: '10px' }}>
+                                <Typography variant="h6" fontFamily='Merriweather'>{customerName}</Typography>
                                 <List>
                                     {orders.map((order, index) => (
                                         <ListItem key={index} divider>
                                             <ListItemText
-                                                primary={`Dish: ${order.dishName} x ${order.quantity}`}
-                                                secondary={`Price: ${order.price} State: ${order.state} Chef: ${order.chefName} Customer: ${order.customerName}`}
+                                                primary={`菜品名: ${order.dishName} x ${order.quantity}`}
+                                                secondary={`价格: ${order.price} 状态: ${order.state} 厨师: ${order.chefName}`}
                                                 sx={{ color: order.state === 'rejected' ? 'red' : 'inherit' }}
                                             />
                                             {order.state == 'rejected' &&(
                                                 <Box>
-                                                    <Button onClick={async () => {
-                                                        handleRefund(order);
-                                                    }} color='error'>退款</Button>
-                                                    <Button onClick={async () => {
+                                                    <Button onClick={async () => {handleRefund(order)}}
+                                                            color='error' sx={{ textTransform: 'none', fontWeight: 'bold' }}>
+                                                        退款
+                                                    </Button>
+                                                    <Button sx={{ textTransform: 'none', fontWeight: 'bold' }}
+                                                        onClick={async () => {
                                                         const reason = await handleRejectLogQuery(order.dishName, order.orderID, order.orderPart);
                                                         setDialogContent(reason);
-                                                        setDialogOpen(true);
-                                                    }}>查看拒绝原因</Button>
+                                                        setDialogOpen(1);
+                                                    }}>
+                                                        查看拒绝原因
+                                                    </Button>
                                                 </Box>)
                                             }
                                         </ListItem>
                                     ))}
                                 </List>
                             </Paper>
-                    ))
-                )}
-            </Box>
-            <Box display="flex" flexDirection="column" alignItems="stretch" mt={1} className="button-container">
-                <Button color="primary" onClick={handleAdminQuery}>
-                    刷新
-                </Button>
-                <Box display="flex" mt={1} className="button-container">
-                    <Button color="secondary" onClick={() => {history.push('/admin')}}>
-                        返回上一级
-                    </Button>
-                    <Button color="secondary" onClick={() => {history.push('/')}}>
-                        主页
-                    </Button>
+                        ))
+                    ) : (
+                        Object.entries(groupedOrdersByOrderID)
+                            .sort(([a], [b]) => parseInt(b, 10) - parseInt(a, 10))
+                            .map(([orderID, orders]) => (
+                                <Paper key={orderID} style={{ margin: '20px', padding: '10px' }}>
+                                    <Typography variant="h6" fontFamily='Merriweather'>
+                                        Order ID: {orderID}, 总价: {orders
+                                        .filter(order => order.state !== "rejected")
+                                        .reduce((total, order) => total + (order.price * order.quantity), 0)}, 退款: {orders
+                                        .filter(order => order.state == 'rejected')
+                                        .reduce((tot, order) => tot + (order.price * order.quantity), 0)}
+                                    </Typography>
+                                    <List>
+                                        {orders.map((order, index) => (
+                                            <ListItem key={index} divider>
+                                                <ListItemText
+                                                    primary={`菜品名: ${order.dishName} x ${order.quantity}`}
+                                                    secondary={`价格: ${order.price} 状态: ${order.state} 厨师: ${order.chefName} 顾客: ${order.customerName}`}
+                                                    sx={{ color: order.state === 'rejected' ? 'red' : 'inherit' }}
+                                                />
+                                                {order.state == 'rejected' &&(
+                                                    <Box>
+                                                        <Button onClick={async () => {handleRefund(order)}}
+                                                                color='error' sx={{ textTransform: 'none', fontWeight: 'bold' }}>
+                                                            退款
+                                                        </Button>
+                                                        <Button sx={{ textTransform: 'none', fontWeight: 'bold' }}
+                                                            onClick={async () => {
+                                                            const reason = await handleRejectLogQuery(order.dishName, order.orderID, order.orderPart);
+                                                            setDialogContent(reason);
+                                                            setDialogOpen(1);
+                                                        }}>
+                                                            查看拒绝原因
+                                                        </Button>
+                                                    </Box>)
+                                                }
+                                            </ListItem>
+                                        ))}
+                                    </List>
+                                </Paper>
+                        ))
+                    )}
                 </Box>
-            </Box>
-        {/*  Dialog box  */}
-            <Dialog open={dialogOpen} sx={{
-                '& .MuiDialog-paper': {
-                    width: '80%',
-                    maxWidth: '500px',
-                    padding: '1rem',
-                }
-            }}>
-                <DialogTitle id="dialog" color="warning">
-                    <Typography align="center" style={{
-                        fontSize: '2rem',
-                        fontWeight: 'bold',
-                        marginBottom: '1rem'
-                    }}>
-                        提示：
-                    </Typography>
-                </DialogTitle>
-                <DialogContent>
-                    <Typography>{dialogContent}</Typography>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => {setDialogOpen(false)}} color="primary"
-                            sx={{ textTransform: 'none', fontWeight: 'bold' }}>
-                        确定
+                <Box display="flex" flexDirection="column" alignItems="stretch" mt={1} className="button-container">
+                    <Button variant="contained" className='button' onClick={handleAdminQuery}>
+                        刷新
                     </Button>
-                </DialogActions>
-            </Dialog>
-        </Container>
+                    <Box display="flex" mt={2} justifyContent="space-between" className="button-container">
+                        <Button color="secondary" onClick={() => {history.push('/admin')}}
+                                sx={{ textTransform: 'none', fontWeight: 'bold' }}>
+                            返回
+                        </Button>
+                        <Button color="secondary" onClick={() => {history.push('/')}}
+                                sx={{ textTransform: 'none', fontWeight: 'bold' }}>
+                            主页
+                        </Button>
+                    </Box>
+                </Box>
+            {/*  Dialog box  */}
+                <Dialog open={dialogOpen !== 0} sx={{
+                    '& .MuiDialog-paper': {
+                        width: '80%',
+                        maxWidth: '500px',
+                        padding: '1rem',
+                    }
+                }}>
+                    <DialogTitle id="dialog" color="warning">
+                        <Typography align="center" style={{
+                            fontSize: '2rem',
+                            fontWeight: 'bold',
+                            marginBottom: '1rem'
+                        }}>
+                            {dialogOpen === 1 ? '拒绝原因' : '提示'}
+                        </Typography>
+                    </DialogTitle>
+                    <DialogContent>
+                        <Typography fontSize='1.5rem'>{dialogContent}</Typography>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => {setDialogOpen(0)}} color="primary"
+                                sx={{ textTransform: 'none', fontWeight: 'bold' }}>
+                            确定
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </Box>
+        </div>
     )
 }
