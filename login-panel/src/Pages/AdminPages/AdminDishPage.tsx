@@ -3,7 +3,6 @@ import { useHistory } from 'react-router'
 import {
     Button,
     Typography,
-    Container,
     Box,
     Dialog,
     TextField,
@@ -22,6 +21,7 @@ import { styled } from '@mui/styles'
 // @ts-ignore
 import ChatPanel from 'Plugins/CommonUtils/ChatPanel'
 import { AdminQueryMessage } from 'Plugins/AdminAPI/AdminQueryMessage'
+import backgroundImage from 'Images/background.png'
 
 interface Dish {
     name: string;
@@ -226,175 +226,186 @@ export function AdminDishPage() {
     }, [])
 
     return (
-        <Container
-            style={{ maxHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-            <h1 style={{
-                marginBottom: '50px',
-            }}>菜单管理:</h1>
-            <Grid container spacing={4} style={{
-                height: '80vh',
-                overflowY: 'auto',
-            }}>
-                {dishes.map((dish) => (
-                    <Grid item xs={12} sm={6} md={4} key={dish.name}>
-                        <Card style={{ maxWidth: '250px', height: '350px', justifyContent: 'center' }}>
-                            <CardMedia component="img" height="140" src={getImagePath(dish.path)} alt={dish.name} />
-                            <CardContent>
-                                <Typography variant="h5">{dish.name}</Typography>
-                                <Box>
-                                    <Typography variant="subtitle1">价格：{dish.price}元</Typography>
-                                    <Typography variant="subtitle1">订单量：{dish.orders}, 评分：{dish.rating === 0? 'N/A' : dish.rating.toFixed(2)}</Typography>
-                                </Box>
-                                <Box display="flex" alignItems="center">
-                                    <Button variant="contained" color="primary" onClick={() => {
-                                        setDishToChange(dish.name)
-                                        setChangeOpen(true)
-                                    }}>
-                                        <Typography>更改价格</Typography>
-                                    </Button>
-                                    <Button variant="contained" color="error" onClick={() => {
-                                        setDishToChange(dish.name)
-                                        setDeleteOpen(true)
-                                    }}>
-                                        <Typography>移除</Typography>
-                                    </Button>
-                                </Box>
+        <div className='root' style={{backgroundImage: `url(${backgroundImage})`}}>
+            <Box className='cover' />
+            <Box className='main-box'>
+                <Grid>
+                    <h1 style={{marginTop:0}}>
+                        菜单管理:
+                    </h1>
+                </Grid>
+                <Grid container spacing={4} style={{
+                    height: '75vh',
+                    overflowY: 'auto',
+                    marginTop: '0'
+                }}>
+                    {dishes.map((dish) => (
+                        <Grid item xs={12} sm={6} md={4} key={dish.name} paddingLeft='16px !important' paddingRight='16px'>
+                            <Card sx={{
+                                height: '100%',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'space-between',
+                                overflowY: 'auto'
+                            }}>
+                                <CardMedia component="img" height="140" src={getImagePath(dish.path)} alt={dish.name} />
+                                <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                                    <Typography variant="h5" fontFamily='Merriweather'>{dish.name}</Typography>
+                                    <Box>
+                                        <Typography variant="subtitle1">价格：{dish.price}元</Typography>
+                                        <Typography variant="subtitle1">订单量：{dish.orders}, 评分：{dish.rating === 0? 'N/A' : dish.rating.toFixed(2)}</Typography>
+                                    </Box>
+                                    <Box display="flex" alignItems="center" justifyContent='space-between'>
+                                        <Button variant="contained" color="primary" className='button' onClick={() => {
+                                            setDishToChange(dish.name)
+                                            setChangeOpen(true)
+                                        }}>
+                                            更改价格
+                                        </Button>
+                                        <Button variant="contained" color="error" className='button' onClick={() => {
+                                            setDishToChange(dish.name)
+                                            setDeleteOpen(true)
+                                        }}>
+                                            移除
+                                        </Button>
+                                    </Box>
 
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                ))}
-            </Grid>
-            <div>
-                <Button variant="contained" color="primary" onClick={() => {
-                    setAddOpen(true)
-                }} style={{ marginTop: '10px' }}>
-                    添加菜品
-                </Button>
-                <Button variant="contained" color="secondary" onClick={() => {
-                    history.push('/admin')
-                }} style={{ marginTop: '10px' }}>
-                    返回
-                </Button>
-            </div>
-            <Dialog open={changeOpen} fullWidth>
-                <DialogTitle>更改{dishToChange}的价格</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        原价为{dishes.find(dish => dish.name === dishToChange)?.price}，输入更新后的价格：
-                    </DialogContentText>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        label="New price"
-                        value={newPrice}
-                        onChange={
-                            (e) => {
-                                setNewPrice(e.target.value)
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    ))}
+                </Grid>
+                <Box display="flex" mt={2} justifyContent="space-between" className="button-container" marginBottom='0'>
+                    <Button variant="contained" color="primary" className='button' onClick={() => {
+                        setAddOpen(true)
+                    }} style={{ marginTop: '10px' }}>
+                        添加菜品
+                    </Button>
+                    <Button variant="contained" color="secondary" className='button' onClick={() => {
+                        history.push('/admin')
+                    }} style={{ marginTop: '10px' }}>
+                        返回
+                    </Button>
+                </Box>
+                <Dialog open={changeOpen} fullWidth>
+                    <DialogTitle>更改{dishToChange}的价格</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            原价为{dishes.find(dish => dish.name === dishToChange)?.price}，输入更新后的价格：
+                        </DialogContentText>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            label="New price"
+                            value={newPrice}
+                            onChange={
+                                (e) => {
+                                    setNewPrice(e.target.value)
+                                }
                             }
-                        }
-                        type="text"
-                        fullWidth
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleChangeClose} color="primary">
-                        取消
-                    </Button>
-                    <Button onClick={() => {
-                        handleChangePrice(dishToChange)
-                        handleChangeClose()
-                    }} color="primary">
-                        提交
-                    </Button>
-                </DialogActions>
-            </Dialog>
-            <Dialog open={deleteOpen} fullWidth>
-                <DialogTitle>删除{dishToChange}？</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        此操作无法撤销！
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleDeleteClose} color="primary">
-                        取消
-                    </Button>
-                    <Button onClick={() => {
-                        handleDeleteDish(dishToChange)
-                        handleDeleteClose()
-                    }} color="primary">
-                        提交
-                    </Button>
-                </DialogActions>
-            </Dialog>
-            <Dialog open={addOpen} fullWidth>
-                <DialogTitle>添加菜品</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
-                        填写新菜品的信息：
-                    </DialogContentText>
-                    <TextField
-                        label="Dish Name"
-                        name="name"
-                        value={newDish.name}
-                        onChange={handleInputChange}
-                        fullWidth
-                        margin="normal"
-                    />
-                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', mb: 2 }}>
-                            <TextField
-                                label="Image Path"
-                                name="path"
-                                value={newDish.path}
-                                // fullWidth
-                                margin="normal"
-                                disabled
-                            />
-                            <label htmlFor="image-upload">
-                                <HiddenInput
-                                    accept="image/*"
-                                    id="image-upload"
-                                    type="file"
-                                    onChange={handleFileChange}
+                            type="text"
+                            fullWidth
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleChangeClose} color="primary">
+                            取消
+                        </Button>
+                        <Button onClick={() => {
+                            handleChangePrice(dishToChange)
+                            handleChangeClose()
+                        }} color="primary">
+                            提交
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+                <Dialog open={deleteOpen} fullWidth>
+                    <DialogTitle>删除{dishToChange}？</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            此操作无法撤销！
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleDeleteClose} color="primary">
+                            取消
+                        </Button>
+                        <Button onClick={() => {
+                            handleDeleteDish(dishToChange)
+                            handleDeleteClose()
+                        }} color="primary">
+                            提交
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+                <Dialog open={addOpen} fullWidth>
+                    <DialogTitle>添加菜品</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            填写新菜品的信息：
+                        </DialogContentText>
+                        <TextField
+                            label="Dish Name"
+                            name="name"
+                            value={newDish.name}
+                            onChange={handleInputChange}
+                            fullWidth
+                            margin="normal"
+                        />
+                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', mb: 2 }}>
+                                <TextField
+                                    label="Image Path"
+                                    name="path"
+                                    value={newDish.path}
+                                    // fullWidth
+                                    margin="normal"
+                                    disabled
                                 />
-                                <Button variant="contained" component="span" sx={{ ml: 2, mt: 2 }}>
-                                    Upload Image
-                                </Button>
-                            </label>
-                        </Box>
-                        {previewImage && (
-                            <Box sx={{ mt: 2 }}>
-                                <img src={previewImage} alt="Image Preview"
-                                     style={{ maxWidth: '100%', marginTop: '10px' }} />
+                                <label htmlFor="image-upload">
+                                    <HiddenInput
+                                        accept="image/*"
+                                        id="image-upload"
+                                        type="file"
+                                        onChange={handleFileChange}
+                                    />
+                                    <Button variant="contained" component="span" sx={{ ml: 2, mt: 2 }}>
+                                        Upload Image
+                                    </Button>
+                                </label>
                             </Box>
-                        )}
-                    </Box>
-                    <TextField
-                        label="Price"
-                        name="price"
-                        value={newDish.price}
-                        onChange={handleInputChange}
-                        fullWidth
-                        margin="normal"
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleAddClose} color="primary">
-                        取消
-                    </Button>
-                    <Button onClick={() => {
-                        if (newDish.name != '') {
-                            handleAddDish()
-                        }
-                        handleAddClose()
-                    }} color="primary">
-                        提交
-                    </Button>
-                </DialogActions>
-            </Dialog>
-            <ChatPanel />
-        </Container>
+                            {previewImage && (
+                                <Box sx={{ mt: 2 }}>
+                                    <img src={previewImage} alt="Image Preview"
+                                         style={{ maxWidth: '100%', marginTop: '10px' }} />
+                                </Box>
+                            )}
+                        </Box>
+                        <TextField
+                            label="Price"
+                            name="price"
+                            value={newDish.price}
+                            onChange={handleInputChange}
+                            fullWidth
+                            margin="normal"
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleAddClose} color="primary">
+                            取消
+                        </Button>
+                        <Button onClick={() => {
+                            if (newDish.name != '') {
+                                handleAddDish()
+                            }
+                            handleAddClose()
+                        }} color="primary">
+                            提交
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </Box>
+            <ChatPanel/>
+        </div>
     )
 }

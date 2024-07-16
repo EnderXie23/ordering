@@ -10,6 +10,7 @@ import '../index.css'
 // @ts-ignore
 import ChatPanel from 'Plugins/CommonUtils/ChatPanel'
 import { useUser } from 'Pages/UserContext'
+import backgroundImage from 'Images/background.png'
 
 export function AdminPage(){
     const history=useHistory()
@@ -22,32 +23,35 @@ export function AdminPage(){
     }, [])
 
     return (
-        <Container>
-            <Typography variant="h4" align="center" gutterBottom marginBottom={5} sx={{
-                fontSize: '3rem',
-                fontWeight: 'bold',
-                marginBottom: '2rem'
-            }}>
-                管理员页面
-            </Typography>
-            <Box display="flex" flexDirection="column" alignItems="stretch" mt={2} className="button-container" gap={2}>
-                <Button variant="outlined" className="button" startIcon={<RestaurantMenuIcon />} onClick={() => history.push("/admin-dish")}>
-                    查看菜品
-                </Button>
-                <Button variant="outlined" className="button" startIcon={<ReceiptIcon />} onClick={() => history.push("/admin-order")}>
-                    查看订单
-                </Button>
-                <Button variant="outlined" className="button" startIcon={<RateReviewIcon />} onClick={() => {history.push('/admin-rating')}}>
-                    顾客评价
-                </Button>
-                <Button variant="outlined" className="button" startIcon={<StarIcon />} onClick={() => {history.push('/admin-chef')}}>
-                    厨师概况
-                </Button>
-                <ChatPanel />
-                <Button color="secondary" onClick={() => {history.push('/')}} sx={{ textTransform: 'none', fontWeight: 'bold' }}>
-                    主页
-                </Button>
+        <div className='root' style={{backgroundImage: `url(${backgroundImage})`}}>
+            <Box className='cover' />
+            <Box className='main-box'>
+                <Typography variant="h4" align="center" gutterBottom marginBottom={5} sx={{
+                    fontSize: '3rem',
+                    fontWeight: 'bold',
+                    marginBottom: '2rem'
+                }}>
+                    管理员页面
+                </Typography>
+                <Box display="flex" flexDirection="column" alignItems="stretch" mt={2} className="button-container" gap={2} margin={0}>
+                    <Button variant="outlined" className="button" startIcon={<RestaurantMenuIcon />} onClick={() => history.push("/admin-dish")}>
+                        查看菜品
+                    </Button>
+                    <Button variant="outlined" className="button" startIcon={<ReceiptIcon />} onClick={() => history.push("/admin-order")}>
+                        查看订单
+                    </Button>
+                    <Button variant="outlined" className="button" startIcon={<RateReviewIcon />} onClick={() => {history.push('/admin-rating')}}>
+                        顾客评价
+                    </Button>
+                    <Button variant="outlined" className="button" startIcon={<StarIcon />} onClick={() => {history.push('/admin-chef')}}>
+                        厨师概况
+                    </Button>
+                    <ChatPanel />
+                    <Button color="secondary" onClick={() => {history.push('/')}} sx={{ textTransform: 'none', fontWeight: 'bold' }}>
+                        主页
+                    </Button>
+                </Box>
             </Box>
-        </Container>
+        </div>
     )
 }
