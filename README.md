@@ -4,7 +4,7 @@
 
 ### Bugs:
 
-- [ ] 在orderingpage页面上充值，显示余额不会刷新，需要手动重启(tjn)
+- [x] 在orderingpage页面上充值，显示余额不会刷新，需要手动重启
 
 - [x] Admin订单未统计总金额
 
