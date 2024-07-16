@@ -242,7 +242,14 @@ const ChefPage: React.FC = () => {
     return (
         <div className='root' style={{ backgroundImage: `url(${backgroundImage})` }}>
             <Box className='cover' />
-            <Box className='main-box' sx={{ display: 'flex', alignItems: 'stretch', margin:'16px', maxHeight:'90%', width:'80%'}}>
+            <Box className='main-box' sx={{
+                display: 'flex',
+                alignItems: 'stretch',
+                margin:'16px',
+                maxHeight:'90%',
+                width:'80%',
+                overflowY: 'auto'
+            }}>
                 <Container className={classes.container}>
                     <Box className={classes.box}>
                         <Typography variant="h4" sx={{

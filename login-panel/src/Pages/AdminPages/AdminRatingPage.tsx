@@ -62,6 +62,26 @@ const AdminRatingPage: React.FC = () => {
                 headers: { 'Content-Type': 'application/json' },
             })
             setComments(parseComments(response.data));
+
+            // Calculate total ratings
+            const _comments : displayComment[] = parseComments(response.data);
+            const totalRatings = _comments.reduce((acc, comment) => {
+                acc.overall += comment.overallRating;
+                acc.taste += comment.tasteRating;
+                acc.packaging += comment.packagingRating;
+                acc.service += comment.serviceRating;
+                acc.env += comment.envRating;
+                return acc;
+            }, { overall: 0, taste: 0, packaging: 0, service: 0, env: 0 });
+
+            const averageRatings = {
+                overall: totalRatings.overall / _comments.length,
+                taste: totalRatings.taste / _comments.length,
+                packaging: totalRatings.packaging / _comments.length,
+                service: totalRatings.service / _comments.length,
+                env: totalRatings.env / _comments.length,
+            };
+            setAverageRatings(averageRatings);
         } catch (error) {
             console.error('Error fetching comments: ',error);
             const testComment = {
@@ -79,42 +99,20 @@ const AdminRatingPage: React.FC = () => {
         }
     };
 
-    const updateInfo = async () => {
-        // Calculate average ratings
-        const totalRatings = comments.reduce((acc, comment) => {
-            acc.overall += comment.overallRating;
-            acc.taste += comment.tasteRating;
-            acc.packaging += comment.packagingRating;
-            acc.service += comment.serviceRating;
-            acc.env += comment.envRating;
-            return acc;
-        }, { overall: 0, taste: 0, packaging: 0, service: 0, env: 0 });
-
-        const averageRatings = {
-            overall: totalRatings.overall / comments.length,
-            taste: totalRatings.taste / comments.length,
-            packaging: totalRatings.packaging / comments.length,
-            service: totalRatings.service / comments.length,
-            env: totalRatings.env / comments.length,
-        };
-        setAverageRatings(averageRatings);
-    }
-
     useEffect(() => {
         fetchComments();
-        updateInfo();
     }, []);
 
     return (
         <div className='root' style={{ backgroundImage: `url(${backgroundImage})` }}>
             <Box className='cover' />
             <Box className='main-box' width='60%'>
-                <Box display="flex" justifyContent="center" alignItems="center" >
+                <Box display="flex" justifyContent="center" alignItems="center">
                     <Typography variant="h4" gutterBottom align='center' sx={{
                         fontSize: '2rem',
                         fontWeight: 'bold',
                     }}>
-                       顾客评价
+                        顾客评价
                     </Typography>
                 </Box>
                 <Grid container style={{
@@ -125,72 +123,76 @@ const AdminRatingPage: React.FC = () => {
                     justifyContent: 'center'
                 }}>
                     <Grid mb={2} p={2} border={1} borderRadius={4} width='100%'>
-                        <Typography variant="h5" align='center' fontWeight='bold' fontSize='1.5rem'>平均分数</Typography>
+                        <Typography variant="h5" align='center' fontWeight='bold'
+                                    fontSize='1.5rem'>平均分数</Typography>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <Typography align='center'>综合评分：{averageRatings.overall.toFixed(2)}</Typography>
-                                <Rating value={averageRatings.overall} readOnly precision={0.5} style={{justifyContent: 'center', width:'100%'}}/>
+                                <Rating value={averageRatings.overall} readOnly precision={0.5}
+                                        style={{ justifyContent: 'center', width: '100%' }} />
                             </Grid>
                             <Grid item xs={6}>
                                 <Typography align='center'>口味评分：{averageRatings.taste.toFixed(2)}</Typography>
-                                <Rating value={averageRatings.taste} readOnly precision={0.5} style={{justifyContent: 'center', width:'100%'}}/>
+                                <Rating value={averageRatings.taste} readOnly precision={0.5}
+                                        style={{ justifyContent: 'center', width: '100%' }} />
                             </Grid>
                             <Grid item xs={6}>
                                 <Typography align='center'>包装评分：{averageRatings.packaging.toFixed(2)}</Typography>
-                                <Rating value={averageRatings.packaging} readOnly precision={0.5} style={{justifyContent: 'center', width:'100%'}}/>
+                                <Rating value={averageRatings.packaging} readOnly precision={0.5}
+                                        style={{ justifyContent: 'center', width: '100%' }} />
                             </Grid>
                             <Grid item xs={6}>
                                 <Typography align='center'>服务评分：{averageRatings.service.toFixed(2)}</Typography>
-                                <Rating value={averageRatings.service} readOnly precision={0.5} style={{justifyContent: 'center', width:'100%'}}/>
+                                <Rating value={averageRatings.service} readOnly precision={0.5}
+                                        style={{ justifyContent: 'center', width: '100%' }} />
                             </Grid>
                             <Grid item xs={6}>
                                 <Typography align='center'>环境评分：{averageRatings.env.toFixed(2)}</Typography>
-                                <Rating value={averageRatings.env} readOnly precision={0.5} style={{justifyContent: 'center', width:'100%'}}/>
+                                <Rating value={averageRatings.env} readOnly precision={0.5}
+                                        style={{ justifyContent: 'center', width: '100%' }} />
                             </Grid>
                         </Grid>
                     </Grid>
                     {comments.map(comment => (
                         <Grid key={comment.id} mb={2} p={2} border={1} borderRadius={4} width='100%'>
                             <Typography variant="h6" fontFamily='Merriweather'>{comment.author}</Typography>
-                            <Typography variant="body1" style={{wordWrap: "break-word"}}>{comment.text}</Typography>
+                            <Typography variant="body1" style={{ wordWrap: "break-word" }}>{comment.text}</Typography>
 
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>
-                                    <Typography align='center'>综合评分：{comment.overallRating}</Typography>
-                                    <Rating value={comment.overallRating} readOnly style={{justifyContent: 'center', width:'100%'}}/>
+                                    <Typography align='center'>综合评分：{comment.overallRating.toFixed(2)}</Typography>
+                                    <Rating value={comment.overallRating} readOnly
+                                            style={{ justifyContent: 'center', width: '100%' }} />
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <Typography align='center'>口味评分：{comment.tasteRating}</Typography>
-                                    <Rating value={comment.tasteRating} readOnly precision={0.5} style={{justifyContent: 'center', width:'100%'}}/>
+                                    <Typography align='center'>口味评分：{comment.tasteRating.toFixed(2)}</Typography>
+                                    <Rating value={comment.tasteRating} readOnly precision={0.5}
+                                            style={{ justifyContent: 'center', width: '100%' }} />
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <Typography align='center'>包装评分：{comment.packagingRating}</Typography>
-                                    <Rating value={comment.packagingRating} readOnly precision={0.5} style={{justifyContent: 'center', width:'100%'}}/>
+                                    <Typography align='center'>包装评分：{comment.packagingRating.toFixed(2)}</Typography>
+                                    <Rating value={comment.packagingRating} readOnly precision={0.5}
+                                            style={{ justifyContent: 'center', width: '100%' }} />
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <Typography align='center'>服务评分：{comment.serviceRating}</Typography>
-                                    <Rating value={comment.serviceRating} readOnly precision={0.5} style={{justifyContent: 'center', width:'100%'}}/>
+                                    <Typography align='center'>服务评分：{comment.serviceRating.toFixed(2)}</Typography>
+                                    <Rating value={comment.serviceRating} readOnly precision={0.5}
+                                            style={{ justifyContent: 'center', width: '100%' }} />
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <Typography align='center'>环境评分：{comment.envRating}</Typography>
-                                    <Rating value={comment.envRating} readOnly precision={0.5} style={{justifyContent: 'center', width:'100%'}}/>
+                                    <Typography align='center'>环境评分：{comment.envRating.toFixed(2)}</Typography>
+                                    <Rating value={comment.envRating} readOnly precision={0.5}
+                                            style={{ justifyContent: 'center', width: '100%' }} />
                                 </Grid>
                             </Grid>
                         </Grid>
                     ))}
                 </Grid>
-                <Box display="flex" mt={2} justifyContent="space-between" className="button-container" marginBottom='0'>
-                    <Button variant="contained" className='button' onClick={() => {
-                        fetchComments();
-                        updateInfo();
-                    }}>
-                        刷新
-                    </Button>
-                    <Button color="secondary" onClick={() => {history.push('/admin')}}
-                            sx={{ textTransform: 'none', fontWeight: 'bold' }}>
-                        返回
-                    </Button>
-                </Box>
+                <Button variant="contained" className='button' fullWidth style={{ marginTop: '20px' }} onClick={() => {
+                    history.push("/admin")
+                }}>
+                    返回
+                </Button>
             </Box>
         </div>
     );
