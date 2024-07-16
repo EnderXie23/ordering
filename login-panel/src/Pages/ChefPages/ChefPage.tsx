@@ -11,7 +11,7 @@ import {
     Container,
     Box,
     IconButton,
-    FormControl
+    FormControl, DialogTitle, DialogContent, TextField, DialogActions, Dialog,
 } from '@mui/material'
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios'
@@ -21,6 +21,7 @@ import { useChef } from '../ChefContext';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import { Select } from 'antd'
+import { RejectMessage } from 'Plugins/ChefAPI/RejectMessage'
 
 interface Order {
     customer: string;
@@ -39,6 +40,16 @@ interface OrderDesp {
     state: string;
     orderID: string;
     orderPart: string;
+}
+
+interface RejectDesp {
+    customerName: string;
+    chefName: string;
+    dishName: string;
+    orderCount: string;
+    orderID: string;
+    orderPart: string;
+    reason: string;
 }
 
 function parseOrder(orderDesps: OrderDesp[]): Order[] {
@@ -91,6 +102,18 @@ const ChefPage: React.FC = () => {
     const [orders, setOrders] = useState<Order[]>([])
     const { chefName } = useChef();
     const [groupBy, setGroupBy] = useState<'dish' | 'customer' | 'orderID'>('dish');
+    const [rejectLogOpen, setRejectLogOpen] = useState(false)
+    const [rejectReason, setRejectReason] = useState('')
+    const groupedOrders : Record<string, Order[]> = groupBy === 'dish' ? groupByDish(orders) :
+        groupBy === 'customer' ? groupByCustomer(orders) : groupByOrderID(orders)
+    const [orderToReject, setOrderToReject] = useState<Order>({
+        customer: '',
+        dish: '',
+        quantity: 0,
+        orderID: 0,
+        orderPart: 0,
+        state: 'processing',
+    })
 
     const sendCompleteRequest = async (message: CompleteMessage) => {
         try {
@@ -152,12 +175,18 @@ const ChefPage: React.FC = () => {
         }
     }
 
-    useEffect(() => {
-        handleQuery()
-            .catch(error => {
-                console.error('Error in handleQuery:', error) // Added error handling
+    const handleRejectLog = async (rejectDesp: RejectDesp) => {
+        const rmessage = new RejectMessage(rejectDesp);
+        try {
+            const response = await axios.post(rmessage.getURL(), JSON.stringify(rmessage), {
+                headers: { 'Content-Type': 'application/json' },
             })
-    }, [])
+            console.log(response.data)
+            setOrders(parseOrder(response.data))
+        } catch (error) {
+            console.error('Error logging reject:', error)
+        }
+    }
 
     const useStyles = makeStyles((theme) => ({
         container: {
@@ -201,7 +230,12 @@ const ChefPage: React.FC = () => {
     }));
     const classes = useStyles();
 
-    const groupedOrders : Record<string, Order[]> = groupBy === 'dish' ? groupByDish(orders) : groupBy === 'customer' ? groupByCustomer(orders) : groupByOrderID(orders)
+    useEffect(() => {
+        handleQuery()
+            .catch(error => {
+                console.error('Error in handleQuery:', error) // Added error handling
+            })
+    }, [])
 
     return (
         <Container className={classes.container}>
@@ -240,7 +274,10 @@ const ChefPage: React.FC = () => {
                                                     <IconButton onClick={() => handleComplete(order, '1')}>
                                                         <CheckIcon />
                                                     </IconButton>
-                                                    <IconButton onClick={() => handleComplete(order, '0')}>
+                                                    <IconButton onClick={() => {
+                                                        setOrderToReject(order)
+                                                        setRejectLogOpen(true)
+                                                    }}>
                                                         <CloseIcon />
                                                     </IconButton>
                                                 </Box>
@@ -277,6 +314,56 @@ const ChefPage: React.FC = () => {
                     返回主页
                 </Button>
             </Box>
+            {/*  Dialog for input reject reason  */}
+            <Dialog open={rejectLogOpen} aria-labelledby="charge-amount-dialog">
+                <DialogTitle id="charge-amount-dialog" color="error">拒绝订单</DialogTitle>
+                <DialogContent>
+                    <Typography>为客户服务，是我们的宗旨！如果你的确想要拒绝该订单，请填写原因。</Typography>
+                    <Typography mt={2}>
+                        订单信息：
+                        顾客名称：{orderToReject.customer}, 菜品：{orderToReject.dish}, 数量：{orderToReject.quantity}.
+                    </Typography>
+                    <Typography mt={2}>输入您拒绝订单的原因:</Typography>
+                    <Box
+                        component="form"
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 2,
+                            mt: 2,
+                        }}
+                    >
+                        <TextField
+                            type="text"
+                            value={rejectReason}
+                            label="拒绝原因"
+                            onChange={(e) => setRejectReason(e.target.value)}
+                            variant="outlined"
+                            fullWidth
+                        />
+                    </Box>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => {setRejectLogOpen(false)}} color="secondary">
+                        取消
+                    </Button>
+                    <Button onClick={() => {
+                        handleComplete(orderToReject, '0');
+                        handleRejectLog({
+                            customerName: orderToReject.customer,
+                            chefName: chefName,
+                            dishName: orderToReject.dish,
+                            orderCount: orderToReject.quantity.toString(),
+                            orderID: orderToReject.orderID.toString(),
+                            orderPart: orderToReject.orderPart.toString(),
+                            reason: rejectReason,
+                        })
+                        setRejectLogOpen(false);
+                    }} color="primary" variant="contained">
+                        确认拒绝订单
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Container>
     )
 }

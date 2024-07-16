@@ -14,7 +14,7 @@ import {
     Card,
     CardContent,
     CardMedia,
-    Paper,
+    Paper, DialogTitle, DialogContent, TextField, DialogActions, Dialog,
 } from '@mui/material'
 import { Add, Remove } from '@mui/icons-material'
 import { OrderIDMessage } from 'Plugins/AdminAPI/OrderIDMessage'
@@ -66,6 +66,8 @@ const OrderingPage: React.FC = () => {
     const history = useHistory()
 
     const [orderCounts, setOrderCounts] = useState<{ [key: string]: number }>({})
+    const [reloginOpen, setReloginOpen] = useState(false)
+    const takeout = service.toString();
 
     const parseDishes = (data: string): Dish[] => {
         return data.split('\n').map(line => {
@@ -158,7 +160,6 @@ const OrderingPage: React.FC = () => {
             const response = await axios.post(message.getURL(), JSON.stringify(message), {
                 headers: { 'Content-Type': 'application/json' },
             })
-            console.log(response.status)
             console.log("Setting OrderID to: ", response.data)
             updateOrderID(response.data)
             incrementOrderPart()
@@ -199,15 +200,6 @@ const OrderingPage: React.FC = () => {
         }
     }
 
-    useEffect(() => {
-        readDishesInfo()
-        handleOrderID()
-            .catch(error => {
-                console.error('Error in handleComplete:', error)
-            })
-    }, [])
-    const takeout = service.toString();
-
     const handleSubmit = () => {
         if (Number(parseFloat(calculateTotalCost())) > balance) {
             alert('You have not enough money!')
@@ -243,6 +235,20 @@ const OrderingPage: React.FC = () => {
         }
         history.push('/order-summary')
     }
+
+    useEffect(() => {
+        if (nickName == null){
+            setReloginOpen(true);
+        }
+    }, [])
+
+    useEffect(() => {
+        readDishesInfo()
+        handleOrderID()
+            .catch(error => {
+                console.error('Error in handleComplete:', error)
+            })
+    }, [])
 
     return (
         <div className='root' style={{ backgroundImage: `url(${backgroundImage})` }}>
@@ -319,6 +325,18 @@ const OrderingPage: React.FC = () => {
                 </Container>
                 <ChatPanel />
             </div>
+
+            <Dialog open={reloginOpen} aria-labelledby="charge-amount-dialog">
+                <DialogTitle id="charge-amount-dialog">注意：</DialogTitle>
+                <DialogContent>
+                    <Typography>您的登录状态已过期，请重新登录！</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => {history.push('/')}} color="error" variant="contained">
+                        返回主界面
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     )
 }

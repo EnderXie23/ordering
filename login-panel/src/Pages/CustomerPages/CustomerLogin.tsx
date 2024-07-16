@@ -26,8 +26,8 @@ export function CustomerLogin() {
             const response = await axios.post(qmessage.getURL(), JSON.stringify(qmessage), {
                 headers: { 'Content-Type': 'application/json' },
             });
-            setBalance(Number(parseFloat(response.data.split('\n')[2])));
-            console.log(response.data.split('\n'));
+            setBalance(Number(response.data.balance));
+            console.log(response.data);
         }catch(error){
             console.error('Unexpected error:', error);
             setErrorMessage('Unexpected error occurred');

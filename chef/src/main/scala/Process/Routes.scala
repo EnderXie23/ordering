@@ -13,6 +13,11 @@ import org.http4s.dsl.io.*
 object Routes:
   private def executePlan(messageType:String, str: String): IO[String]=
     messageType match {
+      case "RejectMessage" =>
+        IO(decode[RejectMessagePlanner](str).getOrElse(throw new Exception("Invalid JSON for RejectMessage")))
+          .flatMap{m=>
+            m.fullPlan
+          }
       case "CompleteMessage" =>
         IO(decode[CompleteMessagePlanner](str).getOrElse(throw new Exception("Invalid JSON for CompleteMessage")))
           .flatMap{m=>

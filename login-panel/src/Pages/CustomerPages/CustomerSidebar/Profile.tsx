@@ -95,9 +95,9 @@ const Profile: React.FC<UserProfileDialogProps> = ({ open, onClose }) => {
                 headers: { 'Content-Type': 'application/json' },
             });
             console.log(response.data)
-            setName(username + '\n' + response.data.split('\n')[0])
-            setPhoneNumber(response.data.split('\n')[1])
-            setBalance(response.data.split('\n')[2])
+            setName(username + '\n' + response.data.nickname)
+            setPhoneNumber(response.data.phone)
+            setBalance(response.data.balance)
         } catch (error) {
             console.error('Unexpected error:', error);
         }

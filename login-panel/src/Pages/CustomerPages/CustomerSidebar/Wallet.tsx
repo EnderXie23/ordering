@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, Button, Alert } from '@mui/material'
+import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, Button, Alert, Box } from '@mui/material'
 import WalletCharge from './WalletCharge'
 import { CustomerQueryProfileMessage, CustomerChargeMessage } from 'Plugins/CustomerAPI/CustomerProfileMessage'
 import axios from 'axios'
@@ -23,7 +23,7 @@ const Wallet: React.FC<WalletProps> = ({ open,  onClose }) => {
                 headers: { 'Content-Type': 'application/json' },
             });
             console.log(response.data)
-            setBalance(Number(parseFloat(response.data.split('\n')[2])));
+            setBalance(Number(response.data.balance));
         } catch (error) {
             console.error('Unexpected error:', error);
         }
@@ -87,10 +87,29 @@ const Wallet: React.FC<WalletProps> = ({ open,  onClose }) => {
 
     return (
         <>
-            <Dialog open={open} onClose={handleClose} aria-labelledby="user-balance-dialog">
-                <DialogTitle id="user-balance-dialog">用户余额</DialogTitle>
-                <DialogContent>
-                    <Typography>您的当前余额是: {balance.toFixed(2)} 元</Typography>
+            <Dialog open={open}
+                    onClose={handleClose}
+                    aria-labelledby="user-balance-dialog"
+                    PaperProps={{
+                        style: {
+                            width: '50vw',
+                            height: '35vh',
+                        },
+                    }}>
+                <DialogTitle id="user-balance-dialog" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <Typography variant="h3" align="center">
+                        用户余额
+                    </Typography>
+                </DialogTitle>
+                <DialogContent dividers>
+                    <Box display="flex" justifyContent="center" alignItems="center" flexDirection="column" padding={2}>
+                        <Typography variant="h6" gutterBottom>
+                            您的当前余额是:
+                        </Typography>
+                        <Typography variant="h4" color="primary">
+                            {balance.toFixed(2)} 元
+                        </Typography>
+                    </Box>
                 </DialogContent>
                 {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
                 {successMessage && <Alert severity="success">{successMessage}</Alert>}
