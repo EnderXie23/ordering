@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react'
 import { useUser } from 'Pages/UserContext'
 
 import {
@@ -22,11 +22,13 @@ interface OrderHistory {
     price: number,
     state: string
 }
+
 interface HistoryProps {
-    open:boolean;
-    onClose:() => void;
+    open: boolean;
+    onClose: () => void;
 }
-import { makeStyles } from '@material-ui/core';
+
+import { makeStyles } from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -51,8 +53,9 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         justifyContent: 'space-between',
     },
-}));
-interface UserHistory{
+}))
+
+interface UserHistory {
     orderID: string
     orderPart: string
     dishName: string,
@@ -61,10 +64,10 @@ interface UserHistory{
     state: string
 }
 
-const CustomerHistory:React.FC<HistoryProps>=({open,onClose})=>{
+const CustomerHistory: React.FC<HistoryProps> = ({ open, onClose }) => {
     const [finishedOrders, setFinishedOrders] = useState<OrderHistory[]>([])
-    const [groupedOrdersByOrderID, setGroupedOrdersByOrderID] = useState<{ [orderID: string]: OrderHistory[] }>({});
-    const { name } = useUser();
+    const [groupedOrdersByOrderID, setGroupedOrdersByOrderID] = useState<{ [orderID: string]: OrderHistory[] }>({})
+    const { name } = useUser()
     const parseOrders = (data: UserHistory[]): OrderHistory[] => {
         return data.map(order => {
             const orderID = order.orderID
@@ -73,26 +76,26 @@ const CustomerHistory:React.FC<HistoryProps>=({open,onClose})=>{
             const quantity = order.quantity
             const price = order.price
             const state = order.state
-            console.log('Parsed order:', { orderID, orderPart, dishName, quantity, price, state });
+            // console.log('Parsed order:', { orderID, orderPart, dishName, quantity, price, state });
             return {
                 orderID,
                 orderPart,
                 dishName,
                 quantity,
                 price,
-                state
-            };
-        });
-    };
+                state,
+            }
+        })
+    }
 
     const groupOrdersByOrderID = (orders: OrderHistory[]) => {
         return orders.reduce((acc, order) => {
-            const orderIDOrders = acc[order.orderID] || [];
-            orderIDOrders.push(order);
-            acc[order.orderID] = orderIDOrders;
-            return acc;
-        }, {} as { [orderID: string]: OrderHistory[] });
-    };
+            const orderIDOrders = acc[order.orderID] || []
+            orderIDOrders.push(order)
+            acc[order.orderID] = orderIDOrders
+            return acc
+        }, {} as { [orderID: string]: OrderHistory[] })
+    }
 
     const sendCustomerHistory = async (message: CustomerHistoryMessage) => {
         try {
@@ -102,9 +105,9 @@ const CustomerHistory:React.FC<HistoryProps>=({open,onClose})=>{
             console.log(response.status)
             console.log(response.data)
             const ordersArray = parseOrders(response.data)
-            const groupedOrdersByOrderID = groupOrdersByOrderID(ordersArray);
-            setFinishedOrders(ordersArray);
-            setGroupedOrdersByOrderID(groupedOrdersByOrderID);
+            const groupedOrdersByOrderID = groupOrdersByOrderID(ordersArray)
+            setFinishedOrders(ordersArray)
+            setGroupedOrdersByOrderID(groupedOrdersByOrderID)
         } catch (error) {
             console.error('Error admin-querying:', error)
         }
@@ -122,11 +125,11 @@ const CustomerHistory:React.FC<HistoryProps>=({open,onClose})=>{
     }
 
     const handleCustomerHistoryClose = () => {
-        onClose();
+        onClose()
     }
 
     useEffect(() => {
-        if(open){
+        if (open) {
             handleCustomerHistory()
                 .catch(error => {
                     console.error('Error in handleComplete:', error) // Added error handling
@@ -134,7 +137,7 @@ const CustomerHistory:React.FC<HistoryProps>=({open,onClose})=>{
         }
     }, [open])
 
-    const classes = useStyles();
+    const classes = useStyles()
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
@@ -143,36 +146,40 @@ const CustomerHistory:React.FC<HistoryProps>=({open,onClose})=>{
                     <Typography variant="h4" component="h1" align="center" gutterBottom sx={{
                         fontSize: '2rem',
                         fontWeight: 'bold',
-                        marginBottom: '1rem'
+                        marginBottom: '1rem',
                     }}>
                         历史订单
                     </Typography>
                 </Box>
                 <Box style={{ maxHeight: '70vh', overflowY: 'auto' }}>
-                    {Object.entries(groupedOrdersByOrderID).sort(([a], [b]) => b.localeCompare(a)).map(([orderID, orders]) => (
-                        <Paper key={orderID} className={classes.paper}>
-                            <Typography variant="h6" style={{fontFamily:'Merriweather', fontWeight:'bold'}}>
-                                Order ID: {orderID}
-                            </Typography>
-                            <List>
-                                {orders.map((order, index) => (
-                                    <ListItem key={index} divider>
-                                        <ListItemText style={{margin:0, whiteSpace: 'pre'}}
-                                            primary={
-                                                <Typography component="span"  style={{fontFamily:'Merriweather'}}>
-                                                    {`菜品名: ${order.dishName} x ${order.quantity}`}
-                                                </Typography>
-                                            }
-                                                secondary={`价格: ${order.price}     状态: ${order.state}`}
-                                        />
-                                    </ListItem>
-                                ))}
-                            </List>
-                        </Paper>
-                    ))}
+                    {Object.entries(groupedOrdersByOrderID)
+                        .sort(([a], [b]) => parseInt(b, 10) - parseInt(a, 10))
+                        .map(([orderID, orders]) => (
+                            <Paper key={orderID} className={classes.paper}>
+                                <Typography variant="h6" style={{ fontFamily: 'Merriweather', fontWeight: 'bold' }}>
+                                    Order ID: {orderID}
+                                </Typography>
+                                <List>
+                                    {orders.map((order, index) => (
+                                        <ListItem key={index} divider>
+                                            <ListItemText style={{ margin: 0, whiteSpace: 'pre' }}
+                                                          primary={
+                                                              <Typography component="span"
+                                                                          style={{ fontFamily: 'Merriweather' }}>
+                                                                  {`菜品名: ${order.dishName} x ${order.quantity}`}
+                                                              </Typography>
+                                                          }
+                                                          secondary={`价格: ${order.price}     状态: ${order.state}`}
+                                            />
+                                        </ListItem>
+                                    ))}
+                                </List>
+                            </Paper>
+                        ))}
                 </Box>
                 <Box className={classes.buttonContainer}>
-                    <Button color="primary" onClick={handleCustomerHistory} sx={{ textTransform: 'none', fontWeight: 'bold' }}>
+                    <Button color="primary" onClick={handleCustomerHistory}
+                            sx={{ textTransform: 'none', fontWeight: 'bold' }}>
                         刷新
                     </Button>
                     <Button onClick={onClose} color="secondary" sx={{ textTransform: 'none', fontWeight: 'bold' }}>
@@ -181,6 +188,6 @@ const CustomerHistory:React.FC<HistoryProps>=({open,onClose})=>{
                 </Box>
             </DialogContent>
         </Dialog>
-    );
+    )
 }
-    export default CustomerHistory;
+export default CustomerHistory

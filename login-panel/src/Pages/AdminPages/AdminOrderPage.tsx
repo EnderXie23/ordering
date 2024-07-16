@@ -226,38 +226,40 @@ export function AdminOrderPage(){
                         </Paper>
                     ))
                 ) : (
-                    Object.entries(groupedOrdersByOrderID).sort(([a], [b]) => b.localeCompare(a)).map(([orderID, orders]) => (
-                        <Paper key={orderID} style={{ margin: '20px', padding: '10px' }}>
-                            <Typography variant="h6">Order ID: {orderID}, 总价: {orders
-                                .filter(order => order.state !== "rejected")
-                                .reduce((total, order) => total + (order.price * order.quantity), 0)}, 退款: {orders
-                                .filter(order => order.state == 'rejected')
-                                .reduce((tot, order) => tot + (order.price * order.quantity), 0)}
-                            </Typography>
-                            <List>
-                                {orders.map((order, index) => (
-                                    <ListItem key={index} divider>
-                                        <ListItemText
-                                            primary={`Dish: ${order.dishName} x ${order.quantity}`}
-                                            secondary={`Price: ${order.price} State: ${order.state} Chef: ${order.chefName} Customer: ${order.customerName}`}
-                                            sx={{ color: order.state === 'rejected' ? 'red' : 'inherit' }}
-                                        />
-                                        {order.state == 'rejected' &&(
-                                            <Box>
-                                                <Button onClick={async () => {
-                                                    handleRefund(order);
-                                                }} color='error'>退款</Button>
-                                                <Button onClick={async () => {
-                                                    const reason = await handleRejectLogQuery(order.dishName, order.orderID, order.orderPart);
-                                                    setDialogContent(reason);
-                                                    setDialogOpen(true);
-                                                }}>查看拒绝原因</Button>
-                                            </Box>)
-                                        }
-                                    </ListItem>
-                                ))}
-                            </List>
-                        </Paper>
+                    Object.entries(groupedOrdersByOrderID)
+                        .sort(([a], [b]) => parseInt(b, 10) - parseInt(a, 10))
+                        .map(([orderID, orders]) => (
+                            <Paper key={orderID} style={{ margin: '20px', padding: '10px' }}>
+                                <Typography variant="h6">Order ID: {orderID}, 总价: {orders
+                                    .filter(order => order.state !== "rejected")
+                                    .reduce((total, order) => total + (order.price * order.quantity), 0)}, 退款: {orders
+                                    .filter(order => order.state == 'rejected')
+                                    .reduce((tot, order) => tot + (order.price * order.quantity), 0)}
+                                </Typography>
+                                <List>
+                                    {orders.map((order, index) => (
+                                        <ListItem key={index} divider>
+                                            <ListItemText
+                                                primary={`Dish: ${order.dishName} x ${order.quantity}`}
+                                                secondary={`Price: ${order.price} State: ${order.state} Chef: ${order.chefName} Customer: ${order.customerName}`}
+                                                sx={{ color: order.state === 'rejected' ? 'red' : 'inherit' }}
+                                            />
+                                            {order.state == 'rejected' &&(
+                                                <Box>
+                                                    <Button onClick={async () => {
+                                                        handleRefund(order);
+                                                    }} color='error'>退款</Button>
+                                                    <Button onClick={async () => {
+                                                        const reason = await handleRejectLogQuery(order.dishName, order.orderID, order.orderPart);
+                                                        setDialogContent(reason);
+                                                        setDialogOpen(true);
+                                                    }}>查看拒绝原因</Button>
+                                                </Box>)
+                                            }
+                                        </ListItem>
+                                    ))}
+                                </List>
+                            </Paper>
                     ))
                 )}
             </Box>
