@@ -8,11 +8,11 @@
 
 - [ ] Admin订单未统计总金额
 
-- [ ] OrderingPage美化
+- [x] OrderingPage美化
 
-- [ ] OrderSummary美化
+- [x] OrderSummary美化
 
-- [ ] FinishPage美化
+- [x] FinishPage美化
 
 - [ ] 登陆界面按Enter键没有反应（zfy正在做）
 
