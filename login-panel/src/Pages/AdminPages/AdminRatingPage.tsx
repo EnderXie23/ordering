@@ -7,7 +7,7 @@ import {
 } from '@mui/material'
 import { ReadCommentsMessage } from 'Plugins/CustomerAPI/ReadCommentsMessage'
 import { useHistory } from 'react-router'
-import CustomerSidebar from 'Pages/CustomerPages/CustomerSidebar/CustomerSidebar'
+import backgroundImage from 'Images/background.png'
 
 interface displayComment {
     id: number;
@@ -106,69 +106,84 @@ const AdminRatingPage: React.FC = () => {
     }, []);
 
     return (
-        <Box>
-            <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom={8}>
-                <Typography variant="h4" gutterBottom>
-                   顾客评价查看页面
-                </Typography>
-            </Box>
-            <Grid container spacing={9} style={{
-                width: '80vw',
-                height: '70vh',
-            }}>
-                <Grid item xs={6} style={{
-                    width: '350px',
-                    height: '70vh',
+        <div className='root' style={{ backgroundImage: `url(${backgroundImage})` }}>
+            <Box className='cover' />
+            <Box className='main-box' width='60%'>
+                <Box display="flex" justifyContent="center" alignItems="center" >
+                    <Typography variant="h4" gutterBottom align='center' sx={{
+                        fontSize: '2rem',
+                        fontWeight: 'bold',
+                    }}>
+                       顾客评价
+                    </Typography>
+                </Box>
+                <Grid container style={{
+                    width: '100%',
+                    height: '75vh',
                     overflowY: 'auto',
+                    overflowX: 'hidden',
+                    justifyContent: 'center'
                 }}>
+                    <Grid mb={2} p={2} border={1} borderRadius={4} width='100%'>
+                        <Typography variant="h5" align='center' fontWeight='bold' fontSize='1.5rem'>平均分数</Typography>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <Typography align='center'>综合评分：{averageRatings.overall.toFixed(2)}</Typography>
+                                <Rating value={averageRatings.overall} readOnly precision={0.5} style={{justifyContent: 'center', width:'100%'}}/>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Typography align='center'>口味评分：{averageRatings.taste.toFixed(2)}</Typography>
+                                <Rating value={averageRatings.taste} readOnly precision={0.5} style={{justifyContent: 'center', width:'100%'}}/>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Typography align='center'>包装评分：{averageRatings.packaging.toFixed(2)}</Typography>
+                                <Rating value={averageRatings.packaging} readOnly precision={0.5} style={{justifyContent: 'center', width:'100%'}}/>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Typography align='center'>服务评分：{averageRatings.service.toFixed(2)}</Typography>
+                                <Rating value={averageRatings.service} readOnly precision={0.5} style={{justifyContent: 'center', width:'100%'}}/>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Typography align='center'>环境评分：{averageRatings.env.toFixed(2)}</Typography>
+                                <Rating value={averageRatings.env} readOnly precision={0.5} style={{justifyContent: 'center', width:'100%'}}/>
+                            </Grid>
+                        </Grid>
+                    </Grid>
                     {comments.map(comment => (
-                        <Box key={comment.id} mb={2} p={2} border={1} borderRadius={4}>
-                            <Typography variant="h6">{comment.author}</Typography>
-                            <Typography variant="body1">{comment.text}</Typography>
+                        <Grid key={comment.id} mb={2} p={2} border={1} borderRadius={4} width='100%'>
+                            <Typography variant="h6" fontFamily='Merriweather'>{comment.author}</Typography>
+                            <Typography variant="body1" style={{wordWrap: "break-word"}}>{comment.text}</Typography>
 
-                            <Box mt={1}>
-                                <Typography>综合评分：{comment.overallRating}</Typography>
-                                <Rating value={comment.overallRating} readOnly/>
-                                <Typography>口味评分：{comment.tasteRating}</Typography>
-                                <Rating value={comment.tasteRating} readOnly precision={0.5} />
-                                <Typography>包装评分：{comment.packagingRating}</Typography>
-                                <Rating value={comment.packagingRating} readOnly precision={0.5} />
-                                <Typography>服务评分：{comment.serviceRating}</Typography>
-                                <Rating value={comment.serviceRating} readOnly precision={0.5} />
-                                <Typography>环境评分：{comment.envRating}</Typography>
-                                <Rating value={comment.envRating} readOnly precision={0.5} />
-                            </Box>
-                        </Box>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <Typography align='center'>综合评分：{comment.overallRating}</Typography>
+                                    <Rating value={comment.overallRating} readOnly style={{justifyContent: 'center', width:'100%'}}/>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Typography align='center'>口味评分：{comment.tasteRating}</Typography>
+                                    <Rating value={comment.tasteRating} readOnly precision={0.5} style={{justifyContent: 'center', width:'100%'}}/>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Typography align='center'>包装评分：{comment.packagingRating}</Typography>
+                                    <Rating value={comment.packagingRating} readOnly precision={0.5} style={{justifyContent: 'center', width:'100%'}}/>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Typography align='center'>服务评分：{comment.serviceRating}</Typography>
+                                    <Rating value={comment.serviceRating} readOnly precision={0.5} style={{justifyContent: 'center', width:'100%'}}/>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Typography align='center'>环境评分：{comment.envRating}</Typography>
+                                    <Rating value={comment.envRating} readOnly precision={0.5} style={{justifyContent: 'center', width:'100%'}}/>
+                                </Grid>
+                            </Grid>
+                        </Grid>
                     ))}
                 </Grid>
-                <Grid item xs={6} >
-                    <Box mt={4}>
-                        <Typography variant="h5">平均分数：</Typography>
-                        <Box mt={1}>
-                            <Typography>综合评分：{averageRatings.overall.toFixed(2)}</Typography>
-                            <Rating value={averageRatings.overall} readOnly precision={0.5} />
-                            <Typography>口味评分：{averageRatings.taste.toFixed(2)}</Typography>
-                            <Rating value={averageRatings.taste} readOnly precision={0.5} />
-                            <Typography>包装评分：{averageRatings.packaging.toFixed(2)}</Typography>
-                            <Rating value={averageRatings.packaging} readOnly precision={0.5} />
-                            <Typography>服务评分：{averageRatings.service.toFixed(2)}</Typography>
-                            <Rating value={averageRatings.service} readOnly precision={0.5} />
-                            <Typography>环境评分：{averageRatings.env.toFixed(2)}</Typography>
-                            <Rating value={averageRatings.env} readOnly precision={0.5} />
-                        </Box>
-                        <Button variant="contained" color="secondary" style={{ marginTop: '20px' }} fullWidth onClick={() => {
-                            fetchComments();
-                            updateInfo();
-                        }}>
-                            刷新
-                        </Button>
-                    </Box>
-                </Grid>
-            </Grid>
-            <Button variant="contained" color="primary" fullWidth style={{ marginTop: '20px' }} onClick={() => {history.push("/admin")}}>
-                返回
-            </Button>
-        </Box>
+                <Button variant="contained" className='button' fullWidth style={{ marginTop: '20px' }} onClick={() => {history.push("/admin")}}>
+                    返回
+                </Button>
+            </Box>
+        </div>
     );
 };
 
