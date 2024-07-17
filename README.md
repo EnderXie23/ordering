@@ -16,13 +16,15 @@
 
 - [ ] 登陆界面按Enter键没有反应（zfy正在做）
 
+- [ ] 将dish.state更改为enum类型
+
 - [x] 登陆界面弹出成功/失败消息时窗口宽度会变化
 
-- [ ] AdminRatingPage: 第一次进入时不会显示总评分，要刷新一下才可以
+- [x] AdminRatingPage: 第一次进入时不会显示总评分，要刷新一下才可以
 
-- [ ] AdminOrderPage: 对于rejected的订单可以一直点退款
+- [x] (Not going to do) AdminOrderPage: 对于rejected的订单可以一直点退款
 
-- [ ] OrderingPage: 点击继续点菜后，显示的余额和第一次点菜时没有变化；如果两次点菜有重复，提交时console会报神秘的错
+- [x] OrderingPage: 点击继续点菜后，显示的余额和第一次点菜时没有变化；如果两次点菜有重复，提交时console会报神秘的错
 
 #### TO-DO:
 

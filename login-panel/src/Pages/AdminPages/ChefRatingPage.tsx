@@ -85,7 +85,7 @@ export function ChefRatingPage() {
                 chefData[chef] = { total: 0, done: 0, rejected: 0, ratings: [] }
             }
             chefData[chef].total += 1
-            if (log.state === 'completed') {
+            if (log.state === 'done') {
                 chefData[chef].done += 1
             } else if (log.state === 'rejected') {
                 chefData[chef].rejected += 1
@@ -106,6 +106,7 @@ export function ChefRatingPage() {
                 rating: averageRating,
             }
         }
+        console.log(updatedChefCounts);
         setChefCounts(updatedChefCounts)
     }
 
@@ -136,20 +137,6 @@ export function ChefRatingPage() {
     const handleClick = (chef: string) => {
         setOpen(prevOpen => ({ ...prevOpen, [chef]: !prevOpen[chef] }))
     }
-
-    useEffect(() => {
-        const counts: { [chefName: string]: ChefInfo } = {}
-        for (const chef in groupedOrders) {
-            const orders = groupedOrders[chef]
-            counts[chef] = {
-                total: orders.reduce((acc, order) => acc + order.quantity, 0),
-                done: orders.reduce((acc, order) => acc + (order.state === 'done' ? order.quantity : 0), 0),
-                rejected: orders.reduce((acc, order) => acc + (order.state === 'rejected' ? order.quantity : 0), 0),
-                rating: 0,
-            }
-        }
-        setChefCounts(counts)
-    }, [groupedOrders])
 
     useEffect(() => {
         handleAdminQuery()
