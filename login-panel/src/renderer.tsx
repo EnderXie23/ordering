@@ -20,18 +20,13 @@ import OrderSummaryPage from 'Pages/CustomerPages/OrderSummaryPage'
 import CustomerFinishPage from 'Pages/CustomerPages/CustomerFinishPage'
 import CommentPage from 'Pages/CustomerPages/CommentPage'
 import AdminRatingPage from 'Pages/AdminPages/AdminRatingPage'
-import { CustomerHistoryPage } from 'Pages/CustomerPages/CustomerHistoryPage'
+
 
 const Layout = () => {
     return (
         <HashRouter>
             <Switch>
                 <Route path="/" exact component={Main} />
-                <Route path="/customer_history" exact>
-                    <UserProvider>
-                        <CustomerHistoryPage />
-                    </UserProvider>
-                </Route>
                 <Route path="/admin" exact>
                     <UserProvider>
                         <AdminPage />

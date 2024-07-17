@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { useUser } from 'Pages/UserContext'
-
 import {
     Button,
     Typography,
@@ -12,21 +11,7 @@ import {
 } from '@mui/material'
 import axios from 'axios'
 import { CustomerHistoryMessage } from 'Plugins/CustomerAPI/CustomerHistoryMessage'
-
-
-interface OrderHistory {
-    orderID: string
-    orderPart: string
-    dishName: string,
-    quantity: number,
-    price: number,
-    state: string
-}
-
-interface HistoryProps {
-    open: boolean;
-    onClose: () => void;
-}
+import { FinishState, getFinishStateName } from '../../enums' // Import the enum and helper function
 
 import { makeStyles } from '@material-ui/core'
 
@@ -55,19 +40,34 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
+interface OrderHistory {
+    orderID: string
+    orderPart: string
+    dishName: string,
+    quantity: number,
+    price: number,
+    state: FinishState
+}
+
 interface UserHistory {
     orderID: string
     orderPart: string
     dishName: string,
     quantity: number,
     price: number,
-    state: string
+    finishState: { [key: string]: any } // Raw state from JSON as an object
+}
+
+interface HistoryProps {
+    open: boolean;
+    onClose: () => void;
 }
 
 const CustomerHistory: React.FC<HistoryProps> = ({ open, onClose }) => {
     const [finishedOrders, setFinishedOrders] = useState<OrderHistory[]>([])
     const [groupedOrdersByOrderID, setGroupedOrdersByOrderID] = useState<{ [orderID: string]: OrderHistory[] }>({})
     const { name } = useUser()
+
     const parseOrders = (data: UserHistory[]): OrderHistory[] => {
         return data.map(order => {
             const orderID = order.orderID
@@ -75,8 +75,8 @@ const CustomerHistory: React.FC<HistoryProps> = ({ open, onClose }) => {
             const dishName = order.dishName
             const quantity = order.quantity
             const price = order.price
-            const state = order.state
-            // console.log('Parsed order:', { orderID, orderPart, dishName, quantity, price, state });
+            const stateKey = order.finishState && Object.keys(order.finishState)[0] // Extract key from finishState object
+            const state = FinishState[stateKey as keyof typeof FinishState]
             return {
                 orderID,
                 orderPart,
@@ -102,8 +102,6 @@ const CustomerHistory: React.FC<HistoryProps> = ({ open, onClose }) => {
             const response = await axios.post(message.getURL(), JSON.stringify(message), {
                 headers: { 'Content-Type': 'application/json' },
             })
-            console.log(response.status)
-            console.log(response.data)
             const ordersArray = parseOrders(response.data)
             const groupedOrdersByOrderID = groupOrdersByOrderID(ordersArray)
             setFinishedOrders(ordersArray)
@@ -114,7 +112,6 @@ const CustomerHistory: React.FC<HistoryProps> = ({ open, onClose }) => {
     }
 
     const handleCustomerHistory = async () => {
-        console.log(name)
         const customerName = name.split('\n')[0]
         const queryMessage = new CustomerHistoryMessage(customerName)
         try {
@@ -157,7 +154,7 @@ const CustomerHistory: React.FC<HistoryProps> = ({ open, onClose }) => {
                         .map(([orderID, orders]) => (
                             <Paper key={orderID} className={classes.paper}>
                                 <Typography variant="h6" style={{ fontFamily: 'Merriweather', fontWeight: 'bold' }}>
-                                    Order ID: {orderID}
+                                    订单号: {orderID}
                                 </Typography>
                                 <List>
                                     {orders.map((order, index) => (
@@ -169,7 +166,7 @@ const CustomerHistory: React.FC<HistoryProps> = ({ open, onClose }) => {
                                                                   {`菜品名: ${order.dishName} x ${order.quantity}`}
                                                               </Typography>
                                                           }
-                                                          secondary={`价格: ${order.price}     状态: ${order.state}`}
+                                                          secondary={`价格: ${order.price}元     状态: ${getFinishStateName(order.state)}`}
                                             />
                                         </ListItem>
                                     ))}

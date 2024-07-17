@@ -7,6 +7,7 @@ import Common.API.{PlanContext, Planner}
 import Common.DBAPI.*
 import Common.Object.{ParameterList, SqlParameter}
 import Common.ServiceUtils.schemaName
+import Impl.FinishState
 
 case class CustomerHistoryMessagePlanner(userName: String, override val planContext: PlanContext) extends Planner[List[UserHistory]]:
   override def plan(using PlanContext): IO[List[UserHistory]] = {
@@ -25,9 +26,10 @@ case class CustomerHistoryMessagePlanner(userName: String, override val planCont
           jsonResult.hcursor.downField("dishName").as[String].getOrElse("Unknown Dish"),
           jsonResult.hcursor.downField("orderCount").as[Int].getOrElse(-1),
           jsonResult.hcursor.downField("price").as[Int].getOrElse(-1),
-          jsonResult.hcursor.downField("finishState").as[String].getOrElse("N/A")
+          FinishState.fromString(jsonResult.hcursor.downField("finishState").as[String].getOrElse("Unknown"))
+
         )
-      }.filter { result => result.state != "2" }
+      }
     }
       results
   }
