@@ -89,6 +89,20 @@ export function CustomerLogin() {
         updateProfile();
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>, nextFieldId: string | null) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            if (nextFieldId) {
+                const nextField = document.getElementById(nextFieldId);
+                if (nextField) {
+                    nextField.focus();
+                }
+            } else {
+                CustomerLogin();
+            }
+        }
+    };
+
     return (
         <div className='root' style={{ backgroundImage: `url(${backgroundImage})` }}>
             <Box className='cover' />
@@ -108,18 +122,22 @@ export function CustomerLogin() {
                     </Typography>
                     <form onSubmit={(e) => e.preventDefault()}>
                         <TextField
+                            id="username"
                             label="用户名"
                             value={userName}
                             onChange={(e) => setUserName(e.target.value)}
+                            onKeyDown={(e) => handleKeyDown(e, 'password')}
                             fullWidth
                             margin="normal"
                             sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
                         />
                         <TextField
+                            id="password"
                             label="密码"
                             type={showPassword ? 'text' : 'password'}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            onKeyDown={(e) => handleKeyDown(e, null)}
                             fullWidth
                             margin="normal"
                             sx={{ backgroundColor: '#fff', borderRadius: '5px' }}

@@ -14,9 +14,9 @@
 
 - [x] FinishPage美化
 
-- [ ] 登陆界面按Enter键没有反应（zfy正在做）
+- [x] 登陆界面按Enter键没有反应
 
-- [ ] 将dish.state更改为enum类型
+- [x] 将dish.state更改为enum类型
 
 - [x] 登陆界面弹出成功/失败消息时窗口宽度会变化
 

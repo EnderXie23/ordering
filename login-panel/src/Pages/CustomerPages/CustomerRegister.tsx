@@ -36,7 +36,12 @@ export function CustomerRegister() {
             if (isAxiosError(error)) {
                 if (error.response && error.response.data) {
                     console.error('Error sending request:', error.response.data);
-                    setErrorMessage('注册失败：' + extractErrorBody(error.response.data.error) || '注册失败');
+                    const ErrorBody= extractErrorBody(error.response.data.error)
+                    if (ErrorBody == 'already registered') {
+                        setErrorMessage('注册失败：该用户已经存在');
+                    } else {
+                        setErrorMessage('注册失败：' + extractErrorBody(error.response.data.error) || '注册失败');
+                    }
                     setSuccessMessage('');
                 } else {
                     console.error('Error sending request:', error.message);
@@ -95,6 +100,20 @@ export function CustomerRegister() {
         sendPostRequest(registerMessage);
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>, nextFieldId: string | null) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            if (nextFieldId) {
+                const nextField = document.getElementById(nextFieldId);
+                if (nextField) {
+                    nextField.focus();
+                }
+            } else {
+                CustomerRegister();
+            }
+        }
+    };
+
     return (
         <div className='root' style={{backgroundImage: `url(${backgroundImage})`}}>
             <Box className='cover' />
@@ -114,34 +133,42 @@ export function CustomerRegister() {
                     </Typography>
                     <form onSubmit={(e) => e.preventDefault()}>
                         <TextField
+                            id="username"
                             label="用户名"
                             value={userName}
                             onChange={(e) => setUserName(e.target.value)}
+                            onKeyDown={(e) => handleKeyDown(e, 'nickname')}
                             fullWidth
                             margin="normal"
                             sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
                         />
                         <TextField
+                            id="nickname"
                             label="昵称"
                             value={nickname}
                             onChange={(e) => setNickname(e.target.value)}
+                            onKeyDown={(e) => handleKeyDown(e, 'phone')}
                             fullWidth
                             margin="normal"
                             sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
                         />
                         <TextField
+                            id="phone"
                             label="电话"
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
+                            onKeyDown={(e) => handleKeyDown(e, 'password')}
                             fullWidth
                             margin="normal"
                             sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
                         />
                         <TextField
+                            id="password"
                             label="密码"
                             type={showPassword ? 'text' : 'password'}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            onKeyDown={(e) => handleKeyDown(e, 'confirmPassword')}
                             fullWidth
                             margin="normal"
                             sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
@@ -160,10 +187,12 @@ export function CustomerRegister() {
                             }}
                         />
                         <TextField
+                            id="confirmPassword"
                             label="确认密码"
                             type={showConfirmPassword ? 'text' : 'password'}
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
+                            onKeyDown={(e) => handleKeyDown(e, null)}
                             fullWidth
                             margin="normal"
                             sx={{ backgroundColor: '#fff', borderRadius: '5px' }}

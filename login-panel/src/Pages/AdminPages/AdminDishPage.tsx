@@ -339,13 +339,21 @@ export function AdminDishPage() {
                     </DialogActions>
                 </Dialog>
                 <Dialog open={addOpen} fullWidth>
-                    <DialogTitle>添加菜品</DialogTitle>
+                    <DialogTitle>
+                        <Typography variant="h4" component="h1" align="center" gutterBottom sx={{
+                            fontSize: '2rem',
+                            fontWeight: 'bold',
+                            marginBottom: '1rem'
+                        }}>
+                            添加菜品
+                        </Typography>
+                    </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
                             填写新菜品的信息：
                         </DialogContentText>
                         <TextField
-                            label="Dish Name"
+                            label="菜品名"
                             name="name"
                             value={newDish.name}
                             onChange={handleInputChange}
@@ -355,22 +363,22 @@ export function AdminDishPage() {
                         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                             <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', mb: 2 }}>
                                 <TextField
-                                    label="Image Path"
+                                    label="图片路径"
                                     name="path"
                                     value={newDish.path}
                                     // fullWidth
                                     margin="normal"
                                     disabled
                                 />
-                                <label htmlFor="image-upload">
+                                <label htmlFor="image-upload" >
                                     <HiddenInput
                                         accept="image/*"
                                         id="image-upload"
                                         type="file"
                                         onChange={handleFileChange}
                                     />
-                                    <Button variant="contained" component="span" sx={{ ml: 2, mt: 2 }}>
-                                        Upload Image
+                                    <Button variant="contained" component="span" sx={{ ml: 2 }} className='button'>
+                                        选择图片
                                     </Button>
                                 </label>
                             </Box>
@@ -382,7 +390,7 @@ export function AdminDishPage() {
                             )}
                         </Box>
                         <TextField
-                            label="Price"
+                            label="价格"
                             name="price"
                             value={newDish.price}
                             onChange={handleInputChange}
@@ -391,7 +399,7 @@ export function AdminDishPage() {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleAddClose} color="primary">
+                        <Button onClick={handleAddClose} color="primary" sx={{ textTransform: 'none', fontWeight: 'bold' }}>
                             取消
                         </Button>
                         <Button onClick={() => {
@@ -399,7 +407,7 @@ export function AdminDishPage() {
                                 handleAddDish()
                             }
                             handleAddClose()
-                        }} color="primary">
+                        }} color="primary" sx={{ textTransform: 'none', fontWeight: 'bold' }}>
                             提交
                         </Button>
                     </DialogActions>

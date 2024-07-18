@@ -67,7 +67,7 @@ export function ChefLogin() {
         return JSON.stringify(errorData);
     };
 
-    const HandleLogin = () => {
+    const ChefLogin = () => {
         if  (userName == 'admin' && password == 'root') {
             setSuccessMessage('登录成功，跳转中…');
             setErrorMessage('');
@@ -76,6 +76,20 @@ export function ChefLogin() {
         }
         const loginMessage = new LoginMessage(userName, password);
         sendPostRequest(loginMessage);
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>, nextFieldId: string | null) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            if (nextFieldId) {
+                const nextField = document.getElementById(nextFieldId);
+                if (nextField) {
+                    nextField.focus();
+                }
+            } else {
+                ChefLogin();
+            }
+        }
     };
 
     return (
@@ -97,18 +111,22 @@ export function ChefLogin() {
                     </Typography>
                     <form onSubmit={(e) => e.preventDefault()}>
                         <TextField
+                            id="username"
                             label="用户名"
                             value={userName}
                             onChange={(e) => setUserName(e.target.value)}
+                            onKeyDown={(e) => handleKeyDown(e, 'password')}
                             fullWidth
                             margin="normal"
                             sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
                         />
                         <TextField
+                            id="password"
                             label="密码"
                             type={showPassword ? 'text' : 'password'}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            onKeyDown={(e) => handleKeyDown(e, null)}
                             fullWidth
                             margin="normal"
                             sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
@@ -129,7 +147,7 @@ export function ChefLogin() {
                         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', marginTop: '1rem' }}>
                             {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
                             {successMessage && <Alert severity="success">{successMessage}</Alert>}
-                            <Button variant="contained" color="primary" onClick={HandleLogin} fullWidth className='button'>
+                            <Button variant="contained" color="primary" onClick={ChefLogin} fullWidth className='button'>
                                 登录
                             </Button>
                         </Box>
