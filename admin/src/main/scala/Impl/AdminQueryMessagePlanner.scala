@@ -10,6 +10,7 @@ import Common.ServiceUtils.schemaName
 import APIs.CustomerAPI.CustomerQueryMessage
 import cats.effect.IO
 import io.circe.generic.auto.*
+import Impl.FinishState
 
 case class AdminQueryMessagePlanner(override val planContext: PlanContext) extends Planner[List[LogInfo]] {
   override def plan(using PlanContext): IO[List[LogInfo]] = {
@@ -30,10 +31,10 @@ case class AdminQueryMessagePlanner(override val planContext: PlanContext) exten
           cursor.downField("quantity").as[String].getOrElse("N/A"),
           cursor.downField("price").as[String].getOrElse("N/A"),
           cursor.downField("takeaway").as[String].getOrElse("N/A"),
-          cursor.downField("state").as[String].getOrElse("N/A"),
+          FinishState.fromDBString(cursor.downField("state").as[String].getOrElse("N/A")),
           cursor.downField("rating").as[String].getOrElse("N/A")
         )
-      }.filter { result => result.state != "2" }
+      }.filter { result => FinishState.ToString(result.state) != "special_mark" }
     }
 
     results

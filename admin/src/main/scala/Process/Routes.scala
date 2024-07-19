@@ -51,7 +51,7 @@ object Routes:
           }
       
       case "OrderLogMessage" =>
-        IO(decode[OrderLogMessagePlanner](str).getOrElse(throw new Exception("Invalid JSON for OrderIDMessage")))
+        IO(decode[OrderLogMessagePlanner](str).getOrElse(throw new Exception("Invalid JSON for OrderLogMessage")))
           .flatMap{m=>
             m.fullPlan.map(_.asJson.toString)
           }

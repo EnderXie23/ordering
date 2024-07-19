@@ -3,6 +3,7 @@ package Impl
 import Common.API.{PlanContext, Planner}
 import Common.DBAPI.*
 import Common.Object.SqlParameter
+import Impl.FinishState.ToString
 import cats.effect.IO
 import io.circe.generic.auto.*
 
@@ -22,7 +23,7 @@ case class CompleteMessagePlanner(orderDesp: OrderDesp, override val planContext
                 AND orderpart = ?
               """
             val params = List(
-              SqlParameter("String", if (orderDesp.state == "1") "done" else "rejected"),
+              SqlParameter("String", ToString(orderDesp.state)),
               SqlParameter("String", orderDesp.customerName),
               SqlParameter("String", orderDesp.dishName),
               SqlParameter("String", orderDesp.orderCount),
@@ -46,7 +47,7 @@ case class CompleteMessagePlanner(orderDesp: OrderDesp, override val planContext
               """
           val params2 = List(
             SqlParameter("String", orderDesp.chefName),
-            SqlParameter("String", if orderDesp.state == "1" then "done" else "rejected"),
+            SqlParameter("String", ToString(orderDesp.state)),
             SqlParameter("String", orderDesp.customerName),
             SqlParameter("String", orderDesp.orderID),
             SqlParameter("String", orderDesp.orderPart),

@@ -16,15 +16,16 @@ import { AdminQueryMessage } from 'Plugins/AdminAPI/AdminQueryMessage'
 import { QueryRejectLogMessage } from 'Plugins/AdminAPI/QueryRejectLogMessage'
 import { CustomerQueryProfileMessage, CustomerChargeMessage } from 'Plugins/CustomerAPI/CustomerProfileMessage'
 import backgroundImage from 'Images/background.png'
+import { FinishState, getFinishStateName, ToString } from '../enums' // Import the enum and helper function
 
-interface finishedOrder{
+interface finishedOrder {
     chefName: string,
     customerName: string,
     dishName: string,
     quantity: number,
     price: number,
-    state: string
-    orderID: string
+    state: FinishState,
+    orderID: string,
     orderPart: string
 }
 
@@ -37,24 +38,25 @@ interface LogInfo {
     quantity: string,
     price: string,
     takeaway: string,
-    state: string,
+    state:  { [key: string]: any },
     rating: string
 }
 
 function parseOrders(logInfos: LogInfo[]): finishedOrder[] {
     return logInfos
         .filter(logInfo => logInfo.chefName != 'admin')
-        .map(logInfo => ({
-            chefName: logInfo.chefName,
-            customerName: logInfo.userName,
-            dishName: logInfo.dishName,
-            quantity: parseInt(logInfo.quantity),
-            price: parseFloat(logInfo.price),
-            state: logInfo.state,
-            rating: parseFloat(logInfo.rating),
-            orderID: logInfo.orderid,
-            orderPart: logInfo.orderPart
-        }));
+        .map(logInfo => {
+            const chefName= logInfo.chefName
+            const customerName= logInfo.userName
+            const dishName= logInfo.dishName
+            const quantity= parseInt(logInfo.quantity)
+            const price= parseFloat(logInfo.price)
+            const stateKey = logInfo.state && Object.keys(logInfo.state)[0] // Extract key from finishState object
+            const state = FinishState[stateKey as keyof typeof FinishState]
+            const orderID= logInfo.orderid
+            const orderPart=logInfo.orderPart
+            return{chefName,customerName,dishName,quantity,price,state,orderID,orderPart}
+        });
 }
 
 export function AdminOrderPage(){
@@ -96,10 +98,10 @@ export function AdminOrderPage(){
             console.log(ordersArray)
             setGroupedOrdersByCustomer(groupedOrdersByCustomer);
             setGroupedOrdersByOrderID(groupedOrdersByOrderID);
-            setIncome(ordersArray.filter(order => order.state !== 'rejected')
+            setIncome(ordersArray.filter(order => order.state !== FinishState.Rejected)
                 .reduce((acc, order) => {
-                return acc + (order.price * order.quantity);
-            }, 0));
+                    return acc + (order.price * order.quantity);
+                }, 0));
         } catch (error){
             console.error('Error admin-querying:', error)
         }
@@ -149,9 +151,9 @@ export function AdminOrderPage(){
 
     useEffect(() => {
         handleAdminQuery()
-        .catch(error => {
-            console.error('Error in handleComplete:', error) // Added error handling
-        })
+            .catch(error => {
+                console.error('Error in handleComplete:', error) // Added error handling
+            })
     }, [])
 
     const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -203,8 +205,8 @@ export function AdminOrderPage(){
                                         <ListItem key={index} divider>
                                             <ListItemText
                                                 primary={`菜品名: ${order.dishName} x ${order.quantity}`}
-                                                secondary={`价格: ${order.price} 状态: ${order.state} 厨师: ${order.chefName}`}
-                                                sx={{ color: order.state === 'rejected' ? 'red' : 'inherit' }}
+                                                secondary={`价格: ${order.price} 状态: ${getFinishStateName(order.state)} 厨师: ${order.chefName}`}
+                                                sx={{ color: ToString(order.state) === 'rejected' ? 'red' : 'inherit' }}
                                             />
                                             {order.state == 'rejected' &&(
                                                 <Box>
@@ -244,8 +246,8 @@ export function AdminOrderPage(){
                                             <ListItem key={index} divider>
                                                 <ListItemText
                                                     primary={`菜品名: ${order.dishName} x ${order.quantity}`}
-                                                    secondary={`价格: ${order.price} 状态: ${order.state} 厨师: ${order.chefName} 顾客: ${order.customerName}`}
-                                                    sx={{ color: order.state === 'rejected' ? 'red' : 'inherit' }}
+                                                    secondary={`价格: ${order.price} 状态: ${getFinishStateName(order.state)} 厨师: ${order.chefName} 顾客: ${order.customerName}`}
+                                                    sx={{ color: ToString(order.state) === 'rejected' ? 'red' : 'inherit' }}
                                                 />
                                                 {order.state == 'rejected' &&(
                                                     <Box>

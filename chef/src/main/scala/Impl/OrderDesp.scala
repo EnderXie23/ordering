@@ -5,7 +5,7 @@ case class OrderDesp(
                       chefName: String,
                       dishName: String,
                       orderCount: String,
-                      state: String,
+                      state: FinishState,
                       orderID: String,
                       orderPart: String
                     )

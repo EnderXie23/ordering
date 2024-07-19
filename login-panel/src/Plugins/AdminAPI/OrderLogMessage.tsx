@@ -1,4 +1,5 @@
 import { AdminMessage } from 'Plugins/AdminAPI/AdminMessage'
+import { FinishState } from 'Pages/enums'
 
 interface LogInfo {
     orderid: string,
@@ -9,7 +10,7 @@ interface LogInfo {
     quantity: string,
     price: string,
     takeaway: string,
-    state: string,
+    state: FinishState,
     rating: string
 }
 

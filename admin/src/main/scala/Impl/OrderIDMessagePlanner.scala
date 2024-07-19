@@ -13,7 +13,7 @@ case class OrderIDMessagePlanner(override val planContext: PlanContext) extends 
     // Define the SQL query to fetch orders with specific data content
     val sqlQuery =
       s"""
-        SELECT orderID, user_name, chef_name, dish_name, quantity, state
+        SELECT orderID
         FROM admin.admin_log
         WHERE user_name = '0' AND chef_name = 'admin' AND dish_name = '0' AND quantity = '0' AND state = '2'
       """
@@ -21,35 +21,32 @@ case class OrderIDMessagePlanner(override val planContext: PlanContext) extends 
     val jsonResultsIO: IO[List[Json]] = readDBRows(sqlQuery, List.empty)
 
     // Convert the JSON results to a list of tuples
-    val results: IO[List[(String, String, String, String, String, String)]] = jsonResultsIO.map { jsonResults =>
-      jsonResults.map { jsonResult =>
-        val orderID = jsonResult.hcursor.downField("orderid").as[String].getOrElse("Unknown OrderID")
-        val userName = jsonResult.hcursor.downField("user_name").as[String].getOrElse("Unknown User")
-        val chefName = jsonResult.hcursor.downField("chef_name").as[String].getOrElse("Unknown Chef")
-        val dishName = jsonResult.hcursor.downField("dish_name").as[String].getOrElse("Unknown Dish")
-        val quantity = jsonResult.hcursor.downField("quantity").as[String].getOrElse("Unknown Quantity")
-        val state = jsonResult.hcursor.downField("state").as[String].getOrElse("Unknown State")
-        (orderID, userName, chefName, dishName, quantity, state)
+    val results: IO[String] = jsonResultsIO.map { jsonResults =>
+      // Extract orderID from each Json and combine them into a single String
+      val orderIDs: List[String] = jsonResults.map { jsonResult =>
+        jsonResult.hcursor.downField("orderid").as[String].getOrElse("Unknown OrderID")
       }
+      orderIDs.mkString(", ") // Combine all orderIDs into a single string, separated by commas (or any other separator you prefer)
     }
 
     // Generate the formatted string
-    val formattedResults: IO[String] = results.map { resultsList =>
-      resultsList.map { case (orderID, userName, chefName, dishName, quantity, state) =>
-        s"$orderID"
-      }.mkString("\n")
+    val formattedResults: IO[String] = results.map { resultString =>
+      // Assuming you want each orderID on a new line
+      resultString.split(", ").mkString("\n")
     }
 
     // Update the order IDs in the database
-    val updateActions: IO[List[String]] = results.flatMap { resultsList =>
-      val actions = resultsList.map { case (orderID, _, _, _, _, _) =>
+    // Update actions
+    val updateActions: IO[List[String]] = results.flatMap { resultString =>
+      val orderIDs = resultString.split(", ").toList
+      val actions = orderIDs.map { orderID =>
         val newOrderID: String = orderID.toIntOption.map(_ + 1).getOrElse(0).toString
         val updateQuery =
           s"""
-          UPDATE admin.admin_log
-          SET orderID = ?
-          WHERE orderID = ?
-        """
+      UPDATE admin.admin_log
+      SET orderID = ?
+      WHERE orderID = ?
+      """
         val params = List(
           SqlParameter("String", newOrderID),
           SqlParameter("String", orderID)

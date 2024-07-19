@@ -1,4 +1,4 @@
 package APIs.AdminAPI
 
-case class OrderIDMessage(OrderID:String) extends AdminMessage[String]
+case class OrderIDMessage() extends AdminMessage[String]
 

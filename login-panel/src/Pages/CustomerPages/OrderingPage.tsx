@@ -24,6 +24,7 @@ import ChatPanel from 'Plugins/CommonUtils/ChatPanel'
 import { DishQueryMessage } from 'Plugins/AdminAPI/AdminDishMessage'
 import 'Pages/index.css'
 import backgroundImage from 'Images/background.png'
+import { FinishState } from 'Pages/enums'
 
 type Dish = {
     name: string;
@@ -47,7 +48,7 @@ interface LogInfo {
     quantity: string,
     price: string,
     takeaway: string,
-    state: string,
+    state: FinishState,
     rating: string
 }
 
@@ -145,15 +146,16 @@ const OrderingPage: React.FC = () => {
                 orderid: OrderID,
                 orderPart: OrderPart,
                 userName: customerName,
-                chefName: '',
+                chefName: 'admin',
                 dishName: order[0],
                 quantity: order[1],
                 price: order[2],
                 takeaway: order[3],
-                state: '3',
+                state: FinishState.Processing,
                 rating: '0'
             }
             const logMessage = new OrderLogMessage(log)
+            console.log(logMessage)
             try {
                 sendOrderLogRequest(logMessage)
             } catch (error) {
@@ -171,7 +173,7 @@ const OrderingPage: React.FC = () => {
             updateOrderID(response.data)
             incrementOrderPart()
         } catch (error) {
-            console.error('Error querying order:', error)
+            console.error('Error orderID:', error)
         }
     }
 
@@ -190,11 +192,11 @@ const OrderingPage: React.FC = () => {
 
     const handleOrderID = async () => {
         if (OrderID=='') {
-            const queryMessage = new OrderIDMessage('0')
+            const queryMessage = new OrderIDMessage()
             try {
                 await sendOrderIDRequest(queryMessage)
             } catch (error) {
-                console.error('Error in handleQuery:', error)
+                console.error('Error in handleOrderID:', error)
             }
         }
     }

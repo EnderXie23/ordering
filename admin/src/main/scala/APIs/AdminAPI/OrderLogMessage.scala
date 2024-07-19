@@ -1,3 +1,5 @@
 package APIs.AdminAPI
 
-case class OrderLogMessage(OrderID:String, OrderPart:String, ChefName: String, CustomerName: String, DishName: String, DishCount: String, State: String) extends AdminMessage[String]
+import Impl.LogInfo
+
+case class OrderLogMessage(logInfo: LogInfo) extends AdminMessage[String]

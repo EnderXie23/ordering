@@ -62,7 +62,7 @@ const Wallet: React.FC<WalletProps> = ({ open,  onClose }) => {
     };
 
     const handleCharge = async(amount: number) => {
-        const new_amount = (Number(balance) + Number(amount)).toFixed(2);
+        const new_amount = (- Number(amount)).toFixed(2);
         const cmessage = new CustomerChargeMessage(username, new_amount);
         await ChargeRequest(cmessage);
 

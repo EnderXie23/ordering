@@ -28,6 +28,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import { Select } from 'antd'
 import { RejectMessage } from 'Plugins/ChefAPI/RejectMessage'
 import backgroundImage from 'Images/background.png'
+import { decodeFinishState, FinishState } from 'Pages/enums'
 
 interface Order {
     customer: string;
@@ -35,7 +36,7 @@ interface Order {
     quantity: number;
     orderID: number;
     orderPart: number;
-    state: string;
+    state: FinishState;
 }
 
 interface OrderDesp {
@@ -43,7 +44,7 @@ interface OrderDesp {
     chefName: string;
     dishName: string;
     orderCount: string;
-    state: string;
+    state: FinishState
     orderID: string;
     orderPart: string;
 }
@@ -58,19 +59,36 @@ interface RejectDesp {
     reason: string;
 }
 
-function parseOrder(orderDesps: OrderDesp[]): Order[] {
-    return orderDesps
-        .filter(orderDesp => orderDesp.state === 'processing')
-        .map(orderDesp => ({
-        customer: orderDesp.customerName,
-        dish: orderDesp.dishName,
-        quantity: parseInt(orderDesp.orderCount, 10),
-        orderID: parseInt(orderDesp.orderID, 10),
-        orderPart: parseInt(orderDesp.orderPart, 10),
-        state: orderDesp.state
-    }));
+interface TransferDesp {
+    customerName: string;
+    chefName: string;
+    dishName: string;
+    orderCount: string;
+    state: { [key: string]: any };
+    orderID: string;
+    orderPart: string;
 }
 
+const parseOrders = (data: TransferDesp[]): Order[] => {
+    return data.map(order => {
+        const orderID = parseInt(order.orderID, 10);
+        const orderPart = parseInt(order.orderPart, 10);
+        const customer = order.customerName;
+        const dish = order.dishName;
+        const quantity = parseInt(order.orderCount, 10);
+        const stateKey = order.state && Object.keys(order.state)[0]
+        const state = FinishState[stateKey as keyof typeof FinishState];
+
+        return {
+            customer,
+            dish,
+            quantity,
+            orderID,
+            orderPart,
+            state,
+        };
+    }).filter(order => order.state === FinishState.Processing);
+}
 // 按照 dish 分类
 function groupByDish(orders: Order[]): Record<string, Order[]> {
     return orders.reduce((acc, order) => {
@@ -118,7 +136,7 @@ const ChefPage: React.FC = () => {
         quantity: 0,
         orderID: 0,
         orderPart: 0,
-        state: 'processing',
+        state: FinishState.Processing,
     })
 
     const sendCompleteRequest = async (message: CompleteMessage) => {
@@ -133,7 +151,7 @@ const ChefPage: React.FC = () => {
         }
     }
 
-    const handleComplete = async (order: Order, state: string) => {
+    const handleComplete = async (order: Order, state: FinishState) => {
         const orderDesp: OrderDesp = {
             customerName: order.customer,
             chefName: chefName,
@@ -144,9 +162,9 @@ const ChefPage: React.FC = () => {
             orderPart: order.orderPart.toString(),
         }
         const completeMessage = new CompleteMessage(orderDesp);
-        if (state === '0') {
+        if (state === FinishState.Rejected) {
             console.log('Reject order:', order)
-        } else if (state === '1') {
+        } else if (state === FinishState.Done) {
             console.log('Complete order:', order)
         } else {
             console.error('Invalid State')
@@ -165,7 +183,7 @@ const ChefPage: React.FC = () => {
                 headers: { 'Content-Type': 'application/json' },
             })
             console.log(response.data)
-            setOrders(parseOrder(response.data))
+            setOrders(parseOrders(response.data))
         } catch (error) {
             console.error('Error querying order:', error)
         }
@@ -294,7 +312,7 @@ const ChefPage: React.FC = () => {
                                                             secondary={(groupBy === 'orderID' ? `Customer: ${order.customer}` : `OrderID: ${order.orderID}`) + `, OrderPart: ${order.orderPart}`}
                                                         />
                                                         <Box className={classes.actionBox}>
-                                                            <IconButton onClick={() => handleComplete(order, '1')}>
+                                                            <IconButton onClick={() => handleComplete(order, FinishState.Done)}>
                                                                 <CheckIcon />
                                                             </IconButton>
                                                             <IconButton onClick={() => {
@@ -381,7 +399,7 @@ const ChefPage: React.FC = () => {
                                 取消
                             </Button>
                             <Button onClick={() => {
-                                handleComplete(orderToReject, '0');
+                                handleComplete(orderToReject, FinishState.Rejected);
                                 handleRejectLog({
                                     customerName: orderToReject.customer,
                                     chefName: chefName,

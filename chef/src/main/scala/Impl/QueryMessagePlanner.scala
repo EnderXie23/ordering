@@ -21,14 +21,14 @@ case class QueryMessagePlanner(override val planContext: PlanContext) extends Pl
         val cursor = jsonResult.hcursor
         OrderDesp(
           cursor.downField("customerName").as[String].getOrElse("Unknown Customer"),
-          "",
+          "admin",
           cursor.downField("dishName").as[String].getOrElse("Unknown Dish"),
           cursor.downField("orderCount").as[String].getOrElse("N/A"),
-          cursor.downField("finishState").as[String].getOrElse("N/A"),
+          FinishState.fromDBString(cursor.downField("finishState").as[String].getOrElse("N/A")),
           cursor.downField("orderid").as[String].getOrElse("Unknown OrderID"),
           cursor.downField("orderpart").as[String].getOrElse("Unknown OrderPart")
         )
-      }
+      }.filter { result => FinishState.ToString(result.state) != "special_mark" }
     }
     
     results

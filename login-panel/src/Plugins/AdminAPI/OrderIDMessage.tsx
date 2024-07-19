@@ -1,10 +1,8 @@
 import { AdminMessage } from 'Plugins/AdminAPI/AdminMessage'
 
 export class OrderIDMessage extends AdminMessage {
-    OrderID: string;
 
-    constructor(OrderID: string) {
+    constructor() {
         super();
-        this.OrderID = OrderID;
     }
 }
