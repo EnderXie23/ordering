@@ -9,22 +9,46 @@ import io.circe.generic.auto.*
 
 case class RejectMessagePlanner(rejectDesp: RejectDesp, override val planContext: PlanContext) extends Planner[String] {
   override def plan(using PlanContext): IO[String] = {
-    // Define the SQL query to fetch orders
-    val sqlUpdateQuery = s"""
-      INSERT INTO ${schemaName}.reject_log (customer_name, chef_name, dish_name, order_count, orderid, orderpart, reason) VALUES (?, ?, ?, ?, ?, ?, ?)
-    """
+//    // Define the SQL query to fetch orders
+//    val sqlUpdateQuery = s"""
+//      INSERT INTO ${schemaName}.reject_log (customer_name, chef_name, dish_name, order_count, orderid, orderpart, reason) VALUES (?, ?, ?, ?, ?, ?, ?)
+//    """
+//
+//    // Execute the SQL query
+//    writeDB(sqlUpdateQuery, List(
+//      SqlParameter("String", rejectDesp.customerName),
+//      SqlParameter("String", rejectDesp.chefName),
+//      SqlParameter("String", rejectDesp.dishName),
+//      SqlParameter("String", rejectDesp.orderCount),
+//      SqlParameter("String", rejectDesp.orderID),
+//      SqlParameter("String", rejectDesp.orderPart),
+//      SqlParameter("String", rejectDesp.reason)
+//    )).flatMap { _ =>
+//      IO.pure("Reject successful")
+//    }
 
-    // Execute the SQL query
-    writeDB(sqlUpdateQuery, List(
-      SqlParameter("String", rejectDesp.customerName),
-      SqlParameter("String", rejectDesp.chefName),
-      SqlParameter("String", rejectDesp.dishName),
-      SqlParameter("String", rejectDesp.orderCount),
-      SqlParameter("String", rejectDesp.orderID),
-      SqlParameter("String", rejectDesp.orderPart),
-      SqlParameter("String", rejectDesp.reason)
-    )).flatMap { _ =>
-      IO.pure("Reject dish successfully.")
+    startTransaction {
+      for {
+        _ <- {
+          // Update customer.customer_rec
+          val query = s"""
+            INSERT INTO ${schemaName}.reject_log (customer_name, chef_name, dish_name, order_count, orderid, orderpart, reason) VALUES (?, ?, ?, ?, ?, ?, ?)
+          """
+
+          val params = List(
+            SqlParameter("String", rejectDesp.customerName),
+            SqlParameter("String", rejectDesp.chefName),
+            SqlParameter("String", rejectDesp.dishName),
+            SqlParameter("String", rejectDesp.orderCount),
+            SqlParameter("String", rejectDesp.orderID),
+            SqlParameter("String", rejectDesp.orderPart),
+            SqlParameter("String", rejectDesp.reason)
+          )
+          writeDB(query, params).handleErrorWith { error =>
+            IO.raiseError(new Exception(s"Failed to log dish record: ${error.getMessage}"))
+          }
+        }
+      } yield "RejectMessage successful" // <-- Indicate success message
     }
   }
 }

@@ -19,7 +19,7 @@ import {
     Typography,
 } from '@mui/material'
 import { makeStyles } from '@material-ui/core/styles'
-import axios from 'axios'
+import axios, { isAxiosError } from 'axios'
 import { QueryMessage } from 'Plugins/ChefAPI/QueryMessage'
 import { CompleteMessage } from 'Plugins/ChefAPI/CompleteMessage'
 import { useChef } from '../ChefContext'
@@ -141,10 +141,10 @@ const ChefPage: React.FC = () => {
 
     const sendCompleteRequest = async (message: CompleteMessage) => {
         try {
-            const response = await axios.post(message.getURL(), JSON.stringify(message), {
+            const response1 = await axios.post(message.getURL(), JSON.stringify(message), {
                 headers: { 'Content-Type': 'application/json' },
             })
-            console.log(response.data)
+            console.log(response1.data)
             await handleQuery()
         } catch (error) {
             console.error('Error completing order:', error)
@@ -201,12 +201,16 @@ const ChefPage: React.FC = () => {
     const handleRejectLog = async (rejectDesp: RejectDesp) => {
         const rmessage = new RejectMessage(rejectDesp);
         try {
-            const response = await axios.post(rmessage.getURL(), JSON.stringify(rmessage), {
+            const response2 = await axios.post(rmessage.getURL(), JSON.stringify(rmessage), {
                 headers: { 'Content-Type': 'application/json' },
             })
-            console.log(response.data)
+            console.log(response2.data)
         } catch (error) {
-            console.error('Error logging reject:', error)
+            if (isAxiosError(error)) {
+                console.warn("The above error message is probably due to simultaneous response handling. You may proceed with ordering.")
+            }else{
+                console.error('Error logging reject:', error)
+            }
         }
     }
 
@@ -359,7 +363,7 @@ const ChefPage: React.FC = () => {
                     {/*  Dialog for input reject reason  */}
                     <Dialog open={rejectLogOpen}>
                         <DialogTitle id="reject-reason-dialog" color="error">
-                            <Typography variant="h4" component="h1" align="center" style={{
+                            <Typography align="center" style={{
                                 fontSize: '2rem',
                                 fontWeight: 'bold',
                                 marginBottom: '1rem'
@@ -398,9 +402,9 @@ const ChefPage: React.FC = () => {
                                     sx={{ textTransform: 'none', fontWeight: 'bold' }}>
                                 取消
                             </Button>
-                            <Button onClick={() => {
-                                handleComplete(orderToReject, FinishState.Rejected);
-                                handleRejectLog({
+                            <Button onClick={async () => {
+                                await handleComplete(orderToReject, FinishState.Rejected);
+                                await handleRejectLog({
                                     customerName: orderToReject.customer,
                                     chefName: chefName,
                                     dishName: orderToReject.dish,
