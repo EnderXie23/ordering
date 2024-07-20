@@ -16,7 +16,7 @@ object Routes:
       case "RejectMessage" =>
         IO(decode[RejectMessagePlanner](str).getOrElse(throw new Exception("Invalid JSON for RejectMessage")))
           .flatMap{m=>
-            m.fullPlan
+            m.fullPlan.map(_.asJson.toString)
           }
       case "CompleteMessage" =>
         IO(decode[CompleteMessagePlanner](str).getOrElse(throw new Exception("Invalid JSON for CompleteMessage")))

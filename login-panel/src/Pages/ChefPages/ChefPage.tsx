@@ -29,6 +29,7 @@ import { Select } from 'antd'
 import { RejectMessage } from 'Plugins/ChefAPI/RejectMessage'
 import backgroundImage from 'Images/background.png'
 import { decodeFinishState, FinishState } from 'Pages/enums'
+import { rm } from 'fs-extra'
 
 interface Order {
     customer: string;
@@ -201,17 +202,33 @@ const ChefPage: React.FC = () => {
     const handleRejectLog = async (rejectDesp: RejectDesp) => {
         const rmessage = new RejectMessage(rejectDesp);
         try {
+            console.log(JSON.stringify(rmessage))
             const response2 = await axios.post(rmessage.getURL(), JSON.stringify(rmessage), {
                 headers: { 'Content-Type': 'application/json' },
             })
+            console.log("Request Headers:", response2.config.headers);
             console.log(response2.data)
         } catch (error) {
             if (isAxiosError(error)) {
-                console.warn("The above error message is probably due to simultaneous response handling. You may proceed with ordering.")
+                console.error('Axios error response:', error.response?.data);
             }else{
                 console.error('Error logging reject:', error)
             }
         }
+    }
+
+    const handleReject = async () => {
+        await handleComplete(orderToReject, FinishState.Rejected);
+        await handleRejectLog({
+            customerName: orderToReject.customer,
+            chefName: chefName,
+            dishName: orderToReject.dish,
+            orderCount: orderToReject.quantity.toString(),
+            orderID: orderToReject.orderID.toString(),
+            orderPart: orderToReject.orderPart.toString(),
+            reason: rejectReason,
+        });
+        setRejectLogOpen(false);
     }
 
     const useStyles = makeStyles((theme) => ({
@@ -402,19 +419,7 @@ const ChefPage: React.FC = () => {
                                     sx={{ textTransform: 'none', fontWeight: 'bold' }}>
                                 取消
                             </Button>
-                            <Button onClick={async () => {
-                                await handleComplete(orderToReject, FinishState.Rejected);
-                                await handleRejectLog({
-                                    customerName: orderToReject.customer,
-                                    chefName: chefName,
-                                    dishName: orderToReject.dish,
-                                    orderCount: orderToReject.quantity.toString(),
-                                    orderID: orderToReject.orderID.toString(),
-                                    orderPart: orderToReject.orderPart.toString(),
-                                    reason: rejectReason,
-                                });
-                                setRejectLogOpen(false);
-                            }} className='button' variant="contained">
+                            <Button onClick={handleReject} className='button' variant="contained">
                                 确认拒绝订单
                             </Button>
                         </DialogActions>
