@@ -97,7 +97,7 @@ const Wallet: React.FC<WalletProps> = ({ open,  onClose }) => {
                         },
                     }}>
                 <DialogTitle>
-                    <Typography variant="h4" component="h1" align="center" style={{
+                    <Typography align="center" style={{
                         fontSize: '3rem',
                         fontWeight: 'bold',
                     }}>

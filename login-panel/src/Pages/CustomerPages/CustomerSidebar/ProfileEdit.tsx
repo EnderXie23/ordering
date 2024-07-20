@@ -53,7 +53,7 @@ const ProfileEdit: React.FC<ProfileEditProps> = ({ open, onClose }) => {
     return (
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
             <DialogTitle>
-                <Typography variant="h4" component="h1" align="center" style={{
+                <Typography align="center" style={{
                     fontSize: '2rem',
                     fontWeight: 'bold',
                     marginBottom: '1rem'

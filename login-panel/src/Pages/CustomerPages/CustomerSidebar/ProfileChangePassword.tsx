@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Typography } from '@material-ui/core'
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Typography, IconButton, InputAdornment }
+    from '@material-ui/core'
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { CustomerChangePwdMessage } from 'Plugins/CustomerAPI/CustomerProfileMessage'
 import { Alert } from '@mui/material'
 import { useUser } from 'Pages/UserContext'
@@ -17,6 +19,9 @@ const ProfileChangePassword: React.FC<ProfileChangePasswordProps> = ({open, onCl
     const [confirmPassword, setConfirmPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+    const [showPassword, setShowPassword] = useState(false); // State for password visibility
+    const [showNewPassword, setShowNewPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false); // State for confirm password visibility
     const { name } = useUser();
     const username = name.split('\n')[0];
 
@@ -72,7 +77,7 @@ const ProfileChangePassword: React.FC<ProfileChangePasswordProps> = ({open, onCl
     return (
         <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
             <DialogTitle>
-                <Typography variant="h4" component="h1" align="center" style={{
+                <Typography align="center" style={{
                     fontSize: '2rem',
                     fontWeight: 'bold',
                     marginBottom: '1rem'
@@ -81,9 +86,51 @@ const ProfileChangePassword: React.FC<ProfileChangePasswordProps> = ({open, onCl
                 </Typography>
             </DialogTitle>
             <DialogContent>
-                <TextField value={oldPassword} margin="dense" label="当前密码" type="password" fullWidth onChange={(e) => setOldPassword(e.target.value)}/>
-                <TextField value={newPassword} margin="dense" label="新密码" type="password" fullWidth onChange={(e) => setNewPassword(e.target.value)}/>
-                <TextField value={confirmPassword} margin="dense" label="确认新密码" type="password" fullWidth onChange={(e) => setConfirmPassword(e.target.value)}/>
+                <TextField value={oldPassword} margin="dense" label="当前密码" type={showPassword ? 'text' : 'password'} fullWidth
+                           onChange={(e) => setOldPassword(e.target.value)}
+                           InputProps={{
+                               endAdornment: (
+                                   <InputAdornment position="end">
+                                       <IconButton
+                                           aria-label="toggle password visibility"
+                                           onClick={() => setShowPassword(!showPassword)}
+                                           edge="end"
+                                       >
+                                           {showPassword ? <Visibility /> : <VisibilityOff />}
+                                       </IconButton>
+                                   </InputAdornment>
+                               ),
+                           }}/>
+                <TextField value={newPassword} margin="dense" label="新密码" type={showNewPassword ? 'text' : 'password'} fullWidth
+                           onChange={(e) => setNewPassword(e.target.value)}
+                           InputProps={{
+                               endAdornment: (
+                                   <InputAdornment position="end">
+                                       <IconButton
+                                           aria-label="toggle password visibility"
+                                           onClick={() => setShowNewPassword(!showNewPassword)}
+                                           edge="end"
+                                       >
+                                           {showPassword ? <Visibility /> : <VisibilityOff />}
+                                       </IconButton>
+                                   </InputAdornment>
+                               ),
+                           }}/>
+                <TextField value={confirmPassword} margin="dense" label="确认新密码" type={showConfirmPassword ? 'text' : 'password'}
+                           fullWidth onChange={(e) => setConfirmPassword(e.target.value)}
+                           InputProps={{
+                               endAdornment: (
+                                   <InputAdornment position="end">
+                                       <IconButton
+                                           aria-label="toggle confirm password visibility"
+                                           onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                           edge="end"
+                                       >
+                                           {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
+                                       </IconButton>
+                                   </InputAdornment>
+                               ),
+                           }}/>
             </DialogContent>
             {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
             {successMessage && <Alert severity="success">{successMessage}</Alert>}

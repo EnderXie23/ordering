@@ -117,7 +117,7 @@ const Profile: React.FC<UserProfileDialogProps> = ({ open, onClose }) => {
     return (
         <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
             <DialogTitle style={{paddingBottom:0}}>
-                <Typography variant="h4" component="h1" align="center" style={{
+                <Typography align="center" style={{
                     fontSize: '2rem',
                     fontWeight: 'bold',
                     marginBottom: '1rem'

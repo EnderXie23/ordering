@@ -23,7 +23,7 @@ const WalletCharge: React.FC<WalletChargeProps> = ({ open, onClose, onCharge }) 
     return (
         <Dialog open={open} onClose={onClose} aria-labelledby="charge-amount-dialog">
             <DialogTitle id="charge-amount-dialog">
-                <Typography variant="h4" component="h1" align="center" style={{
+                <Typography align="center" style={{
                     fontFamily:'Noto Sans',
                     fontSize: '2rem',
                     fontWeight: 'bold',
