@@ -291,19 +291,12 @@ const CommentPage: React.FC = () => {
                                         <ListItem key={comment.id} alignItems="flex-start"
                                                   style={{backgroundColor:'white', margin:'2%', borderRadius:'5px', width:'96%', justifyContent:'center'}}>
                                             <ListItemText
-                                                primary={<Typography style={{fontFamily: 'Merriweather'}}> by: {comment.author}</Typography>}
+                                                primary={comment.author}
                                                 secondary={
-                                                    <Box display="flex" flexDirection='column'>
-                                                        <Typography component="span" color='black' style={{ whiteSpace: 'pre-line', fontSize:'1.5rem', wordWrap: "break-word"}}>
-                                                            {`${comment.text}`}
-                                                        </Typography>
-                                                        <Typography component="span" align='center' style={{ whiteSpace: 'pre-line' }}>
-                                                            {`综合评价：${comment.overallRating}`}
-                                                        </Typography>
-                                                        <Typography component="span" align='center' style={{ whiteSpace: 'pre-line' }}>
-                                                            {`口味：${comment.tasteRating}, 包装：${comment.packagingRating}, 服务：${comment.serviceRating}, 环境：${comment.envRating}`}
-                                                        </Typography>
-                                                    </Box>
+                                                    <Typography style={{ whiteSpace: 'pre-line' }}>
+                                                        <span style={{ fontSize: '1.5em', wordWrap: "break-word" }}>{comment.text}</span>
+                                                        {`\n综合评价：${comment.overallRating}\n口味：${comment.tasteRating}, 包装：${comment.packagingRating}, 服务：${comment.serviceRating}, 环境：${comment.envRating}`}
+                                                    </Typography>
                                                 }
                                             />
                                         </ListItem>
