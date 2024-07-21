@@ -340,7 +340,7 @@ export function AdminDishPage() {
                 </Dialog>
                 <Dialog open={addOpen} fullWidth>
                     <DialogTitle>
-                        <Typography variant="h4" component="h1" align="center" gutterBottom sx={{
+                        <Typography align="center" gutterBottom sx={{
                             fontSize: '2rem',
                             fontWeight: 'bold',
                             marginBottom: '1rem'
