@@ -16,6 +16,7 @@ import '../index.css'
 import axios from 'axios'
 import { ExpandLess, ExpandMore } from '@mui/icons-material'
 import backgroundImage from 'Images/background.png'
+import { FinishState } from 'Pages/enums'
 
 interface finishedOrder {
     chefName: string,
@@ -23,7 +24,7 @@ interface finishedOrder {
     dishName: string,
     quantity: number,
     price: number,
-    state: string,
+    state: FinishState,
     rating: number,
 }
 
@@ -43,22 +44,25 @@ interface LogInfo {
     quantity: string,
     price: string,
     takeaway: string,
-    state: string,
+    state: { [key: string]: any },
     rating: string
 }
+
 
 function parseOrders(logInfos: LogInfo[]): finishedOrder[] {
     return logInfos
         .filter(logInfo => logInfo.chefName != 'admin')
-        .map(logInfo => ({
-            chefName: logInfo.chefName,
-            customerName: logInfo.userName,
-            dishName: logInfo.dishName,
-            quantity: parseInt(logInfo.quantity),
-            price: parseFloat(logInfo.price),
-            state: logInfo.state,
-            rating: parseFloat(logInfo.rating),
-        }))
+        .map(logInfo => {
+            const chefName=logInfo.chefName
+            const customerName= logInfo.userName
+            const dishName= logInfo.dishName
+            const quantity= parseInt(logInfo.quantity)
+            const price= parseFloat(logInfo.price)
+            const stateKey = logInfo.state && Object.keys(logInfo.state)[0] // Extract key from finishState object
+            const state = FinishState[stateKey as keyof typeof FinishState]
+            const rating= parseFloat(logInfo.rating)
+            return{chefName,customerName,dishName,quantity,price,state,rating}
+        });
 }
 
 export function ChefRatingPage() {
@@ -76,18 +80,18 @@ export function ChefRatingPage() {
         }, {} as { [chefName: string]: finishedOrder[] })
     }
 
-    const calculateChefRating = (logInfos: LogInfo[]) => {
+    const calculateChefRating = (logInfos: finishedOrder[]) => {
         const chefData: { [key: string]: { total: number; done: number; rejected: number; ratings: number[] } } = {}
         logInfos.forEach(log => {
             const chef = log.chefName
-            const rating = parseFloat(log.rating)
+            const rating = log.rating
             if (!chefData[chef]) {
                 chefData[chef] = { total: 0, done: 0, rejected: 0, ratings: [] }
             }
             chefData[chef].total += 1
-            if (log.state === 'done') {
+            if (log.state === FinishState.Done) {
                 chefData[chef].done += 1
-            } else if (log.state === 'rejected') {
+            } else if (log.state === FinishState.Rejected) {
                 chefData[chef].rejected += 1
             }
             if (rating != 0) {
@@ -118,7 +122,7 @@ export function ChefRatingPage() {
             const ordersArray = parseOrders(response.data)
             const groupedOrders = groupOrdersByChef(ordersArray)
             setGroupedOrders(groupedOrders)
-            calculateChefRating(response.data)
+            calculateChefRating(ordersArray)
             console.log(ordersArray)
         } catch (error) {
             console.error('Error admin-querying:', error)
