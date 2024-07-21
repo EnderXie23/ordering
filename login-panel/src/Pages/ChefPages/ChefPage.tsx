@@ -202,11 +202,9 @@ const ChefPage: React.FC = () => {
     const handleRejectLog = async (rejectDesp: RejectDesp) => {
         const rmessage = new RejectMessage(rejectDesp);
         try {
-            console.log(JSON.stringify(rmessage))
             const response2 = await axios.post(rmessage.getURL(), JSON.stringify(rmessage), {
                 headers: { 'Content-Type': 'application/json' },
             })
-            console.log("Request Headers:", response2.config.headers);
             console.log(response2.data)
         } catch (error) {
             if (isAxiosError(error)) {

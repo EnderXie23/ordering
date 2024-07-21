@@ -46,6 +46,7 @@ export function CustomerLogin() {
                 setSuccessMessage('登录成功，跳转中…');
                 setErrorMessage('');
                 setName(userName + '\n' + response.data[1]);
+                await updateProfile();
                 setTimeout(() => {
                     history.push('/service-type');
                 }, 1000);
@@ -86,7 +87,6 @@ export function CustomerLogin() {
     const CustomerLogin = () => {
         const loginMessage = new CustomerLoginMessage(userName, password);
         sendPostRequest(loginMessage);
-        updateProfile();
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>, nextFieldId: string | null) => {
